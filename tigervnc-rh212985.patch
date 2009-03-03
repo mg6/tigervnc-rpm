@@ -1,0 +1,33 @@
+diff -up tightvnc-1.5.0-20081015svn3022/unix/vncserver.rh212985 tightvnc-1.5.0-20081015svn3022/unix/vncserver
+--- tightvnc-1.5.0-20081015svn3022/unix/vncserver.rh212985	2008-10-23 13:03:57.000000000 +0200
++++ tightvnc-1.5.0-20081015svn3022/unix/vncserver	2008-10-23 13:05:21.000000000 +0200
+@@ -161,11 +161,25 @@ $cmd .= " >> " . &quotedString($desktopL
+ # Run $cmd and record the process ID.
+ 
+ $pidFile = "$vncUserDir/$host:$displayNumber.pid";
+-system("$cmd & echo \$! >$pidFile");
++system(
++"rm -f $pidFile
++ $cmd &
++ PID_TEMP=\$!
++ PID_NUM=\$PID_TEMP
++
++ # Give Xvnc a chance to start up
++
++ sleep 3;
++
++ if ps -p \$PID_NUM -o comm= | grep -q Xvnc; then
++     echo \$PID_NUM > $pidFile
++ fi"
++);
+ 
+-# Give Xvnc a chance to start up
+-
+-sleep(3); 
++if (!(-e "$pidFile")) {
++    warn "Unable to start Xvnc, exiting\n";
++    exit 2;
++}
+ 
+ warn "\nNew '$desktopName' desktop is $host:$displayNumber\n\n";
+ 
