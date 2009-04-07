@@ -4,7 +4,7 @@
 
 Name:		tigervnc
 Version:	0.0.90
-Release:	0.3.1.%{releasetag}%{?dist}
+Release:	0.4.%{releasetag}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
