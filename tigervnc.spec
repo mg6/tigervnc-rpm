@@ -4,7 +4,7 @@
 
 Name:		tigervnc
 Version:	0.0.90
-Release:	0.4.%{releasetag}%{?dist}
+Release:	0.5.%{releasetag}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -53,6 +53,7 @@ Patch4:		tigervnc-cookie.patch
 Patch5:		tigervnc-manminor.patch
 Patch6:		tigervnc-newfbsize.patch
 Patch8:		tigervnc-viewer-reparent.patch
+Patch9:		tigervnc-rh494801.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -110,6 +111,7 @@ popd
 %patch5 -p1 -b .manminor
 %patch6 -p1 -b .newfbsize
 %patch8 -p1 -b .viewer-reparent
+%patch9 -p1 -b .rh494801
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -249,6 +251,9 @@ fi
 %{_libdir}/xorg/modules/extensions/libvnc.so
 
 %changelog
+* Wed Apr 08 2009 Adam Tkac <atkac redhat com> 0.0.90-0.5.20090403svn3751
+- workaround broken fontpath handling in vncserver script (#494801)
+
 * Fri Apr 03 2009 Adam Tkac <atkac redhat com> 0.0.90-0.4.20090403svn3751
 - update to r3751
 - patches merged
