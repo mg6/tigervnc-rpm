@@ -1,10 +1,10 @@
-%define	revision	3751
-%define	date		20090403
+%define	revision	3789
+%define	date		20090427
 %define	releasetag	%{date}svn%{revision}
 
 Name:		tigervnc
 Version:	0.0.90
-Release:	0.5.%{releasetag}%{?dist}
+Release:	0.6.%{releasetag}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -51,9 +51,7 @@ Patch0:		tigervnc-102434.patch
 Patch1:		tigervnc-bounds.patch
 Patch4:		tigervnc-cookie.patch
 Patch5:		tigervnc-manminor.patch
-Patch6:		tigervnc-newfbsize.patch
 Patch8:		tigervnc-viewer-reparent.patch
-Patch9:		tigervnc-rh494801.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -109,9 +107,7 @@ popd
 %patch1 -p1 -b .bounds
 %patch4 -p1 -b .cookie
 %patch5 -p1 -b .manminor
-%patch6 -p1 -b .newfbsize
 %patch8 -p1 -b .viewer-reparent
-%patch9 -p1 -b .rh494801
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -135,7 +131,7 @@ autoreconf -fiv
 	--disable-xorg --disable-xnest --disable-xvfb --disable-dmx \
 	--disable-xwin --disable-xephyr --disable-kdrive --with-pic \
 	--disable-xorgcfg --disable-xprint --disable-static \
-	--disable-composite --disable-xtrap --enable-xcsecurity \
+	--disable-composite --disable-xtrap \
 	--disable-{a,c,m}fb \
 	--with-default-font-path="catalogue:%{_sysconfdir}/X11/fontpath.d,built-ins" \
 	--with-fontdir=%{_datadir}/X11/fonts \
@@ -251,6 +247,13 @@ fi
 %{_libdir}/xorg/modules/extensions/libvnc.so
 
 %changelog
+* Mon Apr 27 2009 Adam Tkac <atkac redhat com> 0.0.90-0.6.20090427svn3789
+- update to r3789
+  - tigervnc-rh494801.patch merged
+- tigervnc-newfbsize.patch is no longer needed
+- fix problems when vncviewer and Xvnc run on different endianess (#496653)
+- UltraVNC and TightVNC clients work fine again (#496786)
+
 * Wed Apr 08 2009 Adam Tkac <atkac redhat com> 0.0.90-0.5.20090403svn3751
 - workaround broken fontpath handling in vncserver script (#494801)
 
