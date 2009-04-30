@@ -4,7 +4,7 @@
 
 Name:		tigervnc
 Version:	0.0.90
-Release:	0.6.%{releasetag}%{?dist}
+Release:	0.7.%{releasetag}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -72,6 +72,9 @@ Requires(post):	chkconfig
 Requires(preun):chkconfig
 Requires(preun):initscripts
 Requires(postun):initscripts
+
+# Check you don't reintroduce #498184 again
+Requires:	xorg-x11-fonts-misc
 
 %description server
 The VNC system allows you to access the same desktop from a wide
@@ -247,6 +250,9 @@ fi
 %{_libdir}/xorg/modules/extensions/libvnc.so
 
 %changelog
+* Thu Apr 30 2009 Adam Tkac <atkac redhat com> 0.0.90-0.7.20090427svn3789
+- server package now requires xorg-x11-fonts-misc (#498184)
+
 * Mon Apr 27 2009 Adam Tkac <atkac redhat com> 0.0.90-0.6.20090427svn3789
 - update to r3789
   - tigervnc-rh494801.patch merged
