@@ -1,25 +1,13 @@
-%define	revision	3789
-%define	date		20090427
-%define	releasetag	%{date}svn%{revision}
-
 Name:		tigervnc
 Version:	0.0.90
-Release:	0.7.%{releasetag}%{?dist}
+Release:	0.8%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://www.tigervnc.com
 
-# The source for this package was pulled from upstream's svn.  Use the
-# following commands to generate the tarball:
-#
-#  $ svn export -r%{revison} \
-#	https://tigervnc.svn.sourceforge.net/svnroot/tigervnc/trunk \
-	#tigervnc-%{version}-%{releasetag}
-#  $ tar cjf tigervnc-%{version}-%{releasetag}{.tar.bz2,}
-
-Source0:	%{name}-%{version}-%{releasetag}.tar.bz2
+Source0:	%{name}-%{version}.tar.gz
 Source1:	vncserver.init
 Source2:	vncserver.sysconfig
 Source6:	vncviewer.desktop
@@ -95,7 +83,7 @@ This package contains libvnc.so module to X server, allowing others
 to access the desktop on your machine.
 
 %prep
-%setup -q -n %{name}-%{version}-%{releasetag}
+%setup -q -n %{name}-%{version}
 
 cp -r %{_datadir}/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -250,6 +238,9 @@ fi
 %{_libdir}/xorg/modules/extensions/libvnc.so
 
 %changelog
+* Tue May 05 2009 Adam Tkac <atkac redhat com> 0.0.90-0.8
+- update to 0.0.90
+
 * Thu Apr 30 2009 Adam Tkac <atkac redhat com> 0.0.90-0.7.20090427svn3789
 - server package now requires xorg-x11-fonts-misc (#498184)
 
