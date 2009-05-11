@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	0.0.90
-Release:	0.8%{?dist}
+Release:	0.8.1%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -38,7 +38,6 @@ Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 Patch0:		tigervnc-102434.patch
 Patch1:		tigervnc-bounds.patch
 Patch4:		tigervnc-cookie.patch
-Patch5:		tigervnc-manminor.patch
 Patch8:		tigervnc-viewer-reparent.patch
 
 %description
@@ -97,7 +96,6 @@ popd
 %patch0 -p1 -b .102434
 %patch1 -p1 -b .bounds
 %patch4 -p1 -b .cookie
-%patch5 -p1 -b .manminor
 %patch8 -p1 -b .viewer-reparent
 
 # Use newer gettext
@@ -238,6 +236,9 @@ fi
 %{_libdir}/xorg/modules/extensions/libvnc.so
 
 %changelog
+* Mon May 11 2009 Adam Tkac <atkac redhat com> 0.0.90-0.8.1
+- remove merged tigervnc-manminor.patch
+
 * Tue May 05 2009 Adam Tkac <atkac redhat com> 0.0.90-0.8
 - update to 0.0.90
 
