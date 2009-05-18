@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	0.0.90
-Release:	0.8.1%{?dist}
+Release:	0.9%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -39,6 +39,8 @@ Patch0:		tigervnc-102434.patch
 Patch1:		tigervnc-bounds.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
+Patch9:		tigervnc10-rh499401.patch
+Patch10:	tigervnc10-rh497592.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -97,6 +99,8 @@ popd
 %patch1 -p1 -b .bounds
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
+%patch9 -p0 -b .rh499401
+%patch10 -p1 -b .rh497592
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -236,6 +240,10 @@ fi
 %{_libdir}/xorg/modules/extensions/libvnc.so
 
 %changelog
+* Mon May 18 2009 Adam Tkac <atkac redhat com> 0.0.90-9
+- fix vncpasswd crash on long passwords (#499401)
+- start session dbus daemon correctly (#497592)
+
 * Mon May 11 2009 Adam Tkac <atkac redhat com> 0.0.90-0.8.1
 - remove merged tigervnc-manminor.patch
 

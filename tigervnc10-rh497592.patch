@@ -1,0 +1,11 @@
+diff -up tigervnc-0.0.90/unix/vncserver.rh497592 tigervnc-0.0.90/unix/vncserver
+--- tigervnc-0.0.90/unix/vncserver.rh497592	2009-05-18 15:49:33.000000000 +0200
++++ tigervnc-0.0.90/unix/vncserver	2009-05-18 15:50:26.000000000 +0200
+@@ -57,6 +57,7 @@ $defaultXStartup
+     = ("#!/bin/sh\n\n".
+        "vncconfig -iconic &\n".
+        "unset SESSION_MANAGER\n".
++       "unset DBUS_SESSION_BUS_ADDRESS\n".
+        "OS=`uname -s`\n".
+        "if [ \$OS = 'Linux' ]; then\n".
+        "  case \"\$WINDOWMANAGER\" in\n".

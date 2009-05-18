@@ -1,0 +1,26 @@
+Index: common/rfb/Password.cxx
+===================================================================
+--- common/rfb/Password.cxx	(revision 3810)
++++ common/rfb/Password.cxx	(revision 3812)
+@@ -38,6 +38,9 @@
+ PlainPasswd::PlainPasswd(char* pwd) : CharArray(pwd) {
+ }
+ 
++PlainPasswd::PlainPasswd(int len) : CharArray(len) {
++}
++
+ PlainPasswd::PlainPasswd(const ObfuscatedPasswd& obfPwd) : CharArray(9) {
+   if (obfPwd.length < 8)
+     throw rdr::Exception("bad obfuscated password length");
+Index: common/rfb/Password.h
+===================================================================
+--- common/rfb/Password.h	(revision 3810)
++++ common/rfb/Password.h	(revision 3812)
+@@ -28,6 +28,7 @@
+   public:
+     PlainPasswd();
+     PlainPasswd(char* pwd);
++    PlainPasswd(int len);
+     PlainPasswd(const ObfuscatedPasswd& obfPwd);
+     ~PlainPasswd();
+     void replaceBuf(char* b);
