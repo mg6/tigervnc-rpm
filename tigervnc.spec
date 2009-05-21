@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	0.0.90
-Release:	0.9%{?dist}
+Release:	0.10%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -41,6 +41,7 @@ Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
 Patch9:		tigervnc10-rh499401.patch
 Patch10:	tigervnc10-rh497592.patch
+Patch11:	tigervnc10-rh501832.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -91,7 +92,7 @@ pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
-patch -p1 --fuzz=0 -b --suffix .vnc < ../xserver16.patch
+patch -p1 -b --suffix .vnc < ../xserver16.patch
 popd
 
 
@@ -101,6 +102,7 @@ popd
 %patch8 -p1 -b .viewer-reparent
 %patch9 -p0 -b .rh499401
 %patch10 -p1 -b .rh497592
+%patch11 -p1 -b .rh501832
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -240,6 +242,10 @@ fi
 %{_libdir}/xorg/modules/extensions/libvnc.so
 
 %changelog
+* Thu May 21 2009 Adam Tkac <atkac redhat com> 0.0.90-10
+- rebuild against 1.6.1.901 X server (#497835)
+- disable i18n, vncviewer is not UTF-8 compatible (#501832)
+
 * Mon May 18 2009 Adam Tkac <atkac redhat com> 0.0.90-9
 - fix vncpasswd crash on long passwords (#499401)
 - start session dbus daemon correctly (#497592)

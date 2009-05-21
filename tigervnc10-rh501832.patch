@@ -1,0 +1,28 @@
+diff -up tigervnc-0.0.90/unix/vncviewer/AboutDialog.h.rh501832 tigervnc-0.0.90/unix/vncviewer/AboutDialog.h
+--- tigervnc-0.0.90/unix/vncviewer/AboutDialog.h.rh501832	2009-05-21 14:16:20.173820756 +0200
++++ tigervnc-0.0.90/unix/vncviewer/AboutDialog.h	2009-05-21 14:16:39.129309405 +0200
+@@ -26,6 +26,10 @@
+ #include "parameters.h"
+ 
+ #include "gettext.h"
++
++/* Disable I18N - RH bug #501832 */
++#define gettext(arg) (arg)
++
+ #define _(String) gettext (String)
+ #define gettext_noop(String) String
+ #define N_(String) gettext_noop (String)
+diff -up tigervnc-0.0.90/unix/vncviewer/vncviewer.cxx.rh501832 tigervnc-0.0.90/unix/vncviewer/vncviewer.cxx
+--- tigervnc-0.0.90/unix/vncviewer/vncviewer.cxx.rh501832	2009-05-21 14:15:51.810818893 +0200
++++ tigervnc-0.0.90/unix/vncviewer/vncviewer.cxx	2009-05-21 14:16:09.614303459 +0200
+@@ -39,6 +39,10 @@
+ #include "CConn.h"
+ 
+ #include "gettext.h"
++
++/* Disable I18N - RH bug #501832 */
++#define gettext(arg) (arg)
++
+ #define _(String) gettext (String)
+ #define gettext_noop(String) String
+ #define N_(String) gettext_noop (String)
