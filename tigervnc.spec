@@ -1,6 +1,6 @@
 Name:		tigervnc
-Version:	0.0.90
-Release:	0.10%{?dist}
+Version:	0.0.91
+Release:	0.11%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -36,12 +36,8 @@ Provides:	tightvnc = 1.5.0-0.15.20090204svn3586
 Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 
 Patch0:		tigervnc-102434.patch
-Patch1:		tigervnc-bounds.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
-Patch9:		tigervnc10-rh499401.patch
-Patch10:	tigervnc10-rh497592.patch
-Patch11:	tigervnc10-rh501832.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -97,12 +93,8 @@ popd
 
 
 %patch0 -p1 -b .102434
-%patch1 -p1 -b .bounds
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
-%patch9 -p0 -b .rh499401
-%patch10 -p1 -b .rh497592
-%patch11 -p1 -b .rh501832
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -125,16 +117,12 @@ autoreconf -fiv
 %configure \
 	--disable-xorg --disable-xnest --disable-xvfb --disable-dmx \
 	--disable-xwin --disable-xephyr --disable-kdrive --with-pic \
-	--disable-xorgcfg --disable-xprint --disable-static \
-	--disable-composite --disable-xtrap \
-	--disable-{a,c,m}fb \
+	--disable-static \
+	--disable-composite \
 	--with-default-font-path="catalogue:%{_sysconfdir}/X11/fontpath.d,built-ins" \
 	--with-fontdir=%{_datadir}/X11/fonts \
-	--with-os-name="Fedora" \
-	--with-os-vendor="Red Hat, Inc." \
 	--with-xkb-output=%{_localstatedir}/lib/xkb \
 	--enable-install-libxf86config \
-	--disable-xevie \
 	--disable-dri2 \
 	--enable-glx \
 	--disable-config-dbus \
@@ -242,11 +230,20 @@ fi
 %{_libdir}/xorg/modules/extensions/libvnc.so
 
 %changelog
-* Thu May 21 2009 Adam Tkac <atkac redhat com> 0.0.90-10
+* Thu Jun 18 2009 Adam Tkac <atkac redhat com> 0.0.91-0.11
+- update to 0.0.91 (1.0.0 RC1)
+- patches merged
+  - tigervnc10-rh499401.patch
+  - tigervnc10-rh497592.patch
+  - tigervnc10-rh501832.patch
+- after discusion in upstream drop tigervnc-bounds.patch
+- configure flags cleanup
+
+* Thu May 21 2009 Adam Tkac <atkac redhat com> 0.0.90-0.10
 - rebuild against 1.6.1.901 X server (#497835)
 - disable i18n, vncviewer is not UTF-8 compatible (#501832)
 
-* Mon May 18 2009 Adam Tkac <atkac redhat com> 0.0.90-9
+* Mon May 18 2009 Adam Tkac <atkac redhat com> 0.0.90-0.9
 - fix vncpasswd crash on long passwords (#499401)
 - start session dbus daemon correctly (#497592)
 
