@@ -1,0 +1,28 @@
+Index: unix/vncviewer/DesktopWindow.cxx
+===================================================================
+--- unix/vncviewer/DesktopWindow.cxx	(revision 3832)
++++ unix/vncviewer/DesktopWindow.cxx	(working copy)
+@@ -216,6 +216,7 @@
+   if (cursorVisible) {
+     cursorVisible = false;
+     im->imageRect(cursorBackingRect, cursorBacking.data);
++    damageRect(cursorBackingRect);
+   }
+ }
+ 
+@@ -237,6 +238,7 @@
+     im->getImage(cursorBacking.data, cursorBackingRect);
+ 
+     im->maskRect(cursorRect, cursor.data, cursor.mask.buf);
++    damageRect(cursorBackingRect);
+   }
+ }
+ 
+@@ -355,6 +357,7 @@
+         cursorPos = pos;
+         showLocalCursor();
+       }
++      updateWindow();
+     }
+   }
+ }

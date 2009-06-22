@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	0.0.91
-Release:	0.11%{?dist}
+Release:	0.12%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -38,6 +38,7 @@ Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
+Patch9:		tigervnc10-rh495457.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -95,6 +96,7 @@ popd
 %patch0 -p1 -b .102434
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
+%patch9 -p0 -b .rh495457
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -230,6 +232,9 @@ fi
 %{_libdir}/xorg/modules/extensions/libvnc.so
 
 %changelog
+* Mon Jun 22 2009 Adam Tkac <atkac redhat com> 0.0.91-0.12
+- fix local rendering of cursor (#495457)
+
 * Thu Jun 18 2009 Adam Tkac <atkac redhat com> 0.0.91-0.11
 - update to 0.0.91 (1.0.0 RC1)
 - patches merged
