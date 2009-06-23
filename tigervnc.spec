@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	0.0.91
-Release:	0.12%{?dist}
+Release:	0.13%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -11,10 +11,11 @@ Source0:	%{name}-%{version}.tar.gz
 Source1:	vncserver.init
 Source2:	vncserver.sysconfig
 Source6:	vncviewer.desktop
+Source7:	xorg-x11-server-source-1.6.1.901-5.fc11.x86_64.rpm
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	libX11-devel, automake, autoconf, libtool, gettext, cvs
-BuildRequires:	libXext-devel, xorg-x11-server-source
+BuildRequires:	libXext-devel, xorg-x11-server-source, libXi-devel
 BuildRequires:	xorg-x11-xtrans-devel, xorg-x11-util-macros, libXtst-devel
 BuildRequires:	libdrm-devel, libXt-devel, pixman-devel libXfont-devel
 BuildRequires:	libxkbfile-devel, openssl-devel, libpciaccess-devel
@@ -68,6 +69,7 @@ The VNC system allows you to access the same desktop from a wide
 variety of platforms.  This package is a TigerVNC server, allowing
 others to access the desktop on your machine.
 
+%ifnarch s390 s390x
 %package server-module
 Summary:	TigerVNC module to Xorg
 Group:		User Interface/X
@@ -76,6 +78,7 @@ Obsoletes:	vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
 Provides:	tightvnc-server-module = 1.5.0-0.15.20090204svn3586
 Obsoletes:	tightvnc-server-module < 1.5.0-0.15.20090204svn3586
 Requires:	xorg-x11-server-Xorg
+%endif
 
 %description server-module
 This package contains libvnc.so module to X server, allowing others
@@ -84,7 +87,10 @@ to access the desktop on your machine.
 %prep
 %setup -q -n %{name}-%{version}
 
-cp -r %{_datadir}/xorg-x11-server-source/* unix/xserver
+rpm2cpio %{SOURCE7} > cpio
+cpio -id < cpio
+
+cp -r usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
@@ -175,6 +181,10 @@ desktop-file-install \
 # remove unwanted files
 rm -f  $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/libvnc.la
 
+%ifarch s390 s390x
+rm -f $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/libvnc.so
+%endif
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -227,11 +237,18 @@ fi
 %{_mandir}/man1/vncserver.1*
 %{_mandir}/man1/x0vncserver.1*
 
+%ifnarch s390 s390x
 %files server-module
 %defattr(-,root,root,-)
 %{_libdir}/xorg/modules/extensions/libvnc.so
+%endif
 
 %changelog
+* Tue Jun 23 2009 Adam Tkac <atkac redhat com> 0.0.91-0.13
+- temporary use F11 Xserver base to make Xvnc compilable
+- BuildRequires: libXi-devel
+- don't ship tigervnc-server-module on s390/s390x
+
 * Mon Jun 22 2009 Adam Tkac <atkac redhat com> 0.0.91-0.12
 - fix local rendering of cursor (#495457)
 
