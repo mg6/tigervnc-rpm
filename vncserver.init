@@ -98,7 +98,8 @@ case "$1" in
 	start
 	;;
   condrestart)
-	echo "condrestart is obsolete, use try-restart instead"
+#	https://bugzilla.redhat.com/show_bug.cgi?id=508367
+#	echo "condrestart is obsolete, use try-restart instead"
 	if [ -e /var/lock/subsys/vncserver ]; then
 	    stop
 	    sleep 3

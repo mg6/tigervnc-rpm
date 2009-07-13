@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	0.0.91
-Release:	0.13%{?dist}
+Release:	0.13%{?dist}.1
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -244,6 +244,9 @@ fi
 %endif
 
 %changelog
+* Mon Jul 13 2009 Adam Tkac <atkac redhat com> 0.0.91-0.13.1
+- don't write warning when initscript is called with condrestart param (#508367)
+
 * Tue Jun 23 2009 Adam Tkac <atkac redhat com> 0.0.91-0.13
 - temporary use F11 Xserver base to make Xvnc compilable
 - BuildRequires: libXi-devel
