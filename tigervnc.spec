@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	0.0.91
-Release:	0.13%{?dist}.1
+Release:	0.14%{?dist}.1
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -244,6 +244,9 @@ fi
 %endif
 
 %changelog
+* Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.91-0.14.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Mon Jul 13 2009 Adam Tkac <atkac redhat com> 0.0.91-0.13.1
 - don't write warning when initscript is called with condrestart param (#508367)
 
