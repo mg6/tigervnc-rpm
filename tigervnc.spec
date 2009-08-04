@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	0.0.91
-Release:	0.14%{?dist}.1
+Release:	0.15%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -40,6 +40,7 @@ Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
 Patch9:		tigervnc10-rh495457.patch
+Patch10:	tigervnc10-compat.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -103,6 +104,7 @@ popd
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
 %patch9 -p0 -b .rh495457
+%patch10 -p1 -b .compat
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -244,6 +246,9 @@ fi
 %endif
 
 %changelog
+* Tue Aug 04 2009 Adam Tkac <atkac redhat com> 0.0.91-0.15
+- make Xvnc compilable
+
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.91-0.14.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
