@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	0.0.91
-Release:	0.15%{?dist}
+Release:	0.16%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -246,6 +246,9 @@ fi
 %endif
 
 %changelog
+* Fri Aug 21 2009 Tomas Mraz <tmraz@redhat.com> - 0.0.91-0.16
+- rebuilt with new openssl
+
 * Tue Aug 04 2009 Adam Tkac <atkac redhat com> 0.0.91-0.15
 - make Xvnc compilable
 
