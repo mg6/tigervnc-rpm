@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	0.0.91
-Release:	0.16%{?dist}
+Release:	0.17%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -79,11 +79,11 @@ Obsoletes:	vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
 Provides:	tightvnc-server-module = 1.5.0-0.15.20090204svn3586
 Obsoletes:	tightvnc-server-module < 1.5.0-0.15.20090204svn3586
 Requires:	xorg-x11-server-Xorg
-%endif
 
 %description server-module
 This package contains libvnc.so module to X server, allowing others
 to access the desktop on your machine.
+%endif
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -246,6 +246,9 @@ fi
 %endif
 
 %changelog
+* Mon Aug 24 2009 Karsten Hopp <karsten@redhat.com> 0.0.91-0.17
+- fix ifnarch s390x for server-module
+
 * Fri Aug 21 2009 Tomas Mraz <tmraz@redhat.com> - 0.0.91-0.16
 - rebuilt with new openssl
 
