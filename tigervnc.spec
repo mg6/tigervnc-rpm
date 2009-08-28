@@ -1,6 +1,6 @@
 Name:		tigervnc
-Version:	0.0.91
-Release:	0.17%{?dist}
+Version:	1.0.0
+Release:	1%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -39,7 +39,6 @@ Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
-Patch9:		tigervnc10-rh495457.patch
 Patch10:	tigervnc10-compat.patch
 
 %description
@@ -103,7 +102,6 @@ popd
 %patch0 -p1 -b .102434
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
-%patch9 -p0 -b .rh495457
 %patch10 -p1 -b .compat
 
 # Use newer gettext
@@ -246,6 +244,10 @@ fi
 %endif
 
 %changelog
+* Fri Aug 28 2009 Adam Tkac <atkac redhat com> 1.0.0-1
+- update to 1.0.0
+- tigervnc10-rh495457.patch merged to upstream
+
 * Mon Aug 24 2009 Karsten Hopp <karsten@redhat.com> 0.0.91-0.17
 - fix ifnarch s390x for server-module
 
