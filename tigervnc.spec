@@ -125,7 +125,7 @@ autoreconf -fiv
 %configure \
 	--disable-xorg --disable-xnest --disable-xvfb --disable-dmx \
 	--disable-xwin --disable-xephyr --disable-kdrive --with-pic \
-	--disable-static \
+	--disable-static --disable-xinerama \
 	--disable-composite \
 	--with-default-font-path="catalogue:%{_sysconfdir}/X11/fontpath.d,built-ins" \
 	--with-fontdir=%{_datadir}/X11/fonts \
