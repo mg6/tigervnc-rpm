@@ -248,7 +248,7 @@ fi
 %endif
 
 %changelog
-* Mon Oct 05 2009 Adam Tkac <atkac redhat com> 1.0.0-2
+* Thu Oct 08 2009 Adam Tkac <atkac redhat com> 1.0.0-2
 - update underlying X source to 1.6.4-0.3.fc11
 - remove bogus '-nohttpd' parameter from /etc/sysconfig/vncservers (#525629)
 - initscript LSB compliance fixes (#523974)
