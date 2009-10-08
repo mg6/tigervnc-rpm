@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.0.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -11,7 +11,7 @@ Source0:	%{name}-%{version}.tar.gz
 Source1:	vncserver.init
 Source2:	vncserver.sysconfig
 Source6:	vncviewer.desktop
-Source7:	xorg-x11-server-source-1.6.1.901-5.fc11.x86_64.rpm
+Source7:	xorg-x11-server-source-1.6.4-0.3.fc11.x86_64.rpm
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	libX11-devel, automake, autoconf, libtool, gettext, cvs
@@ -40,6 +40,8 @@ Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc10-compat.patch
+Patch11:	tigervnc10-rh510185.patch
+Patch12:	tigervnc10-rh524340.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -103,6 +105,8 @@ popd
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
 %patch10 -p1 -b .compat
+%patch11 -p0 -b .rh510185
+%patch12 -p0 -b .rh524340
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -244,6 +248,13 @@ fi
 %endif
 
 %changelog
+* Mon Oct 05 2009 Adam Tkac <atkac redhat com> 1.0.0-2
+- update underlying X source to 1.6.4-0.3.fc11
+- remove bogus '-nohttpd' parameter from /etc/sysconfig/vncservers (#525629)
+- initscript LSB compliance fixes (#523974)
+- improve -LowColorSwitch documentation and handling (#510185)
+- honor dotWhenNoCursor option (and it's changes) every time (#524340)
+
 * Fri Aug 28 2009 Adam Tkac <atkac redhat com> 1.0.0-1
 - update to 1.0.0
 - tigervnc10-rh495457.patch merged to upstream

@@ -65,20 +65,34 @@ start() {
         fi
     fi
     echo
+
+# As written in https://bugzilla.redhat.com/show_bug.cgi?id=523974 (LSB
+# compliance) start of already running service is OK.
+    [ "$RETVAL" -eq 98 ] && return 0
+
     return "$RETVAL"
 }
 
 stop() {
     echo -n $"Shutting down $prog: "
-    for display in ${VNCSERVERS}
-    do
-        echo -n "${display} "
-	export USER="${display##*:}"
-	runuser ${USER} -c "vncserver -kill :${display%%:*}" >/dev/null 2>&1
-    done
+
+    status Xvnc > /dev/null 2>&1
     RETVAL=$?
+
+    # 3 means service is already stopped
+    if ! [ "$RETVAL" -eq 3 ]; then
+	for display in ${VNCSERVERS}; do
+	    echo -n "${display} "
+	    export USER="${display##*:}"
+	    runuser ${USER} -c "vncserver -kill :${display%%:*}" >/dev/null 2>&1
+	done
+	RETVAL=$?
+    else
+	let RETVAL=0
+    fi
+
     [ "$RETVAL" -eq 0 ] && success $"vncserver shutdown" || \
-        failure $"vncserver shutdown"
+	failure $"vncserver shutdown"
     echo
     [ "$RETVAL" -eq 0 ] && rm -f /var/lock/subsys/vncserver
     return "$RETVAL"
@@ -117,9 +131,12 @@ case "$1" in
 	status Xvnc
 	RETVAL=$?
 	;;
+  reload)
+	exit 3
+	;;
   *)
 	echo $"Usage: $0 {start|stop|restart|try-restart|status|force-reload}"
-	exit 3
+	exit 2
 esac
 
 exit "$RETVAL"
