@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.0.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -42,6 +42,7 @@ Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc10-compat.patch
 Patch11:	tigervnc10-rh510185.patch
 Patch12:	tigervnc10-rh524340.patch
+Patch13:	tigervnc10-rh516274.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -107,6 +108,7 @@ popd
 %patch10 -p1 -b .compat
 %patch11 -p0 -b .rh510185
 %patch12 -p0 -b .rh524340
+%patch13 -p1 -b .rh516274
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -248,6 +250,9 @@ fi
 %endif
 
 %changelog
+* Mon Oct 26 2009 Adam Tkac <atkac redhat com> 1.0.0-3
+- create Xvnc keyboard mapping before first keypress (#516274)
+
 * Thu Oct 08 2009 Adam Tkac <atkac redhat com> 1.0.0-2
 - update underlying X source to 1.6.4-0.3.fc11
 - remove bogus '-nohttpd' parameter from /etc/sysconfig/vncservers (#525629)
