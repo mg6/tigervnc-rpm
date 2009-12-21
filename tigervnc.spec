@@ -25,7 +25,7 @@ BuildRequires:	mesa-libGL-devel, libXinerama-devel, ImageMagick
 BuildRequires:  freetype-devel
 BuildRequires:	desktop-file-utils
 
-%ifarch %ix86
+%ifarch %ix86 x86_64
 BuildRequires: nasm
 %endif
 
