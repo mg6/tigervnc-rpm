@@ -1,19 +1,29 @@
---- vnc-4_1-unixsrc/unix/vncserver.cookie	2005-02-23 12:28:18.000000000 +0000
-+++ vnc-4_1-unixsrc/unix/vncserver	2005-03-03 22:04:28.000000000 +0000
-@@ -116,18 +116,12 @@
+diff -up tigervnc-1.0.90-20091221svn3929/unix/vncserver.cookie tigervnc-1.0.90-20091221svn3929/unix/vncserver
+--- tigervnc-1.0.90-20091221svn3929/unix/vncserver.cookie	2009-11-12 11:39:54.000000000 +0100
++++ tigervnc-1.0.90-20091221svn3929/unix/vncserver	2009-12-21 16:15:01.907799091 +0100
+@@ -189,27 +189,12 @@ $vncPort = 5900 + $displayNumber;
  $desktopLog = "$vncUserDir/$host:$displayNumber.log";
  unlink($desktopLog);
  
--# Make an X server cookie - use as the seed the sum of the current time, our
--# PID and part of the encrypted form of the password.  Ideally we'd use
--# /dev/urandom, but that's only available on Linux.
+-# Make an X server cookie - use /dev/urandom on systems that have it,
+-# otherwise use perl's random number generator, seeded with the sum
+-# of the current time, our PID and part of the encrypted form of the password.
 -
--srand(time+$$+unpack("L",`cat $vncUserDir/passwd`));
--$cookie = "";
--for (1..16) {
--    $cookie .= sprintf("%02x", int(rand(256)) % 256);
+-my $cookie = "";
+-if (open(URANDOM, '<', '/dev/urandom')) {
+-  my $randata;
+-  if (sysread(URANDOM, $randata, 16) == 16) {
+-    $cookie = unpack 'h*', $randata;
+-  }
+-  close(URANDOM);
 -}
--    
+-if ($cookie eq "") {
+-  srand(time+$$+unpack("L",`cat $vncUserDir/passwd`));
+-  for (1..16) {
+-    $cookie .= sprintf("%02x", int(rand(256)) % 256);
+-  }
+-}
+-
 -system("xauth -f $xauthorityFile add $host:$displayNumber . $cookie");
 -system("xauth -f $xauthorityFile add $host/unix:$displayNumber . $cookie"); 
 +# Make an X server cookie - use mcookie

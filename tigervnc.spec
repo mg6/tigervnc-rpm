@@ -1,17 +1,19 @@
+%define snap 20091221svn3929
+
 Name:		tigervnc
-Version:	1.0.0
-Release:	3%{?dist}
+Version:	1.0.90
+Release:	0.1.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://www.tigervnc.com
 
-Source0:	%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}-%{snap}.tar.bz2
 Source1:	vncserver.init
 Source2:	vncserver.sysconfig
+Source3:	shave-1.tar.bz2
 Source6:	vncviewer.desktop
-Source7:	xorg-x11-server-source-1.6.4-0.3.fc11.x86_64.rpm
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	libX11-devel, automake, autoconf, libtool, gettext, cvs
@@ -39,10 +41,6 @@ Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
-Patch10:	tigervnc10-compat.patch
-Patch11:	tigervnc10-rh510185.patch
-Patch12:	tigervnc10-rh524340.patch
-Patch13:	tigervnc10-rh516274.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -88,43 +86,34 @@ to access the desktop on your machine.
 %endif
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n %{name}-%{version}-%{snap}
 
-rpm2cpio %{SOURCE7} > cpio
-cpio -id < cpio
-
-cp -r usr/share/xorg-x11-server-source/* unix/xserver
+cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
-patch -p1 -b --suffix .vnc < ../xserver16.patch
+patch -p1 -b --suffix .vnc < ../xserver17.patch
+tar -xjf %{SOURCE3}
 popd
 
 
 %patch0 -p1 -b .102434
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
-%patch10 -p1 -b .compat
-%patch11 -p0 -b .rh510185
-%patch12 -p0 -b .rh524340
-%patch13 -p1 -b .rh516274
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
-	unix/configure.ac
+	configure.ac
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS"
 export CXXFLAGS="$CFLAGS"
 
-pushd unix
 autoreconf -fiv
-%configure \
-	--disable-static
+%configure --disable-static
 
 make %{?_smp_mflags}
-popd
 
 pushd unix/xserver
 autoreconf -fiv
@@ -153,9 +142,7 @@ popd
 
 %install
 rm -rf $RPM_BUILD_ROOT
-pushd unix
 make install DESTDIR=$RPM_BUILD_ROOT
-popd
 
 pushd unix/xserver/hw/vnc
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -250,6 +237,14 @@ fi
 %endif
 
 %changelog
+* Mon Dec 21 2009 Adam Tkac <atkac redhat com> 1.0.90-0.1.20091221svn3929
+- update to 1.0.90 snapshot
+- patches merged
+  - tigervnc10-compat.patch
+  - tigervnc10-rh510185.patch
+  - tigervnc10-rh524340.patch
+  - tigervnc10-rh516274.patch
+
 * Mon Oct 26 2009 Adam Tkac <atkac redhat com> 1.0.0-3
 - create Xvnc keyboard mapping before first keypress (#516274)
 
