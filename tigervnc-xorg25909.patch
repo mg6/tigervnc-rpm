@@ -1,0 +1,35 @@
+From 9f48f109872798c70d0215a0c67e4c6462803ee7 Mon Sep 17 00:00:00 2001
+From: Adam Tkac <atkac@redhat.com>
+Date: Mon, 21 Dec 2009 15:03:30 +0100
+Subject: [PATCH] Do not define members of include/eventstr.h:EventType enum conditionally. It can
+ break modules which are built in-tree.
+
+---
+ include/eventstr.h |    4 ----
+ 1 files changed, 0 insertions(+), 4 deletions(-)
+
+diff --git a/include/eventstr.h b/include/eventstr.h
+index 0d5b1c6..79685c1 100644
+--- a/include/eventstr.h
++++ b/include/eventstr.h
+@@ -58,17 +58,13 @@ enum EventType {
+     ET_ProximityOut,
+     ET_DeviceChanged,
+     ET_Hierarchy,
+-#if XFreeXDGA
+     ET_DGAEvent,
+-#endif
+     ET_RawKeyPress,
+     ET_RawKeyRelease,
+     ET_RawButtonPress,
+     ET_RawButtonRelease,
+     ET_RawMotion,
+-#ifdef XQUARTZ
+     ET_XQuartz,
+-#endif
+     ET_Internal = 0xFF /* First byte */
+ };
+ 
+-- 
+1.6.5.5
+
