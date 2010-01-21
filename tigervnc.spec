@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.2.%{snap}%{?dist}
+Release:	0.3.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -41,8 +41,6 @@ Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
-# https://bugs.freedesktop.org/show_bug.cgi?id=25909
-Patch9:		tigervnc-xorg25909.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -103,9 +101,6 @@ popd
 %patch0 -p1 -b .102434
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
-pushd unix/xserver/
-%patch9 -p1 -b .xorg25909
-popd
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -242,6 +237,9 @@ fi
 %endif
 
 %changelog
+* Thu Jan 21 2010 Adam Tkac <atkac redhat com> 1.0.90-0.3.20091221svn3929
+- drop tigervnc-xorg25909.patch, it has been merged to X.Org upstream
+
 * Thu Jan 07 2010 Adam Tkac <atkac redhat com> 1.0.90-0.2.20091221svn3929
 - add patch for upstream X.Org issue #25909
 - add libXdmcp-devel to build requires to build Xvnc with XDMCP support (#552322)
