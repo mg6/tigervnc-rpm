@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.3.%{snap}%{?dist}
+Release:	0.4.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -12,7 +12,7 @@ URL:		http://www.tigervnc.com
 Source0:	%{name}-%{version}-%{snap}.tar.bz2
 Source1:	vncserver.init
 Source2:	vncserver.sysconfig
-Source3:	shave-1.tar.bz2
+Source4:	xserver18.patch
 Source6:	vncviewer.desktop
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -41,6 +41,8 @@ Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
+Patch9:		tigervnc11-noexecstack.patch
+Patch10:	tigervnc11-xorg18.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -64,6 +66,7 @@ Requires(postun):initscripts
 
 # Check you don't reintroduce #498184 again
 Requires:	xorg-x11-fonts-misc
+Requires:	xorg-x11-xauth
 
 %description server
 The VNC system allows you to access the same desktop from a wide
@@ -93,14 +96,15 @@ pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
-patch -p1 -b --suffix .vnc < ../xserver17.patch
-tar -xjf %{SOURCE3}
+patch -p1 -b --suffix .vnc < %{SOURCE4}
 popd
 
 
 %patch0 -p1 -b .102434
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
+%patch9 -p1 -b .noexecstack
+%patch10 -p1 -b .xorg18
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -237,6 +241,12 @@ fi
 %endif
 
 %changelog
+* Fri Jan 22 2010 Adam Tkac <atkac redhat com> 1.0.90-0.4.20091221svn3929
+- mark stack as non-executable in jpeg ASM code
+- add xorg-x11-xauth to Requires
+- add support for X.Org 1.8
+- drop shave sources, they are no longer needed
+
 * Thu Jan 21 2010 Adam Tkac <atkac redhat com> 1.0.90-0.3.20091221svn3929
 - drop tigervnc-xorg25909.patch, it has been merged to X.Org upstream
 
