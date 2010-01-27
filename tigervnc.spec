@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.4.%{snap}%{?dist}
+Release:	0.5.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -241,6 +241,9 @@ fi
 %endif
 
 %changelog
+* Wed Jan 27 2010 Jan Gorig <jgorig redhat com> 1.0.90-0.5.20091221svn3929
+- initscript LSB compliance fixes (#523974)
+
 * Fri Jan 22 2010 Adam Tkac <atkac redhat com> 1.0.90-0.4.20091221svn3929
 - mark stack as non-executable in jpeg ASM code
 - add xorg-x11-xauth to Requires

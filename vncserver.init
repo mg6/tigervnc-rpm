@@ -24,6 +24,8 @@ prog=$"VNC server"
 RETVAL=0
 
 start() {
+    [ "$EUID" != "0" ] && exit 4
+    
     # Source networking configuration.
     . /etc/sysconfig/network
 
@@ -59,7 +61,7 @@ start() {
     else
         if [ "$RETVAL" -eq 0 ]; then
 	    success $"vncserver startup"
-	    touch /var/lock/subsys/vncserver
+	    touch /var/lock/subsys/Xvnc
         else 
             failure $"vncserver start"
         fi
@@ -68,12 +70,14 @@ start() {
 
 # As written in https://bugzilla.redhat.com/show_bug.cgi?id=523974 (LSB
 # compliance) start of already running service is OK.
-    [ "$RETVAL" -eq 98 ] && return 0
+    [ "$RETVAL" -eq 98 ] && RETVAL=0
 
     return "$RETVAL"
 }
 
 stop() {
+    [ "$EUID" != "0" ] && exit 4
+
     echo -n $"Shutting down $prog: "
 
     status Xvnc > /dev/null 2>&1
@@ -94,7 +98,7 @@ stop() {
     [ "$RETVAL" -eq 0 ] && success $"vncserver shutdown" || \
 	failure $"vncserver shutdown"
     echo
-    [ "$RETVAL" -eq 0 ] && rm -f /var/lock/subsys/vncserver
+    [ "$RETVAL" -eq 0 ] && rm -f /var/lock/subsys/Xvnc
     return "$RETVAL"
 }
 
@@ -114,14 +118,14 @@ case "$1" in
   condrestart)
 #	https://bugzilla.redhat.com/show_bug.cgi?id=508367
 #	echo "condrestart is obsolete, use try-restart instead"
-	if [ -e /var/lock/subsys/vncserver ]; then
+	if [ -e /var/lock/subsys/Xvnc ]; then
 	    stop
 	    sleep 3
 	    start
 	fi
 	;;
   try-restart)
-        if [ -e /var/lock/subsys/vncserver ]; then
+        if [ -e /var/lock/subsys/Xvnc ]; then
             stop
             sleep 3
             start
