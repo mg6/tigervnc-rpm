@@ -1,8 +1,8 @@
-%define snap 20091221svn3929
+%define snap 20100219svn3993
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.5.%{snap}%{?dist}
+Release:	0.6.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -12,7 +12,6 @@ URL:		http://www.tigervnc.com
 Source0:	%{name}-%{version}-%{snap}.tar.bz2
 Source1:	vncserver.init
 Source2:	vncserver.sysconfig
-Source4:	xserver18.patch
 Source6:	vncviewer.desktop
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -41,8 +40,6 @@ Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
-Patch9:		tigervnc11-noexecstack.patch
-Patch10:	tigervnc11-xorg18.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -67,6 +64,7 @@ Requires(postun):initscripts
 # Check you don't reintroduce #498184 again
 Requires:	xorg-x11-fonts-misc
 Requires:	xorg-x11-xauth
+Requires:	mesa-dri-drivers, xkeyboard-config
 
 %description server
 The VNC system allows you to access the same desktop from a wide
@@ -96,22 +94,21 @@ pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
-patch -p1 -b --suffix .vnc < %{SOURCE4}
+patch -p1 -b --suffix .vnc < ../xserver18.patch
 popd
 
 
 %patch0 -p1 -b .102434
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
-%patch9 -p1 -b .noexecstack
-%patch10 -p1 -b .xorg18
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
 	configure.ac
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS"
+# Temporary build with -fno-omit-frame-pointer, it causes problems
+export CFLAGS="$RPM_OPT_FLAGS -fno-omit-frame-pointer"
 export CXXFLAGS="$CFLAGS"
 
 autoreconf -fiv
@@ -241,6 +238,13 @@ fi
 %endif
 
 %changelog
+* Mon Mar 01 2010 Adam Tkac <atkac redhat com> 1.0.90-0.6.20100219svn3993
+- add mesa-dri-drivers and xkeyboard-config to -server Requires
+- update to r3993 1.0.90 snapshot
+  - tigervnc11-noexecstack.patch merged
+  - tigervnc11-xorg18.patch merged
+  - xserver18.patch is no longer needed
+
 * Wed Jan 27 2010 Jan Gorig <jgorig redhat com> 1.0.90-0.5.20091221svn3929
 - initscript LSB compliance fixes (#523974)
 
