@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.6.%{snap}%{?dist}
+Release:	0.7.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -40,6 +40,8 @@ Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
+Patch9:		tigervnc11-rh522369.patch
+Patch10:	tigervnc11-rh551262.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -101,6 +103,8 @@ popd
 %patch0 -p1 -b .102434
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
+%patch9 -p0 -b .rh522369
+%patch10 -p0 -b .rh551262
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -238,6 +242,9 @@ fi
 %endif
 
 %changelog
+* Thu Mar 04 2010 Adam Tkac <atkac redhat com> 1.0.90-0.7.20100219svn3993
+- don't crash during pixel format change (#522369, #551262)
+
 * Mon Mar 01 2010 Adam Tkac <atkac redhat com> 1.0.90-0.6.20100219svn3993
 - add mesa-dri-drivers and xkeyboard-config to -server Requires
 - update to r3993 1.0.90 snapshot
