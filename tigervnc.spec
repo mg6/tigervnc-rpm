@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.7.%{snap}%{?dist}
+Release:	0.8.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -242,6 +242,9 @@ fi
 %endif
 
 %changelog
+* Fri Mar 12 2010 Adam Tkac <atkac redhat com> 1.0.90-0.8.20100219svn3993
+- add French translation to vncviewer.desktop (thanks to Alain Portal)
+
 * Thu Mar 04 2010 Adam Tkac <atkac redhat com> 1.0.90-0.7.20100219svn3993
 - don't crash during pixel format change (#522369, #551262)
 
