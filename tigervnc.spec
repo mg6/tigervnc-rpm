@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.8.%{snap}%{?dist}
+Release:	0.9.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -22,7 +22,7 @@ BuildRequires:	libdrm-devel, libXt-devel, pixman-devel libXfont-devel
 BuildRequires:	libxkbfile-devel, openssl-devel, libpciaccess-devel
 BuildRequires:	mesa-libGL-devel, libXinerama-devel, ImageMagick
 BuildRequires:  freetype-devel, libXdmcp-devel
-BuildRequires:	desktop-file-utils
+BuildRequires:	desktop-file-utils, java-1.5.0-gcj-devel
 
 %ifarch %ix86 x86_64
 BuildRequires: nasm
@@ -42,6 +42,8 @@ Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
 Patch9:		tigervnc11-rh522369.patch
 Patch10:	tigervnc11-rh551262.patch
+Patch11:	tigervnc11-r4002.patch
+Patch12:	tigervnc11-r4014.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -66,7 +68,7 @@ Requires(postun):initscripts
 # Check you don't reintroduce #498184 again
 Requires:	xorg-x11-fonts-misc
 Requires:	xorg-x11-xauth
-Requires:	mesa-dri-drivers, xkeyboard-config
+Requires:	mesa-dri-drivers, xkeyboard-config, xorg-x11-xkb-utils
 
 %description server
 The VNC system allows you to access the same desktop from a wide
@@ -88,6 +90,16 @@ This package contains libvnc.so module to X server, allowing others
 to access the desktop on your machine.
 %endif
 
+%package server-applet
+Summary:	Java TigerVNC viewer applet for TigerVNC server
+Group:		User Interface/X
+Requires:	tigervnc-server
+BuildArch:	noarch
+
+%description server-applet
+The Java TigerVNC viewer applet for web browsers. Install this package to allow
+clients to use web browser when connect to the TigerVNC server.
+
 %prep
 %setup -q -n %{name}-%{version}-%{snap}
 
@@ -105,6 +117,8 @@ popd
 %patch8 -p1 -b .viewer-reparent
 %patch9 -p0 -b .rh522369
 %patch10 -p0 -b .rh551262
+%patch11 -p0 -b .r4002
+%patch12 -p0 -b .r4014
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -145,6 +159,11 @@ pushd media
 make
 popd
 
+# Build Java applet
+pushd java/src/com/tigervnc/vncviewer/
+make
+popd
+
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -173,6 +192,13 @@ mkdir $RPM_BUILD_ROOT%{_datadir}/applications
 desktop-file-install \
 	--dir $RPM_BUILD_ROOT%{_datadir}/applications \
 	%{SOURCE6}
+
+# Install Java applet
+pushd java/src/com/tigervnc/vncviewer/
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/vnc/classes
+install -m755 VncViewer.jar $RPM_BUILD_ROOT%{_datadir}/vnc/classes
+install -m644 index.vnc $RPM_BUILD_ROOT%{_datadir}/vnc/classes
+popd
 
 %find_lang %{name} %{name}.lang
 
@@ -241,7 +267,17 @@ fi
 %{_libdir}/xorg/modules/extensions/libvnc.so
 %endif
 
+%files server-applet
+%defattr(-,root,root,-)
+%doc java/src/com/tigervnc/vncviewer/README
+%{_datadir}/vnc/classes/*
+
 %changelog
+* Thu Apr 08 2010 Adam Tkac <atkac redhat com> 1.0.90-0.9.20100219svn3993
+- add server-applet subpackage which contains Java vncviewer applet
+- fix Java applet; it didn't work when run from web browser
+- add xorg-x11-xkb-utils to server Requires
+
 * Fri Mar 12 2010 Adam Tkac <atkac redhat com> 1.0.90-0.8.20100219svn3993
 - add French translation to vncviewer.desktop (thanks to Alain Portal)
 
