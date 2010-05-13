@@ -1,8 +1,8 @@
-%define snap 20100219svn3993
+%define snap 20100420svn4030
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.9.%{snap}%{?dist}
+Release:	0.10.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -40,10 +40,6 @@ Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
-Patch9:		tigervnc11-rh522369.patch
-Patch10:	tigervnc11-rh551262.patch
-Patch11:	tigervnc11-r4002.patch
-Patch12:	tigervnc11-r4014.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -115,10 +111,6 @@ popd
 %patch0 -p1 -b .102434
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
-%patch9 -p0 -b .rh522369
-%patch10 -p0 -b .rh551262
-%patch11 -p0 -b .r4002
-%patch12 -p0 -b .r4014
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -273,6 +265,14 @@ fi
 %{_datadir}/vnc/classes/*
 
 %changelog
+* Thu May 13 2010 Adam Tkac <atkac redhat com> 1.0.90-0.10.20100420svn4030
+- update to r4030 snapshot
+- patches merged to upstream
+  - tigervnc11-rh522369.patch
+  - tigervnc11-rh551262.patch
+  - tigervnc11-r4002.patch
+  - tigervnc11-r4014.patch
+
 * Thu Apr 08 2010 Adam Tkac <atkac redhat com> 1.0.90-0.9.20100219svn3993
 - add server-applet subpackage which contains Java vncviewer applet
 - fix Java applet; it didn't work when run from web browser
