@@ -1,0 +1,12 @@
+diff -up tigervnc-1.0.90-20100420svn4030/unix/xserver/hw/vnc/Makefile.am.ldnow tigervnc-1.0.90-20100420svn4030/unix/xserver/hw/vnc/Makefile.am
+--- tigervnc-1.0.90-20100420svn4030/unix/xserver/hw/vnc/Makefile.am.ldnow	2010-05-10 13:55:28.484322693 +0200
++++ tigervnc-1.0.90-20100420svn4030/unix/xserver/hw/vnc/Makefile.am	2010-05-10 13:55:37.574320863 +0200
+@@ -50,7 +50,7 @@ libvnc_la_CPPFLAGS = $(XVNC_CPPFLAGS) -I
+ 	-I$(top_srcdir)/hw/xfree86/os-support/bus \
+ 	-I$(includedir)/pixman-1 -I$(includedir)
+ 
+-libvnc_la_LDFLAGS = -module -avoid-version
++libvnc_la_LDFLAGS = -module -avoid-version -Wl,-z,now
+ 
+ libvnc_la_LIBADD = libvnccommon.la $(COMMON_LIBS) $(LIBVNC_LIBS)
+ 

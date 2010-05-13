@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.10.%{snap}%{?dist}
+Release:	0.11.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -40,6 +40,9 @@ Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
+Patch9:		tigervnc11-rh586406.patch
+Patch10:	tigervnc11-ldnow.patch
+Patch11:	tigervnc11-libvnc.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -99,6 +102,13 @@ clients to use web browser when connect to the TigerVNC server.
 %prep
 %setup -q -n %{name}-%{version}-%{snap}
 
+%patch0 -p1 -b .102434
+%patch4 -p1 -b .cookie
+%patch8 -p1 -b .viewer-reparent
+%patch9 -p1 -b .rh586406
+%patch10 -p1 -b .ldnow
+%patch11 -p1 -b .libvnc
+
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
 for all in `find . -type f -perm -001`; do
@@ -106,11 +116,6 @@ for all in `find . -type f -perm -001`; do
 done
 patch -p1 -b --suffix .vnc < ../xserver18.patch
 popd
-
-
-%patch0 -p1 -b .102434
-%patch4 -p1 -b .cookie
-%patch8 -p1 -b .viewer-reparent
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
@@ -265,6 +270,12 @@ fi
 %{_datadir}/vnc/classes/*
 
 %changelog
+* Thu May 13 2010 Adam Tkac <atkac redhat com> 1.0.90-0.11.20100420svn4030
+- link libvnc.so "now" to catch "undefined symbol" errors during Xorg startup
+- use always XkbConvertCase instead of XConvertCase (#580159, #586406)
+- don't link libvnc.so against libXi.la, libdix.la and libxkb.la; use symbols
+  from Xorg instead
+
 * Thu May 13 2010 Adam Tkac <atkac redhat com> 1.0.90-0.10.20100420svn4030
 - update to r4030 snapshot
 - patches merged to upstream
