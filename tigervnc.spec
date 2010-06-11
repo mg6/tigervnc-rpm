@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.11.%{snap}%{?dist}
+Release:	0.12.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -118,7 +118,7 @@ patch -p1 -b --suffix .vnc < ../xserver18.patch
 popd
 
 # Use newer gettext
-sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.17])/' \
+sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.18.1])/' \
 	configure.ac
 
 %build
@@ -270,6 +270,9 @@ fi
 %{_datadir}/vnc/classes/*
 
 %changelog
+* Fri Jun 11 2010 Adam Tkac <atkac redhat com> 1.0.90-0.12.20100420svn4030
+- use newer gettext
+
 * Thu May 13 2010 Adam Tkac <atkac redhat com> 1.0.90-0.11.20100420svn4030
 - link libvnc.so "now" to catch "undefined symbol" errors during Xorg startup
 - use always XkbConvertCase instead of XConvertCase (#580159, #586406)
