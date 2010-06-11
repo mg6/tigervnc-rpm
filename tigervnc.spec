@@ -15,7 +15,7 @@ Source2:	vncserver.sysconfig
 Source6:	vncviewer.desktop
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	libX11-devel, automake, autoconf, libtool, gettext, cvs
+BuildRequires:	libX11-devel, automake, autoconf, libtool, gettext, git
 BuildRequires:	libXext-devel, xorg-x11-server-source, libXi-devel
 BuildRequires:	xorg-x11-xtrans-devel, xorg-x11-util-macros, libXtst-devel
 BuildRequires:	libdrm-devel, libXt-devel, pixman-devel libXfont-devel
@@ -272,6 +272,7 @@ fi
 %changelog
 * Fri Jun 11 2010 Adam Tkac <atkac redhat com> 1.0.90-0.12.20100420svn4030
 - use newer gettext
+- autopoint now uses git instead of cvs, adjust BuildRequires appropriately
 
 * Thu May 13 2010 Adam Tkac <atkac redhat com> 1.0.90-0.11.20100420svn4030
 - link libvnc.so "now" to catch "undefined symbol" errors during Xorg startup
