@@ -6,8 +6,8 @@
 # to do that.  
 #
 # DO NOT RUN THIS SERVICE if your local area network is
-# untrusted!  For a secure way of using VNC, see
-# <URL:http://www.uk.research.att.com/archive/vnc/sshvnc.html>.
+# untrusted!  For a secure way of using VNC, see this URL:
+# http://kbase.redhat.com/faq/docs/DOC-7028
 
 # Use "-nolisten tcp" to prevent X connections to your VNC server via TCP.
 

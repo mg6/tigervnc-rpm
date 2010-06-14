@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.12.%{snap}%{?dist}
+Release:	0.13.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -270,6 +270,9 @@ fi
 %{_datadir}/vnc/classes/*
 
 %changelog
+* Mon Jun 14 2010 Adam Tkac <atkac redhat com> 1.0.90-0.13.20100420svn4030
+- update URL about SSH tunneling in the sysconfig file (#601996)
+
 * Fri Jun 11 2010 Adam Tkac <atkac redhat com> 1.0.90-0.12.20100420svn4030
 - use newer gettext
 - autopoint now uses git instead of cvs, adjust BuildRequires appropriately
