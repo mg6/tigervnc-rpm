@@ -15,7 +15,7 @@ Source2:	vncserver.sysconfig
 Source6:	vncviewer.desktop
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	libX11-devel, automake, autoconf, libtool, gettext, git
+BuildRequires:	libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
 BuildRequires:	libXext-devel, xorg-x11-server-source, libXi-devel
 BuildRequires:	xorg-x11-xtrans-devel, xorg-x11-util-macros, libXtst-devel
 BuildRequires:	libdrm-devel, libXt-devel, pixman-devel libXfont-devel
@@ -279,6 +279,7 @@ fi
 - fix memory leak in Xvnc input code (#597172)
 - don't crash when receive negative encoding (#600070)
 - explicitly disable udev configuration support
+- add gettext-autopoint to BR
 
 * Mon Jun 14 2010 Adam Tkac <atkac redhat com> 1.0.90-0.13.20100420svn4030
 - update URL about SSH tunneling in the sysconfig file (#601996)
