@@ -1,0 +1,28 @@
+--- tigervnc-1.0.90-20100420svn4030/common/rfb/ConnParams.cxx.rh600070	2010-06-07 17:01:56.990676103 +0200
++++ tigervnc-1.0.90-20100420svn4030/common/rfb/ConnParams.cxx	2010-06-07 17:02:21.518022631 +0200
+@@ -129,7 +129,7 @@ void ConnParams::setEncodings(int nEncod
+ 	       encodings[i] <= pseudoEncodingQualityLevel9) {
+       noJpeg = false;
+       qualityLevel = encodings[i] - pseudoEncodingQualityLevel0;
+-    } else if (encodings[i] <= encodingMax && Encoder::supported(encodings[i]))
++    } else if (Encoder::supported(encodings[i]))
+       currentEncoding_ = encodings[i];
+   }
+ }
+--- tigervnc-1.0.90-20100420svn4030/common/rfb/Encoder.cxx.rh600070	2010-06-07 17:00:34.249636665 +0200
++++ tigervnc-1.0.90-20100420svn4030/common/rfb/Encoder.cxx	2010-06-07 17:02:38.286209287 +0200
+@@ -34,12 +34,12 @@ EncoderCreateFnType Encoder::createFns[e
+ 
+ bool Encoder::supported(int encoding)
+ {
+-  return encoding <= encodingMax && createFns[encoding];
++  return encoding >= 0 && encoding <= encodingMax && createFns[encoding];
+ }
+ 
+ Encoder* Encoder::createEncoder(int encoding, SMsgWriter* writer)
+ {
+-  if (encoding <= encodingMax && createFns[encoding])
++  if (supported(encoding))
+     return (*createFns[encoding])(writer);
+   return 0;
+ }

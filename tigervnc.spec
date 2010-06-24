@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.13.%{snap}%{?dist}
+Release:	0.14.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -43,6 +43,8 @@ Patch8:		tigervnc-viewer-reparent.patch
 Patch9:		tigervnc11-rh586406.patch
 Patch10:	tigervnc11-ldnow.patch
 Patch11:	tigervnc11-libvnc.patch
+Patch12:	tigervnc11-rh597172.patch
+Patch13:	tigervnc11-rh600070.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -108,6 +110,8 @@ clients to use web browser when connect to the TigerVNC server.
 %patch9 -p1 -b .rh586406
 %patch10 -p1 -b .ldnow
 %patch11 -p1 -b .libvnc
+%patch12 -p1 -b .rh597172
+%patch13 -p1 -b .rh600070
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -146,6 +150,7 @@ autoreconf -fiv
 	--enable-glx \
 	--disable-config-dbus \
 	--disable-config-hal \
+	--disable-config-udev \
 	--with-dri-driver-path=%{_libdir}/dri
 
 make %{?_smp_mflags}
@@ -270,6 +275,11 @@ fi
 %{_datadir}/vnc/classes/*
 
 %changelog
+* Thu Jun 24 2010 Adam Tkac <atkac redhat com> 1.0.90-0.14.20100420svn4030
+- fix memory leak in Xvnc input code (#597172)
+- don't crash when receive negative encoding (#600070)
+- explicitly disable udev configuration support
+
 * Mon Jun 14 2010 Adam Tkac <atkac redhat com> 1.0.90-0.13.20100420svn4030
 - update URL about SSH tunneling in the sysconfig file (#601996)
 
