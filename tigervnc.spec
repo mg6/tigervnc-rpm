@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.14.%{snap}%{?dist}
+Release:	0.15.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -45,6 +45,7 @@ Patch10:	tigervnc11-ldnow.patch
 Patch11:	tigervnc11-libvnc.patch
 Patch12:	tigervnc11-rh597172.patch
 Patch13:	tigervnc11-rh600070.patch
+Patch14:	tigervnc11-options.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -112,6 +113,7 @@ clients to use web browser when connect to the TigerVNC server.
 %patch11 -p1 -b .libvnc
 %patch12 -p1 -b .rh597172
 %patch13 -p1 -b .rh600070
+%patch14 -p1 -b .options
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -275,6 +277,9 @@ fi
 %{_datadir}/vnc/classes/*
 
 %changelog
+* Mon Jun 28 2010 Adam Tkac <atkac redhat com> 1.0.90-0.15.20100420svn4030
+- vncserver: accept <+optname> option when specified as the first one
+
 * Thu Jun 24 2010 Adam Tkac <atkac redhat com> 1.0.90-0.14.20100420svn4030
 - fix memory leak in Xvnc input code (#597172)
 - don't crash when receive negative encoding (#600070)
