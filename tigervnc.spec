@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.15.%{snap}%{?dist}
+Release:	0.16.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -23,11 +23,6 @@ BuildRequires:	libxkbfile-devel, openssl-devel, libpciaccess-devel
 BuildRequires:	mesa-libGL-devel, libXinerama-devel, ImageMagick
 BuildRequires:  freetype-devel, libXdmcp-devel
 BuildRequires:	desktop-file-utils, java-1.5.0-gcj-devel
-
-%ifarch %ix86 x86_64
-BuildRequires: nasm
-%endif
-
 
 Requires(post):	coreutils	
 Requires(postun):coreutils	
@@ -133,7 +128,7 @@ export CFLAGS="$RPM_OPT_FLAGS -fno-omit-frame-pointer"
 export CXXFLAGS="$CFLAGS"
 
 autoreconf -fiv
-%configure --disable-static
+%configure --disable-static --with-system-jpeg
 
 make %{?_smp_mflags}
 
@@ -277,6 +272,10 @@ fi
 %{_datadir}/vnc/classes/*
 
 %changelog
+* Fri Jul 02 2010 Adam Tkac <atkac redhat com> 1.0.90-0.16.20100420svn4030
+- build against system-wide libjpeg-turbo (#494458)
+- build no longer requires nasm
+
 * Mon Jun 28 2010 Adam Tkac <atkac redhat com> 1.0.90-0.15.20100420svn4030
 - vncserver: accept <+optname> option when specified as the first one
 
