@@ -23,6 +23,7 @@ BuildRequires:	libxkbfile-devel, openssl-devel, libpciaccess-devel
 BuildRequires:	mesa-libGL-devel, libXinerama-devel, ImageMagick
 BuildRequires:  freetype-devel, libXdmcp-devel
 BuildRequires:	desktop-file-utils, java-1.5.0-gcj-devel
+BuildRequires:	libjpeg-turbo-devel
 
 Requires(post):	coreutils	
 Requires(postun):coreutils	
