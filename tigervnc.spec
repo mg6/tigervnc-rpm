@@ -1,8 +1,8 @@
-%define snap 20100420svn4030
+%define snap 20100721svn4113
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.16.%{snap}%{?dist}
+Release:	0.17.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -25,8 +25,9 @@ BuildRequires:  freetype-devel, libXdmcp-devel
 BuildRequires:	desktop-file-utils, java-1.5.0-gcj-devel
 BuildRequires:	libjpeg-turbo-devel
 
-Requires(post):	coreutils	
-Requires(postun):coreutils	
+Requires(post):	coreutils
+Requires(postun):coreutils
+Requires: hicolor-icon-theme
 
 Provides:	vnc = 4.1.3-2, vnc-libs = 4.1.3-2
 Obsoletes:	vnc < 4.1.3-2, vnc-libs < 4.1.3-2
@@ -36,12 +37,7 @@ Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
-Patch9:		tigervnc11-rh586406.patch
 Patch10:	tigervnc11-ldnow.patch
-Patch11:	tigervnc11-libvnc.patch
-Patch12:	tigervnc11-rh597172.patch
-Patch13:	tigervnc11-rh600070.patch
-Patch14:	tigervnc11-options.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -104,19 +100,14 @@ clients to use web browser when connect to the TigerVNC server.
 %patch0 -p1 -b .102434
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
-%patch9 -p1 -b .rh586406
 %patch10 -p1 -b .ldnow
-%patch11 -p1 -b .libvnc
-%patch12 -p1 -b .rh597172
-%patch13 -p1 -b .rh600070
-%patch14 -p1 -b .options
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
-patch -p1 -b --suffix .vnc < ../xserver18.patch
+patch -p1 -b --suffix .vnc < ../xserver19.patch
 popd
 
 # Use newer gettext
@@ -129,7 +120,7 @@ export CFLAGS="$RPM_OPT_FLAGS -fno-omit-frame-pointer"
 export CXXFLAGS="$CFLAGS"
 
 autoreconf -fiv
-%configure --disable-static --with-system-jpeg
+%configure --disable-static --with-system-jpeg --disable-gnutls
 
 make %{?_smp_mflags}
 
@@ -242,7 +233,7 @@ fi
 %defattr(-,root,root,-)
 %doc LICENCE.TXT unix/README
 %{_bindir}/vncviewer
-%{_datadir}/icons/*
+%{_datadir}/icons/hicolor/*/apps/*
 %{_datadir}/applications/*
 %{_mandir}/man1/vncviewer.1*
 
@@ -273,6 +264,17 @@ fi
 %{_datadir}/vnc/classes/*
 
 %changelog
+* Thu Jul 22 2010 Adam Tkac <atkac redhat com> 1.0.90-0.17.20100721svn4113
+- update to r4113
+- patches merged
+  - tigervnc11-rh586406.patch
+  - tigervnc11-libvnc.patch
+  - tigervnc11-rh597172.patch
+  - tigervnc11-rh600070.patch
+  - tigervnc11-options.patch
+- don't own %%{_datadir}/icons directory (#614301)
+- minor improvements in the .desktop file (#616340)
+
 * Fri Jul 02 2010 Adam Tkac <atkac redhat com> 1.0.90-0.16.20100420svn4030
 - build against system-wide libjpeg-turbo (#494458)
 - build no longer requires nasm

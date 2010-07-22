@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=TigerVNC Viewer
 Name[fr]=Visionneur TigerVNC
 Comment=Connect to VNC server and display remote desktop
@@ -9,4 +8,4 @@ Icon=tigervnc
 Terminal=false
 Type=Application
 StartupWMClass=TigerVNC Viewer: Connection Details
-Categories=Network;Application;
+Categories=Network;RemoteAccess;

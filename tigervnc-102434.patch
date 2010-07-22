@@ -1,7 +1,7 @@
-diff -up tightvnc-1.5.0-20081015svn3022/unix/vncviewer/CConn.cxx.102434 tightvnc-1.5.0-20081015svn3022/unix/vncviewer/CConn.cxx
---- tightvnc-1.5.0-20081015svn3022/unix/vncviewer/CConn.cxx.102434	2008-10-10 17:48:22.000000000 +0200
-+++ tightvnc-1.5.0-20081015svn3022/unix/vncviewer/CConn.cxx	2008-10-22 18:35:46.000000000 +0200
-@@ -37,6 +37,8 @@
+diff -up tigervnc-1.0.90-20100721svn4113/unix/vncviewer/CConn.cxx.102434 tigervnc-1.0.90-20100721svn4113/unix/vncviewer/CConn.cxx
+--- tigervnc-1.0.90-20100721svn4113/unix/vncviewer/CConn.cxx.102434	2010-07-20 17:07:44.000000000 +0200
++++ tigervnc-1.0.90-20100721svn4113/unix/vncviewer/CConn.cxx	2010-07-21 17:02:09.900085594 +0200
+@@ -40,6 +40,8 @@
  #include "ServerDialog.h"
  #include "PasswdDialog.h"
  #include "parameters.h"
@@ -10,26 +10,26 @@ diff -up tightvnc-1.5.0-20081015svn3022/unix/vncviewer/CConn.cxx.102434 tightvnc
  
  using namespace rfb;
  
-@@ -209,6 +211,15 @@ void CConn::getUserPasswd(char** user, c
+@@ -214,6 +216,15 @@ void CConn::getUserPasswd(char** user, c
      return;
    }
  
 +  /* XXX Who wrote this code? Yes, it is really ugly */
 +  if (passwdInput) {
-+    std::string s;
-+    std::cin >> s;
-+    *password = strdup(s.c_str());
-+    if(user) *user = 0;
-+      return;
++   std::string s;
++   std::cin >> s;
++   *password = strdup(s.c_str());
++   if (user) *user = 0;
++     return;
 +  }
 +
-   const char* secType = secTypeName(getCurrentCSecurity()->getType());
+   const char* secType = secTypeName(csecurity->getType());
    const char* titlePrefix = _("VNC authentication");
    unsigned int titleLen = strlen(titlePrefix) + strlen(secType) + 4;
-diff -up tightvnc-1.5.0-20081015svn3022/unix/vncviewer/parameters.h.102434 tightvnc-1.5.0-20081015svn3022/unix/vncviewer/parameters.h
---- tightvnc-1.5.0-20081015svn3022/unix/vncviewer/parameters.h.102434	2006-05-18 13:08:21.000000000 +0200
-+++ tightvnc-1.5.0-20081015svn3022/unix/vncviewer/parameters.h	2008-10-22 18:08:47.000000000 +0200
-@@ -41,6 +41,7 @@ extern rfb::BoolParameter customCompress
+diff -up tigervnc-1.0.90-20100721svn4113/unix/vncviewer/parameters.h.102434 tigervnc-1.0.90-20100721svn4113/unix/vncviewer/parameters.h
+--- tigervnc-1.0.90-20100721svn4113/unix/vncviewer/parameters.h.102434	2009-03-23 17:49:47.000000000 +0100
++++ tigervnc-1.0.90-20100721svn4113/unix/vncviewer/parameters.h	2010-07-21 16:55:44.414314911 +0200
+@@ -42,6 +42,7 @@ extern rfb::BoolParameter customCompress
  extern rfb::IntParameter compressLevel;
  extern rfb::BoolParameter noJpeg;
  extern rfb::IntParameter qualityLevel;
@@ -37,21 +37,22 @@ diff -up tightvnc-1.5.0-20081015svn3022/unix/vncviewer/parameters.h.102434 tight
  
  extern char aboutText[];
  extern char* programName;
-diff -up tightvnc-1.5.0-20081015svn3022/unix/vncviewer/vncviewer.cxx.102434 tightvnc-1.5.0-20081015svn3022/unix/vncviewer/vncviewer.cxx
---- tightvnc-1.5.0-20081015svn3022/unix/vncviewer/vncviewer.cxx.102434	2008-09-28 07:08:48.000000000 +0200
-+++ tightvnc-1.5.0-20081015svn3022/unix/vncviewer/vncviewer.cxx	2008-10-22 18:04:00.000000000 +0200
-@@ -58,6 +58,7 @@ IntParameter wmDecorationHeight("WMDecor
-                                 "manager decoration around a window", 24);
+diff -up tigervnc-1.0.90-20100721svn4113/unix/vncviewer/vncviewer.cxx.102434 tigervnc-1.0.90-20100721svn4113/unix/vncviewer/vncviewer.cxx
+--- tigervnc-1.0.90-20100721svn4113/unix/vncviewer/vncviewer.cxx.102434	2010-04-23 16:06:38.000000000 +0200
++++ tigervnc-1.0.90-20100721svn4113/unix/vncviewer/vncviewer.cxx	2010-07-21 17:01:05.979161234 +0200
+@@ -59,7 +59,7 @@ IntParameter wmDecorationHeight("WMDecor
  StringParameter passwordFile("PasswordFile",
                               "Password file for VNC authentication", "");
+ AliasParameter passwd("passwd", "Alias for PasswordFile", &passwordFile);
+-
 +BoolParameter passwdInput("passwdInput", "Gets password from stdin", false);
- AliasParameter rfbauth("passwd", "Alias for PasswordFile", &passwordFile);
- 
  BoolParameter useLocalCursor("UseLocalCursor",
-diff -up tightvnc-1.5.0-20081015svn3022/unix/vncviewer/vncviewer.man.102434 tightvnc-1.5.0-20081015svn3022/unix/vncviewer/vncviewer.man
---- tightvnc-1.5.0-20081015svn3022/unix/vncviewer/vncviewer.man.102434	2006-06-02 06:43:52.000000000 +0200
-+++ tightvnc-1.5.0-20081015svn3022/unix/vncviewer/vncviewer.man	2008-10-22 18:04:00.000000000 +0200
-@@ -115,6 +115,11 @@ the server, you can specify it here to a
+                              "Render the mouse cursor locally", true);
+ BoolParameter dotWhenNoCursor("DotWhenNoCursor",
+diff -up tigervnc-1.0.90-20100721svn4113/unix/vncviewer/vncviewer.man.102434 tigervnc-1.0.90-20100721svn4113/unix/vncviewer/vncviewer.man
+--- tigervnc-1.0.90-20100721svn4113/unix/vncviewer/vncviewer.man.102434	2009-10-07 17:13:00.000000000 +0200
++++ tigervnc-1.0.90-20100721svn4113/unix/vncviewer/vncviewer.man	2010-07-21 16:55:44.414314911 +0200
+@@ -119,6 +119,11 @@ the server, you can specify it here to a
  "~/.vnc/passwd".
  
  .TP
