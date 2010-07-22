@@ -25,6 +25,10 @@ BuildRequires:  freetype-devel, libXdmcp-devel
 BuildRequires:	desktop-file-utils, java-1.5.0-gcj-devel
 BuildRequires:	libjpeg-turbo-devel
 
+%ifarch %ix86 x86_64
+BuildRequires: nasm
+%endif
+
 Requires(post):	coreutils
 Requires(postun):coreutils
 Requires: hicolor-icon-theme
@@ -274,6 +278,8 @@ fi
   - tigervnc11-options.patch
 - don't own %%{_datadir}/icons directory (#614301)
 - minor improvements in the .desktop file (#616340)
+- bundled libjpeg configure requires nasm; is executed even if system-wide
+  libjpeg is used
 
 * Fri Jul 02 2010 Adam Tkac <atkac redhat com> 1.0.90-0.16.20100420svn4030
 - build against system-wide libjpeg-turbo (#494458)
