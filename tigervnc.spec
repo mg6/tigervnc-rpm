@@ -1,8 +1,8 @@
-%define snap 20100721svn4113
+%define snap 20100813svn4123
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.17.%{snap}%{?dist}
+Release:	0.18.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -62,6 +62,7 @@ Requires(post):	chkconfig
 Requires(preun):chkconfig
 Requires(preun):initscripts
 Requires(postun):initscripts
+Requires:	perl
 
 # Check you don't reintroduce #498184 again
 Requires:	xorg-x11-fonts-misc
@@ -268,6 +269,10 @@ fi
 %{_datadir}/vnc/classes/*
 
 %changelog
+* Fri Aug 13 2010 Adam Tkac <atkac redhat com> 1.0.90-0.18.20100813svn4123
+- update to r4123 (#617973)
+- add perl requires to -server subpkg (#619791)
+
 * Thu Jul 22 2010 Adam Tkac <atkac redhat com> 1.0.90-0.17.20100721svn4113
 - update to r4113
 - patches merged
