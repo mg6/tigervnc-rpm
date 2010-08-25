@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.18.%{snap}%{?dist}
+Release:	0.19.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -31,7 +31,8 @@ BuildRequires: nasm
 
 Requires(post):	coreutils
 Requires(postun):coreutils
-Requires: hicolor-icon-theme
+Requires:	hicolor-icon-theme
+Requires:	tigervnc-license
 
 Provides:	vnc = 4.1.3-2, vnc-libs = 4.1.3-2
 Obsoletes:	vnc < 4.1.3-2, vnc-libs < 4.1.3-2
@@ -42,6 +43,8 @@ Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc11-ldnow.patch
+Patch11:	0001-Return-Success-from-generate_modkeymap-when-max_keys.patch
+Patch12:	tigervnc11-rh611677.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -58,21 +61,35 @@ Provides:	vnc-server = 4.1.3-2, vnc-libs = 4.1.3-2
 Obsoletes:	vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
 Provides:	tightvnc-server = 1.5.0-0.15.20090204svn3586
 Obsoletes:	tightvnc-server < 1.5.0-0.15.20090204svn3586
+Requires:	perl
+Requires:	tigervnc-server-minimal
+Requires:	xorg-x11-xauth
+
+%description server
+The VNC system allows you to access the same desktop from a wide
+variety of platforms.  This package includes set of utilities
+which make usage of TigerVNC server more user friendly. It also
+contains x0vncserver program which can export your active
+X session.
+
+%package server-minimal
+Summary:	A minimal installation of TigerVNC server
+Group:		User Interface/X
 Requires(post):	chkconfig
 Requires(preun):chkconfig
 Requires(preun):initscripts
 Requires(postun):initscripts
-Requires:	perl
 
 # Check you don't reintroduce #498184 again
 Requires:	xorg-x11-fonts-misc
-Requires:	xorg-x11-xauth
 Requires:	mesa-dri-drivers, xkeyboard-config, xorg-x11-xkb-utils
+Requires:	tigervnc-license
 
-%description server
+%description server-minimal
 The VNC system allows you to access the same desktop from a wide
-variety of platforms.  This package is a TigerVNC server, allowing
-others to access the desktop on your machine.
+variety of platforms. This package contains minimal installation
+of TigerVNC server, allowing others to access the desktop on your
+machine.
 
 %ifnarch s390 s390x
 %package server-module
@@ -83,6 +100,7 @@ Obsoletes:	vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
 Provides:	tightvnc-server-module = 1.5.0-0.15.20090204svn3586
 Obsoletes:	tightvnc-server-module < 1.5.0-0.15.20090204svn3586
 Requires:	xorg-x11-server-Xorg
+Requires:	tigervnc-license
 
 %description server-module
 This package contains libvnc.so module to X server, allowing others
@@ -99,6 +117,14 @@ BuildArch:	noarch
 The Java TigerVNC viewer applet for web browsers. Install this package to allow
 clients to use web browser when connect to the TigerVNC server.
 
+%package license
+Summary:	License of TigerVNC suite
+Group:		User Interface/X
+BuildArch:	noarch
+
+%description license
+This package contains license of the TigerVNC suite
+
 %prep
 %setup -q -n %{name}-%{version}-%{snap}
 
@@ -106,6 +132,7 @@ clients to use web browser when connect to the TigerVNC server.
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
 %patch10 -p1 -b .ldnow
+%patch12 -p1 -b .rh611677
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -113,6 +140,7 @@ for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
 patch -p1 -b --suffix .vnc < ../xserver19.patch
+%patch11 -p1 -b .rh611677-xorg
 popd
 
 # Use newer gettext
@@ -236,7 +264,7 @@ fi
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc LICENCE.TXT unix/README
+%doc unix/README
 %{_bindir}/vncviewer
 %{_datadir}/icons/hicolor/*/apps/*
 %{_datadir}/applications/*
@@ -244,18 +272,21 @@ fi
 
 %files server
 %defattr(-,root,root,-)
-%{_initddir}/vncserver
 %config(noreplace) %{_sysconfdir}/sysconfig/vncservers
+%{_initddir}/vncserver
+%{_bindir}/x0vncserver
+%{_bindir}/vncserver
+%{_mandir}/man1/vncserver.1*
+%{_mandir}/man1/x0vncserver.1*
+
+%files server-minimal
+%defattr(-,root,root,-)
 %{_bindir}/vncconfig
 %{_bindir}/vncpasswd
-%{_bindir}/x0vncserver
 %{_bindir}/Xvnc
-%{_bindir}/vncserver
 %{_mandir}/man1/Xvnc.1*
 %{_mandir}/man1/vncpasswd.1*
 %{_mandir}/man1/vncconfig.1*
-%{_mandir}/man1/vncserver.1*
-%{_mandir}/man1/x0vncserver.1*
 
 %ifnarch s390 s390x
 %files server-module
@@ -268,7 +299,15 @@ fi
 %doc java/src/com/tigervnc/vncviewer/README
 %{_datadir}/vnc/classes/*
 
+%files license
+%doc LICENCE.TXT
+
 %changelog
+* Wed Aug 25 2010 Adam Tkac <atkac redhat com> 1.0.90-0.19.20100813svn4123
+- separate Xvnc, vncpasswd and vncconfig to -server-minimal subpkg (#626946)
+- move license to separate subpkg and Requires it from main subpkgs
+- Xvnc: handle situations when no modifiers exist well (#611677)
+
 * Fri Aug 13 2010 Adam Tkac <atkac redhat com> 1.0.90-0.18.20100813svn4123
 - update to r4123 (#617973)
 - add perl requires to -server subpkg (#619791)
