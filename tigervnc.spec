@@ -307,6 +307,7 @@ fi
 %changelog
 * Thu Sep 16 2010 Adam Tkac <atkac redhat com> 1.0.90-0.20.20100813svn4123
 - press fake modifiers correctly (#633931)
+- supress unneeded debug information emitted from initscript (#633645)
 
 * Wed Aug 25 2010 Adam Tkac <atkac redhat com> 1.0.90-0.19.20100813svn4123
 - separate Xvnc, vncpasswd and vncconfig to -server-minimal subpkg (#626946)

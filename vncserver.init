@@ -50,7 +50,8 @@ start() {
 	DISP="${display%%:*}"
 	USER="${display##*:}"
 	VNCUSERARGS="${VNCSERVERARGS[${DISP}]}"
-        runuser -l ${USER} -c "cd ~${USER} && [ -r .vnc/passwd ] && vncserver :${DISP} ${VNCUSERARGS}"
+        runuser -l ${USER} -c "cd ~${USER} && [ -r .vnc/passwd ] && \
+			       vncserver :${DISP} ${VNCUSERARGS} > /dev/null 2>&1 "
         RETVAL=$?
         [ "$RETVAL" -eq 0 ] || break
     done
