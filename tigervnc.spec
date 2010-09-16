@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.19.%{snap}%{?dist}
+Release:	0.20.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -45,6 +45,7 @@ Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc11-ldnow.patch
 Patch11:	0001-Return-Success-from-generate_modkeymap-when-max_keys.patch
 Patch12:	tigervnc11-rh611677.patch
+Patch13:	tigervnc11-rh633931.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -133,6 +134,7 @@ This package contains license of the TigerVNC suite
 %patch8 -p1 -b .viewer-reparent
 %patch10 -p1 -b .ldnow
 %patch12 -p1 -b .rh611677
+%patch13 -p1 -b .rh633931
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -303,6 +305,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Thu Sep 16 2010 Adam Tkac <atkac redhat com> 1.0.90-0.20.20100813svn4123
+- press fake modifiers correctly (#633931)
+
 * Wed Aug 25 2010 Adam Tkac <atkac redhat com> 1.0.90-0.19.20100813svn4123
 - separate Xvnc, vncpasswd and vncconfig to -server-minimal subpkg (#626946)
 - move license to separate subpkg and Requires it from main subpkgs
