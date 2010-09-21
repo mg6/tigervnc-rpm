@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.20.%{snap}%{?dist}
+Release:	0.21.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -305,6 +305,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Tue Sep 21 2010 Adam Tkac <atkac redhat com> 1.0.90-0.21.20100420svn4030
+- improve patch for #633645 (fix tcsh incompatibilities)
+
 * Thu Sep 16 2010 Adam Tkac <atkac redhat com> 1.0.90-0.20.20100813svn4123
 - press fake modifiers correctly (#633931)
 - supress unneeded debug information emitted from initscript (#633645)
