@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.21.%{snap}%{?dist}
+Release:	0.22.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -81,8 +81,6 @@ Requires(preun):chkconfig
 Requires(preun):initscripts
 Requires(postun):initscripts
 
-# Check you don't reintroduce #498184 again
-Requires:	xorg-x11-fonts-misc
 Requires:	mesa-dri-drivers, xkeyboard-config, xorg-x11-xkb-utils
 Requires:	tigervnc-license
 
@@ -305,6 +303,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Tue Sep 21 2010 Adam Tkac <atkac redhat com> 1.0.90-0.22.20100420svn4030
+- drop xorg-x11-fonts-misc dependency (#636170)
+
 * Tue Sep 21 2010 Adam Tkac <atkac redhat com> 1.0.90-0.21.20100420svn4030
 - improve patch for #633645 (fix tcsh incompatibilities)
 
