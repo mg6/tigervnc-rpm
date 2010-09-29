@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.22.%{snap}%{?dist}
+Release:	0.23.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -303,6 +303,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Wed Sep 29 2010 jkeating - 1.0.90-0.23.20100813svn4123
+- Rebuilt for gcc bug 634757
+
 * Tue Sep 21 2010 Adam Tkac <atkac redhat com> 1.0.90-0.22.20100420svn4030
 - drop xorg-x11-fonts-misc dependency (#636170)
 
