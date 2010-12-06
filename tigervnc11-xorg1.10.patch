@@ -1,0 +1,226 @@
+diff -up tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/Input.cc.xorg1.10 tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/Input.cc
+--- tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/Input.cc.xorg1.10	2010-12-06 13:00:10.112567228 +0100
++++ tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/Input.cc	2010-12-06 13:03:57.172330576 +0100
+@@ -30,6 +30,9 @@ extern "C" {
+ #define public c_public
+ #define class c_class
+ #include "inputstr.h"
++#if XORG >= 110
++#include "inpututils.h"
++#endif
+ #include "mi.h"
+ #ifndef XKB_IN_SERVER
+ #define XKB_IN_SERVER
+@@ -140,6 +143,9 @@ InputDevice::InputDevice(rfb::VNCServerS
+ void InputDevice::PointerButtonAction(int buttonMask)
+ {
+ 	int i, n;
++#if XORG >= 110
++	ValuatorMask mask;
++#endif
+ 
+ 	initInputDevice();
+ 
+@@ -147,8 +153,14 @@ void InputDevice::PointerButtonAction(in
+ 		if ((buttonMask ^ oldButtonMask) & (1 << i)) {
+ 			int action = (buttonMask & (1<<i)) ?
+ 				     ButtonPress : ButtonRelease;
++#if XORG < 110
+ 			n = GetPointerEvents(eventq, pointerDev, action, i + 1,
+ 					     POINTER_RELATIVE, 0, 0, NULL);
++#else
++			valuator_mask_set_range(&mask, 0, 0, NULL);
++			n = GetPointerEvents(eventq, pointerDev, action, i + 1,
++					     POINTER_RELATIVE, &mask);
++#endif
+ 			enqueueEvents(pointerDev, n);
+ 
+ 		}
+@@ -160,6 +172,9 @@ void InputDevice::PointerButtonAction(in
+ void InputDevice::PointerMove(const rfb::Point &pos)
+ {
+ 	int n, valuators[2];
++#if XORG >= 110
++	ValuatorMask mask;
++#endif
+ 
+ 	if (pos.equals(cursorPos))
+ 		return;
+@@ -168,8 +183,14 @@ void InputDevice::PointerMove(const rfb:
+ 
+ 	valuators[0] = pos.x;
+ 	valuators[1] = pos.y;
++#if XORG < 110
+ 	n = GetPointerEvents(eventq, pointerDev, MotionNotify, 0, POINTER_ABSOLUTE, 0,
+ 			     2, valuators);
++#else
++	valuator_mask_set_range(&mask, 0, 2, valuators);
++	n = GetPointerEvents(eventq, pointerDev, MotionNotify, 0, POINTER_ABSOLUTE,
++			     &mask);
++#endif
+ 	enqueueEvents(pointerDev, n);
+ 
+ 	cursorPos = pos;
+diff -up tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/vncHooks.cc.xorg1.10 tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/vncHooks.cc
+--- tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/vncHooks.cc.xorg1.10	2010-12-06 12:54:18.580543561 +0100
++++ tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/vncHooks.cc	2010-12-06 12:55:11.630324442 +0100
+@@ -72,7 +72,6 @@ typedef struct {
+   CreateGCProcPtr              CreateGC;
+   CopyWindowProcPtr            CopyWindow;
+   ClearToBackgroundProcPtr     ClearToBackground;
+-  RestoreAreasProcPtr          RestoreAreas;
+   InstallColormapProcPtr       InstallColormap;
+   StoreColorsProcPtr           StoreColors;
+   DisplayCursorProcPtr         DisplayCursor;
+@@ -120,7 +119,6 @@ static void vncHooksCopyWindow(WindowPtr
+                                RegionPtr pOldRegion);
+ static void vncHooksClearToBackground(WindowPtr pWin, int x, int y, int w,
+                                       int h, Bool generateExposures);
+-static RegionPtr vncHooksRestoreAreas(WindowPtr pWin, RegionPtr prgnExposed);
+ static void vncHooksInstallColormap(ColormapPtr pColormap);
+ static void vncHooksStoreColors(ColormapPtr pColormap, int ndef,
+                                 xColorItem* pdef);
+@@ -260,7 +258,6 @@ Bool vncHooksInit(ScreenPtr pScreen, Xse
+   vncHooksScreen->CreateGC = pScreen->CreateGC;
+   vncHooksScreen->CopyWindow = pScreen->CopyWindow;
+   vncHooksScreen->ClearToBackground = pScreen->ClearToBackground;
+-  vncHooksScreen->RestoreAreas = pScreen->RestoreAreas;
+   vncHooksScreen->InstallColormap = pScreen->InstallColormap;
+   vncHooksScreen->StoreColors = pScreen->StoreColors;
+   vncHooksScreen->DisplayCursor = pScreen->DisplayCursor;
+@@ -284,7 +281,6 @@ Bool vncHooksInit(ScreenPtr pScreen, Xse
+   pScreen->CreateGC = vncHooksCreateGC;
+   pScreen->CopyWindow = vncHooksCopyWindow;
+   pScreen->ClearToBackground = vncHooksClearToBackground;
+-  pScreen->RestoreAreas = vncHooksRestoreAreas;
+   pScreen->InstallColormap = vncHooksInstallColormap;
+   pScreen->StoreColors = vncHooksStoreColors;
+   pScreen->DisplayCursor = vncHooksDisplayCursor;
+@@ -334,7 +330,6 @@ static Bool vncHooksCloseScreen(int i, S
+   pScreen->CreateGC = vncHooksScreen->CreateGC;
+   pScreen->CopyWindow = vncHooksScreen->CopyWindow;
+   pScreen->ClearToBackground = vncHooksScreen->ClearToBackground;
+-  pScreen->RestoreAreas = vncHooksScreen->RestoreAreas;
+   pScreen->InstallColormap = vncHooksScreen->InstallColormap;
+   pScreen->StoreColors = vncHooksScreen->StoreColors;
+   pScreen->DisplayCursor = vncHooksScreen->DisplayCursor;
+@@ -428,23 +423,6 @@ static void vncHooksClearToBackground(Wi
+   SCREEN_REWRAP(ClearToBackground);
+ }
+ 
+-// RestoreAreas - changed region is the given region
+-
+-static RegionPtr vncHooksRestoreAreas(WindowPtr pWin, RegionPtr pRegion)
+-{
+-  SCREEN_UNWRAP(pWin->drawable.pScreen, RestoreAreas);
+-
+-  RegionHelper changed(pScreen, pRegion);
+-
+-  RegionPtr result = (*pScreen->RestoreAreas) (pWin, pRegion);
+-
+-  vncHooksScreen->desktop->add_changed(changed.reg);
+-
+-  SCREEN_REWRAP(RestoreAreas);
+-
+-  return result;
+-}
+-
+ // InstallColormap - get the new colormap
+ 
+ static void vncHooksInstallColormap(ColormapPtr pColormap)
+diff -up tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/xorg-version.h.xorg1.10 tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/xorg-version.h
+--- tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/xorg-version.h.xorg1.10	2010-12-06 12:48:26.884227552 +0100
++++ tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/xorg-version.h	2010-12-06 12:48:57.553289733 +0100
+@@ -34,6 +34,8 @@
+ #define XORG 18
+ #elif XORG_VERSION_CURRENT < ((1 * 10000000) + (9 * 100000) + (99 * 1000))
+ #define XORG 19
++#elif XORG_VERSION_CURRENT < ((1 * 10000000) + (10 * 100000) + (99 * 1000))
++#define XORG 110
+ #else
+ #error "X.Org newer than 1.9 is not supported"
+ #endif
+diff -up tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/xvnc.cc.xorg1.10 tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/xvnc.cc
+--- tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/xvnc.cc.xorg1.10	2010-12-06 12:55:28.590912483 +0100
++++ tigervnc-1.0.90-20100813svn4123/unix/xserver/hw/vnc/xvnc.cc	2010-12-06 13:07:55.712460842 +0100
+@@ -890,10 +890,6 @@ xf86SetRootClip (ScreenPtr pScreen, Bool
+     WindowPtr	pChild;
+     Bool	WasViewable = (Bool)(pWin->viewable);
+     Bool	anyMarked = FALSE;
+-    RegionPtr	pOldClip = NULL, bsExposed;
+-#ifdef DO_SAVE_UNDERS
+-    Bool	dosave = FALSE;
+-#endif
+     WindowPtr   pLayerWin;
+     BoxRec	box;
+ 
+@@ -951,12 +947,6 @@ xf86SetRootClip (ScreenPtr pScreen, Bool
+     
+     if (WasViewable)
+     {
+-	if (pWin->backStorage)
+-	{
+-	    pOldClip = REGION_CREATE(pScreen, NullBox, 1);
+-	    REGION_COPY(pScreen, pOldClip, &pWin->clipList);
+-	}
+-
+ 	if (pWin->firstChild)
+ 	{
+ 	    anyMarked |= (*pScreen->MarkOverlappedWindows)(pWin->firstChild,
+@@ -969,47 +959,14 @@ xf86SetRootClip (ScreenPtr pScreen, Bool
+ 	    anyMarked = TRUE;
+ 	}
+ 
+-#ifdef DO_SAVE_UNDERS
+-	if (DO_SAVE_UNDERS(pWin))
+-	{
+-	    dosave = (*pScreen->ChangeSaveUnder)(pLayerWin, pLayerWin);
+-	}
+-#endif /* DO_SAVE_UNDERS */
+-
+ 	if (anyMarked)
+ 	    (*pScreen->ValidateTree)(pWin, NullWindow, VTOther);
+     }
+ 
+-    if (pWin->backStorage &&
+-	((pWin->backingStore == Always) || WasViewable))
+-    {
+-	if (!WasViewable)
+-	    pOldClip = &pWin->clipList; /* a convenient empty region */
+-	bsExposed = (*pScreen->TranslateBackingStore)
+-			     (pWin, 0, 0, pOldClip,
+-			      pWin->drawable.x, pWin->drawable.y);
+-	if (WasViewable)
+-	    REGION_DESTROY(pScreen, pOldClip);
+-	if (bsExposed)
+-	{
+-	    RegionPtr	valExposed = NullRegion;
+-    
+-	    if (pWin->valdata)
+-		valExposed = &pWin->valdata->after.exposed;
+-	    (*pScreen->WindowExposures) (pWin, valExposed, bsExposed);
+-	    if (valExposed)
+-		REGION_EMPTY(pScreen, valExposed);
+-	    REGION_DESTROY(pScreen, bsExposed);
+-	}
+-    }
+     if (WasViewable)
+     {
+ 	if (anyMarked)
+ 	    (*pScreen->HandleExposures)(pWin);
+-#ifdef DO_SAVE_UNDERS
+-	if (dosave)
+-	    (*pScreen->PostChangeSaveUnder)(pLayerWin, pLayerWin);
+-#endif /* DO_SAVE_UNDERS */
+ 	if (anyMarked && pScreen->PostValidateTree)
+ 	    (*pScreen->PostValidateTree)(pWin, NullWindow, VTOther);
+     }
+@@ -1184,8 +1141,6 @@ vfbScreenInit(int index, ScreenPtr pScre
+ 
+     if (!ret) return FALSE;
+ 
+-    miInitializeBackingStore(pScreen);
+-
+     /*
+      * Circumvent the backing store that was just initialised.  This amounts
+      * to a truely bizarre way of initialising SaveDoomedAreas and friends.

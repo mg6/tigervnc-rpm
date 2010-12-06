@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.23.%{snap}%{?dist}
+Release:	0.24.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -43,9 +43,9 @@ Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc11-ldnow.patch
-Patch11:	0001-Return-Success-from-generate_modkeymap-when-max_keys.patch
 Patch12:	tigervnc11-rh611677.patch
 Patch13:	tigervnc11-rh633931.patch
+Patch14:	tigervnc11-xorg1.10.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -133,6 +133,7 @@ This package contains license of the TigerVNC suite
 %patch10 -p1 -b .ldnow
 %patch12 -p1 -b .rh611677
 %patch13 -p1 -b .rh633931
+%patch14 -p1 -b .xorg1.10
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -140,7 +141,6 @@ for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
 patch -p1 -b --suffix .vnc < ../xserver19.patch
-%patch11 -p1 -b .rh611677-xorg
 popd
 
 # Use newer gettext
@@ -303,6 +303,10 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Mon Dec 06 2010 Adam Tkac <atkac redhat com> 1.0.90-0.24.20100813svn4123
+- rebuild against xserver 1.10.X
+- 0001-Return-Success-from-generate_modkeymap-when-max_keys.patch merged
+
 * Wed Sep 29 2010 jkeating - 1.0.90-0.23.20100813svn4123
 - Rebuilt for gcc bug 634757
 
