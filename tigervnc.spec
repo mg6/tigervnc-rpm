@@ -1,8 +1,8 @@
-%define snap 20100813svn4123
+%define snap 20101208svn4225
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.24.%{snap}%{?dist}
+Release:	0.24.%{snap}%{?dist}.1
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -23,7 +23,7 @@ BuildRequires:	libxkbfile-devel, openssl-devel, libpciaccess-devel
 BuildRequires:	mesa-libGL-devel, libXinerama-devel, ImageMagick
 BuildRequires:  freetype-devel, libXdmcp-devel
 BuildRequires:	desktop-file-utils, java-1.5.0-gcj-devel
-BuildRequires:	libjpeg-turbo-devel
+BuildRequires:	libjpeg-turbo-devel, gnutls-devel, pam-devel
 
 %ifarch %ix86 x86_64
 BuildRequires: nasm
@@ -43,9 +43,6 @@ Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc11-ldnow.patch
-Patch12:	tigervnc11-rh611677.patch
-Patch13:	tigervnc11-rh633931.patch
-Patch14:	tigervnc11-xorg1.10.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -131,16 +128,13 @@ This package contains license of the TigerVNC suite
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
 %patch10 -p1 -b .ldnow
-%patch12 -p1 -b .rh611677
-%patch13 -p1 -b .rh633931
-%patch14 -p1 -b .xorg1.10
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
-patch -p1 -b --suffix .vnc < ../xserver19.patch
+patch -p1 -b --suffix .vnc < ../xserver110.patch
 popd
 
 # Use newer gettext
@@ -148,12 +142,11 @@ sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.18.1])/' \
 	configure.ac
 
 %build
-# Temporary build with -fno-omit-frame-pointer, it causes problems
-export CFLAGS="$RPM_OPT_FLAGS -fno-omit-frame-pointer"
+export CFLAGS="$RPM_OPT_FLAGS"
 export CXXFLAGS="$CFLAGS"
 
 autoreconf -fiv
-%configure --disable-static --with-system-jpeg --disable-gnutls
+%configure --disable-static --with-system-jpeg
 
 make %{?_smp_mflags}
 
@@ -303,6 +296,14 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Fri Dec 10 2010 Adam Tkac <atkac redhat com> 1.0.90-0.25.20101208svn4225
+- update to r4225
+- patches merged
+  - tigervnc11-rh611677.patch
+  - tigervnc11-rh633931.patch
+  - tigervnc11-xorg1.10.patch
+- enable VeNCrypt and PAM support
+
 * Mon Dec 06 2010 Adam Tkac <atkac redhat com> 1.0.90-0.24.20100813svn4123
 - rebuild against xserver 1.10.X
 - 0001-Return-Success-from-generate_modkeymap-when-max_keys.patch merged
