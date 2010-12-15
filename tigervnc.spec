@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.25.%{snap}%{?dist}
+Release:	0.26.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -296,6 +296,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Wed Dec 15 2010 Jan Görig <jgorig redhat com> 1.0.90-0.26.20101208svn4225
+- added vncserver lock file (#662784)
+
 * Fri Dec 10 2010 Adam Tkac <atkac redhat com> 1.0.90-0.25.20101208svn4225
 - update to r4225
 - patches merged
