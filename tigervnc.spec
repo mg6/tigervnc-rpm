@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.26.%{snap}%{?dist}
+Release:	0.27.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -43,6 +43,7 @@ Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc11-ldnow.patch
+Patch11:	tigervnc11-optionsdialog.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -128,6 +129,9 @@ This package contains license of the TigerVNC suite
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
 %patch10 -p1 -b .ldnow
+pushd unix/vncviewer
+%patch11 -p0 -b .optionsdialog
+popd
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -296,6 +300,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Fri Jan 07 2011 Adam Tkac <atkac redhat com> 1.0.90-0.27.20101208svn4225
+- render "Ok" and "Cancel" buttons in the options dialog correctly
+
 * Wed Dec 15 2010 Jan Görig <jgorig redhat com> 1.0.90-0.26.20101208svn4225
 - added vncserver lock file (#662784)
 

@@ -1,0 +1,13 @@
+Index: OptionsDialog.h
+===================================================================
+--- OptionsDialog.h	(revision 4225)
++++ OptionsDialog.h	(revision 4232)
+@@ -198,6 +198,8 @@
+     y += secVnc.height();
+     secPlain.move(xPad, y);
+     y += secPlain.height();
++
++    xPad -= SECOND_COL_XPAD;
+ #endif
+ 
+     /* Render "OK" and "Cancel" buttons */
