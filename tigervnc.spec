@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.28.%{snap}%{?dist}
+Release:	0.29.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -303,6 +303,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Fri Jan 14 2011 Adam Tkac <atkac redhat com> 1.0.90-0.29.20101208svn4225
+- improve patch for keyboard issues
+
 * Fri Jan 14 2011 Adam Tkac <atkac redhat com> 1.0.90-0.28.20101208svn4225
 - attempt to fix various keyboard-related issues (key repeating etc)
 
