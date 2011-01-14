@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.27.%{snap}%{?dist}
+Release:	0.28.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -44,6 +44,7 @@ Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc11-ldnow.patch
 Patch11:	tigervnc11-optionsdialog.patch
+Patch12:	tigervnc11-rh607866.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -132,6 +133,7 @@ This package contains license of the TigerVNC suite
 pushd unix/vncviewer
 %patch11 -p0 -b .optionsdialog
 popd
+%patch12 -p1 -b .rh607866
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -170,7 +172,8 @@ autoreconf -fiv
 	--disable-config-dbus \
 	--disable-config-hal \
 	--disable-config-udev \
-	--with-dri-driver-path=%{_libdir}/dri
+	--with-dri-driver-path=%{_libdir}/dri \
+	--without-dtrace
 
 make %{?_smp_mflags}
 popd
@@ -300,6 +303,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Fri Jan 14 2011 Adam Tkac <atkac redhat com> 1.0.90-0.28.20101208svn4225
+- attempt to fix various keyboard-related issues (key repeating etc)
+
 * Fri Jan 07 2011 Adam Tkac <atkac redhat com> 1.0.90-0.27.20101208svn4225
 - render "Ok" and "Cancel" buttons in the options dialog correctly
 
