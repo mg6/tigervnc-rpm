@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.30.%{snap}%{?dist}
+Release:	0.31.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -43,6 +43,7 @@ Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc11-ldnow.patch
+Patch11:	tigervnc11-gethomedir.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -128,6 +129,7 @@ This package contains license of the TigerVNC suite
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
 %patch10 -p1 -b .ldnow
+%patch11 -p1 -b .gethomedir
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -297,6 +299,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Mon Jan 17 2011 Adam Tkac <atkac redhat com> 1.0.90-0.31.20110117svn4237
+- fix libvnc.so module loading
+
 * Mon Jan 17 2011 Adam Tkac <atkac redhat com> 1.0.90-0.30.20110117svn4237
 - update to r4237
 - patches merged
