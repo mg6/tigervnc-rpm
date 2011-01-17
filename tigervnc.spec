@@ -1,8 +1,8 @@
-%define snap 20101208svn4225
+%define snap 20110117svn4237
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.29.%{snap}%{?dist}
+Release:	0.30.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -43,8 +43,6 @@ Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc11-ldnow.patch
-Patch11:	tigervnc11-optionsdialog.patch
-Patch12:	tigervnc11-rh607866.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -130,10 +128,6 @@ This package contains license of the TigerVNC suite
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
 %patch10 -p1 -b .ldnow
-pushd unix/vncviewer
-%patch11 -p0 -b .optionsdialog
-popd
-%patch12 -p1 -b .rh607866
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -303,6 +297,12 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Mon Jan 17 2011 Adam Tkac <atkac redhat com> 1.0.90-0.30.20110117svn4237
+- update to r4237
+- patches merged
+  - tigervnc11-optionsdialog.patch
+  - tigervnc11-rh607866.patch
+
 * Fri Jan 14 2011 Adam Tkac <atkac redhat com> 1.0.90-0.29.20101208svn4225
 - improve patch for keyboard issues
 
