@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.31.%{snap}%{?dist}
+Release:	0.32.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -299,6 +299,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.90-0.32.20110117svn4237
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Mon Jan 17 2011 Adam Tkac <atkac redhat com> 1.0.90-0.31.20110117svn4237
 - fix libvnc.so module loading
 
