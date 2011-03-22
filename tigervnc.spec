@@ -1,18 +1,17 @@
-%define snap 20110117svn4237
-
 Name:		tigervnc
 Version:	1.0.90
-Release:	0.32.%{snap}%{?dist}
+Release:	1%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://www.tigervnc.com
 
-Source0:	%{name}-%{version}-%{snap}.tar.bz2
+Source0:	%{name}-%{version}.tar.gz
 Source1:	vncserver.init
 Source2:	vncserver.sysconfig
 Source6:	vncviewer.desktop
+Source7:	xserver110.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
@@ -44,6 +43,7 @@ Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc11-ldnow.patch
 Patch11:	tigervnc11-gethomedir.patch
+Patch12:	tigervnc11-glx.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -123,20 +123,21 @@ BuildArch:	noarch
 This package contains license of the TigerVNC suite
 
 %prep
-%setup -q -n %{name}-%{version}-%{snap}
+%setup -q -n %{name}-%{version}
 
 %patch0 -p1 -b .102434
 %patch4 -p1 -b .cookie
 %patch8 -p1 -b .viewer-reparent
 %patch10 -p1 -b .ldnow
 %patch11 -p1 -b .gethomedir
+%patch12 -p1 -b .glx
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
-patch -p1 -b --suffix .vnc < ../xserver110.patch
+patch -p1 -b --suffix .vnc < %{SOURCE7}
 popd
 
 # Use newer gettext
@@ -299,6 +300,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Tue Mar 22 2011 Adam Tkac <atkac redhat com> - 1.0.90-1
+- update to 1.0.90
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.90-0.32.20110117svn4237
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
