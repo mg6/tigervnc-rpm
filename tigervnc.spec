@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.0.90
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -44,6 +44,7 @@ Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc11-ldnow.patch
 Patch11:	tigervnc11-gethomedir.patch
 Patch12:	tigervnc11-glx.patch
+Patch13:	tigervnc11-rh692048.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -131,6 +132,7 @@ This package contains license of the TigerVNC suite
 %patch10 -p1 -b .ldnow
 %patch11 -p1 -b .gethomedir
 %patch12 -p1 -b .glx
+%patch13 -p1 -b .rh692048
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -300,6 +302,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Fri Apr 08 2011 Adam Tkac <atkac redhat com> - 1.0.90-2
+- improve compatibility with vinagre client (#692048)
+
 * Tue Mar 22 2011 Adam Tkac <atkac redhat com> - 1.0.90-1
 - update to 1.0.90
 
