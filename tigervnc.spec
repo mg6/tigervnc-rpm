@@ -306,6 +306,7 @@ fi
 %changelog
 * Wed Apr 13 2011 Adam Tkac <atkac redhat com> - 1.0.90-3
 - fix wrong usage of memcpy which caused screen artifacts (#652590)
+- don't point to inaccessible link in sysconfig/vncservers (#644975)
 
 * Fri Apr 08 2011 Adam Tkac <atkac redhat com> - 1.0.90-2
 - improve compatibility with vinagre client (#692048)
