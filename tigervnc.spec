@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.0.90
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -45,6 +45,7 @@ Patch10:	tigervnc11-ldnow.patch
 Patch11:	tigervnc11-gethomedir.patch
 Patch12:	tigervnc11-glx.patch
 Patch13:	tigervnc11-rh692048.patch
+Patch14:	0001-Use-memmove-instead-of-memcpy-in-fbblt.c-when-memory.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -140,6 +141,7 @@ for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
 patch -p1 -b --suffix .vnc < %{SOURCE7}
+%patch14 -p1 -b .memcpy
 popd
 
 # Use newer gettext
@@ -302,6 +304,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Wed Apr 13 2011 Adam Tkac <atkac redhat com> - 1.0.90-3
+- fix wrong usage of memcpy which caused screen artifacts (#652590)
+
 * Fri Apr 08 2011 Adam Tkac <atkac redhat com> - 1.0.90-2
 - improve compatibility with vinagre client (#692048)
 
