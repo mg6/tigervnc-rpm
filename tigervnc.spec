@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.0.90
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -46,6 +46,7 @@ Patch11:	tigervnc11-gethomedir.patch
 Patch12:	tigervnc11-glx.patch
 Patch13:	tigervnc11-rh692048.patch
 Patch14:	0001-Use-memmove-instead-of-memcpy-in-fbblt.c-when-memory.patch
+Patch15:	tigervnc11-CVE-2011-1775.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -143,6 +144,8 @@ done
 patch -p1 -b --suffix .vnc < %{SOURCE7}
 %patch14 -p1 -b .memcpy
 popd
+
+%patch15 -p0 -b .CVE-2011-1775
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.18.1])/' \
@@ -304,6 +307,10 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Tue May 10 2011 Adam Tkac <atkac redhat com> - 1.0.90-4
+- viewer can send password without proper validation of X.509 certs
+  (CVE-2011-1775)
+
 * Wed Apr 13 2011 Adam Tkac <atkac redhat com> - 1.0.90-3
 - fix wrong usage of memcpy which caused screen artifacts (#652590)
 - don't point to inaccessible link in sysconfig/vncservers (#644975)
