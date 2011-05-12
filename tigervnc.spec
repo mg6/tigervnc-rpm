@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.0.90
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -47,6 +47,7 @@ Patch12:	tigervnc11-glx.patch
 Patch13:	tigervnc11-rh692048.patch
 Patch14:	0001-Use-memmove-instead-of-memcpy-in-fbblt.c-when-memory.patch
 Patch15:	tigervnc11-CVE-2011-1775.patch
+Patch16:	tigervnc11-xorg111.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -146,6 +147,7 @@ patch -p1 -b --suffix .vnc < %{SOURCE7}
 popd
 
 %patch15 -p0 -b .CVE-2011-1775
+%patch16 -p1 -b .xorg111
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.18.1])/' \
@@ -171,13 +173,13 @@ autoreconf -fiv
 	--with-fontdir=%{_datadir}/X11/fonts \
 	--with-xkb-output=%{_localstatedir}/lib/xkb \
 	--enable-install-libxf86config \
-	--disable-dri2 \
-	--enable-glx \
+	--enable-glx --disable-dri --enable-dri2 \
 	--disable-config-dbus \
 	--disable-config-hal \
 	--disable-config-udev \
 	--with-dri-driver-path=%{_libdir}/dri \
-	--without-dtrace
+	--without-dtrace \
+	--disable-unit-tests
 
 make %{?_smp_mflags}
 popd
@@ -307,6 +309,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Tue May 12 2011 Adam Tkac <atkac redhat com> - 1.0.90-5
+- make Xvnc buildable against X.Org 1.11
+
 * Tue May 10 2011 Adam Tkac <atkac redhat com> - 1.0.90-4
 - viewer can send password without proper validation of X.509 certs
   (CVE-2011-1775)
