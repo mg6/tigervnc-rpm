@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.0.90
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -8,7 +8,7 @@ License:	GPLv2+
 URL:		http://www.tigervnc.com
 
 Source0:	%{name}-%{version}.tar.gz
-Source1:	vncserver.init
+Source1:	vncserver.service
 Source2:	vncserver.sysconfig
 Source6:	vncviewer.desktop
 Source7:	xserver110.patch
@@ -23,13 +23,15 @@ BuildRequires:	mesa-libGL-devel, libXinerama-devel, ImageMagick
 BuildRequires:  freetype-devel, libXdmcp-devel
 BuildRequires:	desktop-file-utils, java-1.5.0-gcj-devel
 BuildRequires:	libjpeg-turbo-devel, gnutls-devel, pam-devel
+BuildRequires:	systemd-units
 
 %ifarch %ix86 x86_64
 BuildRequires: nasm
 %endif
 
-Requires(post):	coreutils
-Requires(postun):coreutils
+Requires(post):	systemd-units systemd-sysv chkconfig coreutils
+Requires(preun):systemd-units
+Requires(postun):systemd-units coreutils
 Requires:	hicolor-icon-theme
 Requires:	tigervnc-license
 
@@ -202,9 +204,10 @@ pushd unix/xserver/hw/vnc
 make install DESTDIR=$RPM_BUILD_ROOT
 popd
 
-# Install Xvnc as service
-mkdir -p $RPM_BUILD_ROOT%{_initddir}
-install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_initddir}/vncserver
+# Install systemd unit file
+mkdir -p %{buildroot}%{_unitdir}
+install -m644 %{SOURCE1} %{buildroot}%{_unitdir}/vncserver@.service
+rm -rf %{buildroot}%{_initrddir}
 
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 install -m644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/vncservers
@@ -255,18 +258,24 @@ if [ -x %{_bindir}/gtk-update-icon-cache ]; then
 fi
 
 %post server
-/sbin/chkconfig --add vncserver
+/bin/systemctl daemon-reload > /dev/null 2>&1
 
 %preun server
 if [ "$1" -eq 0 ]; then
-	/sbin/service vncserver stop > /dev/null 2>&1
-	/sbin/chkconfig --del vncserver
+	/bin/systemctl --no-reload vncserver.service > /dev/null 2>&1
+	/bin/systemctl stop vncserver.service > /dev/null 2>&1
 fi
 
 %postun server
 if [ "$1" -ge "1" ]; then
-	/sbin/service vncserver condrestart > /dev/null 2>&1 || :
+	/bin/systemctl try-restart vncserver.service > /dev/null 2>&1
 fi
+
+%triggerun -- tigervnc-server < 1.0.90-6
+%{_bindir}/systemd-sysv-convert --save vncserver >/dev/null 2>&1 ||:
+/bin/systemctl enable vncserver.service >/dev/null 2>&1
+/sbin/chkconfig --del vncserver >/dev/null 2>&1 || :
+/bin/systemctl try-restart vncserver.service >/dev/null 2>&1 || :
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
@@ -279,7 +288,7 @@ fi
 %files server
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/sysconfig/vncservers
-%{_initddir}/vncserver
+%{_unitdir}/vncserver@.service
 %{_bindir}/x0vncserver
 %{_bindir}/vncserver
 %{_mandir}/man1/vncserver.1*
@@ -309,6 +318,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Thu Jul 28 2011 Adam Tkac <atkac redhat com> - 1.0.90-6
+- add systemd service file and remove legacy SysV initscript (#717227)
+
 * Tue May 12 2011 Adam Tkac <atkac redhat com> - 1.0.90-5
 - make Xvnc buildable against X.Org 1.11
 
