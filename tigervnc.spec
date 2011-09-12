@@ -273,7 +273,7 @@ fi
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc unix/README
+%doc README.txt
 %{_bindir}/vncviewer
 %{_datadir}/icons/hicolor/*/apps/*
 %{_datadir}/applications/*
