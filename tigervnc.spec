@@ -1,6 +1,6 @@
 Name:		tigervnc
-Version:	1.0.90
-Release:	6%{?dist}
+Version:	1.1.0
+Release:	1%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -45,10 +45,7 @@ Patch4:		tigervnc-cookie.patch
 Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc11-ldnow.patch
 Patch11:	tigervnc11-gethomedir.patch
-Patch12:	tigervnc11-glx.patch
 Patch13:	tigervnc11-rh692048.patch
-Patch14:	0001-Use-memmove-instead-of-memcpy-in-fbblt.c-when-memory.patch
-Patch15:	tigervnc11-CVE-2011-1775.patch
 Patch16:	tigervnc11-xorg111.patch
 
 %description
@@ -136,7 +133,6 @@ This package contains license of the TigerVNC suite
 %patch8 -p1 -b .viewer-reparent
 %patch10 -p1 -b .ldnow
 %patch11 -p1 -b .gethomedir
-%patch12 -p1 -b .glx
 %patch13 -p1 -b .rh692048
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
@@ -145,10 +141,8 @@ for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
 patch -p1 -b --suffix .vnc < %{SOURCE7}
-%patch14 -p1 -b .memcpy
 popd
 
-%patch15 -p0 -b .CVE-2011-1775
 %patch16 -p1 -b .xorg111
 
 # Use newer gettext
@@ -318,6 +312,13 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Mon Sep 12 2011 Adam Tkac <atkac redhat com> - 1.1.0-1
+- update to 1.1.0
+- patches merged
+  - tigervnc11-glx.patch
+  - tigervnc11-CVE-2011-1775.patch
+  - 0001-Use-memmove-instead-of-memcpy-in-fbblt.c-when-memory.patch
+
 * Thu Jul 28 2011 Adam Tkac <atkac redhat com> - 1.0.90-6
 - add systemd service file and remove legacy SysV initscript (#717227)
 
