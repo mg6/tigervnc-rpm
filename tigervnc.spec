@@ -314,6 +314,7 @@ fi
 %changelog
 * Mon Sep 12 2011 Adam Tkac <atkac redhat com> - 1.1.0-1
 - update to 1.1.0
+- update the xorg11 patch
 - patches merged
   - tigervnc11-glx.patch
   - tigervnc11-CVE-2011-1775.patch
