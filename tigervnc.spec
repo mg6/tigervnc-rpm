@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.1.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -24,10 +24,6 @@ BuildRequires:  freetype-devel, libXdmcp-devel
 BuildRequires:	desktop-file-utils, java-1.5.0-gcj-devel
 BuildRequires:	libjpeg-turbo-devel, gnutls-devel, pam-devel
 BuildRequires:	systemd-units
-
-%ifarch %ix86 x86_64
-BuildRequires: nasm
-%endif
 
 Requires(post):	systemd-units systemd-sysv chkconfig coreutils
 Requires(preun):systemd-units
@@ -154,7 +150,7 @@ export CFLAGS="$RPM_OPT_FLAGS"
 export CXXFLAGS="$CFLAGS"
 
 autoreconf -fiv
-%configure --disable-static --with-system-jpeg
+%configure --disable-static --with-system-jpeg --without-simd
 
 make %{?_smp_mflags}
 
@@ -312,6 +308,10 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Fri Nov 11 2011 Adam Tkac <atkac redhat com> - 1.1.0-2
+- libvnc.so: don't use unexported GetMaster function (#744881)
+- remove nasm buildreq
+
 * Mon Sep 12 2011 Adam Tkac <atkac redhat com> - 1.1.0-1
 - update to 1.1.0
 - update the xorg11 patch
