@@ -2,8 +2,8 @@
 #
 # Quick HowTo:
 # 1. Copy this file to /etc/systemd/system/vncserver@:<display>.service
-# 2. Edit "User" and "ExecStart" variables appropriately
-# 	(ExecStart should be "/usr/bin/vncserver %i -arg1 -arg2")
+# 2. Edit <USER> and vncserver parameters appropriately
+#   ("runuser -l <USER> -c /usr/bin/vncserver %i -arg1 -arg2")
 # 3. Run `systemctl daemon-reload`
 #
 # DO NOT RUN THIS SERVICE if your local area network is
@@ -34,9 +34,8 @@ After=syslog.target network.target
 
 [Service]
 Type=forking
-User=root
-ExecStart=/usr/bin/vncserver %i
-ExecStop=/usr/bin/vncserver -kill %i
+ExecStart=/sbin/runuser -l <USER> -c "/usr/bin/vncserver %i"
+ExecStop=/sbin/runuser -l <USER> -c "/usr/bin/vncserver -kill %i"
 
 [Install]
 WantedBy=multi-user.target

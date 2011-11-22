@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.1.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -21,7 +21,7 @@ BuildRequires:	libdrm-devel, libXt-devel, pixman-devel libXfont-devel
 BuildRequires:	libxkbfile-devel, openssl-devel, libpciaccess-devel
 BuildRequires:	mesa-libGL-devel, libXinerama-devel, ImageMagick
 BuildRequires:  freetype-devel, libXdmcp-devel
-BuildRequires:	desktop-file-utils, java-1.5.0-gcj-devel
+BuildRequires:	desktop-file-utils, java-devel, jpackage-utils
 BuildRequires:	libjpeg-turbo-devel, gnutls-devel, pam-devel
 BuildRequires:	systemd-units
 
@@ -106,7 +106,7 @@ to access the desktop on your machine.
 %package server-applet
 Summary:	Java TigerVNC viewer applet for TigerVNC server
 Group:		User Interface/X
-Requires:	tigervnc-server
+Requires:	tigervnc-server, java, jpackage-utils
 BuildArch:	noarch
 
 %description server-applet
@@ -171,7 +171,8 @@ autoreconf -fiv
 	--disable-config-udev \
 	--with-dri-driver-path=%{_libdir}/dri \
 	--without-dtrace \
-	--disable-unit-tests
+	--disable-unit-tests \
+	--disable-devel-docs
 
 make %{?_smp_mflags}
 popd
@@ -250,22 +251,9 @@ fi
 %post server
 /bin/systemctl daemon-reload > /dev/null 2>&1
 
-%preun server
-if [ "$1" -eq 0 ]; then
-	/bin/systemctl --no-reload vncserver.service > /dev/null 2>&1
-	/bin/systemctl stop vncserver.service > /dev/null 2>&1
-fi
-
-%postun server
-if [ "$1" -ge "1" ]; then
-	/bin/systemctl try-restart vncserver.service > /dev/null 2>&1
-fi
-
 %triggerun -- tigervnc-server < 1.0.90-6
 %{_bindir}/systemd-sysv-convert --save vncserver >/dev/null 2>&1 ||:
-/bin/systemctl enable vncserver.service >/dev/null 2>&1
 /sbin/chkconfig --del vncserver >/dev/null 2>&1 || :
-/bin/systemctl try-restart vncserver.service >/dev/null 2>&1 || :
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
@@ -308,6 +296,12 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Tue Nov 22 2011 Adam Tkac <atkac redhat com> - 1.1.0-3
+- don't build X.Org devel docs (#755782)
+- applet: BR generic java-devel instead of java-gcj-devel (#755783)
+- use runuser to start Xvnc in systemd service file (#754259)
+- don't attepmt to restart Xvnc session during update/erase (#753216)
+
 * Fri Nov 11 2011 Adam Tkac <atkac redhat com> - 1.1.0-2
 - libvnc.so: don't use unexported GetMaster function (#744881)
 - remove nasm buildreq
