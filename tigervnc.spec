@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.1.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -296,6 +296,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Tue Nov 22 2011 Adam Tkac <atkac redhat com> - 1.1.0-3
 - don't build X.Org devel docs (#755782)
 - applet: BR generic java-devel instead of java-gcj-devel (#755783)
