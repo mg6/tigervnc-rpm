@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.1.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -296,6 +296,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Mon Mar 26 2012 Adam Tkac <atkac redhat com> - 1.1.0-5
+- clean Xvnc's /tmp environment in service file before startup
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
