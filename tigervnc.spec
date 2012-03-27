@@ -43,6 +43,8 @@ Patch10:	tigervnc11-ldnow.patch
 Patch11:	tigervnc11-gethomedir.patch
 Patch13:	tigervnc11-rh692048.patch
 Patch16:	tigervnc11-xorg111.patch
+Patch17:	tigervnc11-xorg112.patch
+Patch18:	tigervnc11-java7.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -132,14 +134,16 @@ This package contains license of the TigerVNC suite
 %patch13 -p1 -b .rh692048
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
+%patch16 -p1 -b .xorg111
 pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
 patch -p1 -b --suffix .vnc < %{SOURCE7}
+%patch17 -p1 -b .xorg112
 popd
 
-%patch16 -p1 -b .xorg111
+%patch18 -p1 -b .java7
 
 # Use newer gettext
 sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.18.1])/' \
@@ -298,6 +302,7 @@ fi
 %changelog
 * Mon Mar 26 2012 Adam Tkac <atkac redhat com> - 1.1.0-5
 - clean Xvnc's /tmp environment in service file before startup
+- fix building against the latest JAVA 7 and X.Org 1.12
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
