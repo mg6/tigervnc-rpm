@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.1.0
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -89,7 +89,7 @@ variety of platforms. This package contains minimal installation
 of TigerVNC server, allowing others to access the desktop on your
 machine.
 
-%ifnarch s390 s390x
+%ifnarch s390 s390x %{?rhel:ppc ppc64}
 %package server-module
 Summary:	TigerVNC module to Xorg
 Group:		User Interface/X
@@ -233,7 +233,7 @@ popd
 # remove unwanted files
 rm -f  $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/libvnc.la
 
-%ifarch s390 s390x
+%ifarch s390 s390x %{?rhel:ppc ppc64}
 rm -f $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/libvnc.so
 %endif
 
@@ -285,7 +285,7 @@ fi
 %{_mandir}/man1/vncpasswd.1*
 %{_mandir}/man1/vncconfig.1*
 
-%ifnarch s390 s390x
+%ifnarch s390 s390x %{?rhel:ppc ppc64}
 %files server-module
 %defattr(-,root,root,-)
 %{_libdir}/xorg/modules/extensions/libvnc.so
@@ -300,6 +300,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Wed Apr 04 2012 Adam Jackson <ajax@redhat.com> 1.1.0-6
+- RHEL exclusion for -server-module on ppc* too
+
 * Mon Mar 26 2012 Adam Tkac <atkac redhat com> - 1.1.0-5
 - clean Xvnc's /tmp environment in service file before startup
 - fix building against the latest JAVA 7 and X.Org 1.12
