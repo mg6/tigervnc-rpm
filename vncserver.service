@@ -5,6 +5,7 @@
 # 2. Edit <USER> and vncserver parameters appropriately
 #   ("runuser -l <USER> -c /usr/bin/vncserver %i -arg1 -arg2")
 # 3. Run `systemctl daemon-reload`
+# 4. Run `systemctl enable vncserver@:<display>.service`
 #
 # DO NOT RUN THIS SERVICE if your local area network is
 # untrusted!  For a secure way of using VNC, you should
