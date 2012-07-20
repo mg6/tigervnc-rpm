@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.1.0
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -45,6 +45,7 @@ Patch13:	tigervnc11-rh692048.patch
 Patch16:	tigervnc11-xorg111.patch
 Patch17:	tigervnc11-xorg112.patch
 Patch18:	tigervnc11-java7.patch
+Patch19:	tigervnc11-xorg113.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -141,6 +142,7 @@ for all in `find . -type f -perm -001`; do
 done
 patch -p1 -b --suffix .vnc < %{SOURCE7}
 %patch17 -p1 -b .xorg112
+%patch19 -p1 -b .xorg113
 popd
 
 %patch18 -p1 -b .java7
@@ -300,6 +302,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Thu Jul 19 2012 Dave Airlie <airlied@redhat.com> 1.1.0-7
+- fix building against X.org 1.13
+
 * Wed Apr 04 2012 Adam Jackson <ajax@redhat.com> 1.1.0-6
 - RHEL exclusion for -server-module on ppc* too
 
