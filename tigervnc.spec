@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.1.0
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -302,6 +302,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Thu Jul 19 2012 Dave Airlie <airlied@redhat.com> 1.1.0-7
 - fix building against X.org 1.13
 
