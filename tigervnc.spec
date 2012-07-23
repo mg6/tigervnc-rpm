@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.1.0
-Release:	8%{?dist}
+Release:	9%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -166,7 +166,6 @@ autoreconf -fiv
 	--disable-xorg --disable-xnest --disable-xvfb --disable-dmx \
 	--disable-xwin --disable-xephyr --disable-kdrive --with-pic \
 	--disable-static --disable-xinerama \
-	--disable-composite \
 	--with-default-font-path="catalogue:%{_sysconfdir}/X11/fontpath.d,built-ins" \
 	--with-fontdir=%{_datadir}/X11/fonts \
 	--with-xkb-output=%{_localstatedir}/lib/xkb \
@@ -302,6 +301,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Mon Jul 23 2012 Adam Jackson <ajax@redhat.com> 1.1.0-9
+- Build with the Composite extension for feature parity with other X servers
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
