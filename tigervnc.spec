@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.1.0
-Release:	9%{?dist}
+Release:	10%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -301,6 +301,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Fri Aug 10 2012 Dave Airlie <airlied@redhat.com> 1.1.0-10
+- fix build against newer X server
+
 * Mon Jul 23 2012 Adam Jackson <ajax@redhat.com> 1.1.0-9
 - Build with the Composite extension for feature parity with other X servers
 
