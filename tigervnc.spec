@@ -1,17 +1,18 @@
+%global		snap 20120905svn4996
+
 Name:		tigervnc
-Version:	1.1.0
-Release:	6%{?dist}
+Version:	1.2.80
+Release:	0.1.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://www.tigervnc.com
 
-Source0:	%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}-%{snap}.tar.bz2
 Source1:	vncserver.service
 Source2:	vncserver.sysconfig
 Source6:	vncviewer.desktop
-Source7:	xserver110.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
@@ -23,7 +24,7 @@ BuildRequires:	mesa-libGL-devel, libXinerama-devel, ImageMagick
 BuildRequires:  freetype-devel, libXdmcp-devel
 BuildRequires:	desktop-file-utils, java-devel, jpackage-utils
 BuildRequires:	libjpeg-turbo-devel, gnutls-devel, pam-devel
-BuildRequires:	systemd-units
+BuildRequires:	systemd-units, cmake, fltk-devel
 
 Requires(post):	systemd-units systemd-sysv chkconfig coreutils
 Requires(preun):systemd-units
@@ -36,15 +37,10 @@ Obsoletes:	vnc < 4.1.3-2, vnc-libs < 4.1.3-2
 Provides:	tightvnc = 1.5.0-0.15.20090204svn3586
 Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 
-Patch0:		tigervnc-102434.patch
 Patch4:		tigervnc-cookie.patch
-Patch8:		tigervnc-viewer-reparent.patch
 Patch10:	tigervnc11-ldnow.patch
 Patch11:	tigervnc11-gethomedir.patch
 Patch13:	tigervnc11-rh692048.patch
-Patch16:	tigervnc11-xorg111.patch
-Patch17:	tigervnc11-xorg112.patch
-Patch18:	tigervnc11-java7.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -124,38 +120,26 @@ BuildArch:	noarch
 This package contains license of the TigerVNC suite
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n %{name}-%{version}-%{snap}
 
-%patch0 -p1 -b .102434
 %patch4 -p1 -b .cookie
-%patch8 -p1 -b .viewer-reparent
 %patch10 -p1 -b .ldnow
 %patch11 -p1 -b .gethomedir
 %patch13 -p1 -b .rh692048
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
-%patch16 -p1 -b .xorg111
 pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
-patch -p1 -b --suffix .vnc < %{SOURCE7}
-%patch17 -p1 -b .xorg112
+patch -p1 -b --suffix .vnc < ../xserver113.patch
 popd
-
-%patch18 -p1 -b .java7
-
-# Use newer gettext
-sed -i 's/AM_GNU_GETTEXT_VERSION.*/AM_GNU_GETTEXT_VERSION([0.18.1])/' \
-	configure.ac
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS"
 export CXXFLAGS="$CFLAGS"
 
-autoreconf -fiv
-%configure --disable-static --with-system-jpeg --without-simd
-
+%{cmake} .
 make %{?_smp_mflags}
 
 pushd unix/xserver
@@ -176,7 +160,8 @@ autoreconf -fiv
 	--with-dri-driver-path=%{_libdir}/dri \
 	--without-dtrace \
 	--disable-unit-tests \
-	--disable-devel-docs
+	--disable-devel-docs \
+	--disable-selective-werror
 
 make %{?_smp_mflags}
 popd
@@ -187,7 +172,8 @@ make
 popd
 
 # Build Java applet
-pushd java/src/com/tigervnc/vncviewer/
+pushd java
+%{cmake} .
 make
 popd
 
@@ -222,10 +208,10 @@ desktop-file-install \
 	%{SOURCE6}
 
 # Install Java applet
-pushd java/src/com/tigervnc/vncviewer/
+pushd java
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/vnc/classes
 install -m755 VncViewer.jar $RPM_BUILD_ROOT%{_datadir}/vnc/classes
-install -m644 index.vnc $RPM_BUILD_ROOT%{_datadir}/vnc/classes
+install -m644 com/tigervnc/vncviewer/index.vnc $RPM_BUILD_ROOT%{_datadir}/vnc/classes
 popd
 
 %find_lang %{name} %{name}.lang
@@ -293,13 +279,23 @@ fi
 
 %files server-applet
 %defattr(-,root,root,-)
-%doc java/src/com/tigervnc/vncviewer/README
+%doc java/com/tigervnc/vncviewer/README
 %{_datadir}/vnc/classes/*
 
 %files license
 %doc LICENCE.TXT
 
 %changelog
+* Fri Aug 17 2012 Adam Tkac <atkac redhat com> 1.2.80-0.1.20120905svn4996
+- update to 1.2.80
+- remove deprecated patches
+  - tigervnc-102434.patch
+  - tigervnc-viewer-reparent.patch
+  - tigervnc11-java7.patch
+- patches merged
+  - tigervnc11-xorg111.patch
+  - tigervnc11-xorg112.patch
+
 * Wed Apr 04 2012 Adam Jackson <ajax@redhat.com> 1.1.0-6
 - RHEL exclusion for -server-module on ppc* too
 
