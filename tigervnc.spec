@@ -148,7 +148,6 @@ autoreconf -fiv
 	--disable-xorg --disable-xnest --disable-xvfb --disable-dmx \
 	--disable-xwin --disable-xephyr --disable-kdrive --with-pic \
 	--disable-static --disable-xinerama \
-	--disable-composite \
 	--with-default-font-path="catalogue:%{_sysconfdir}/X11/fontpath.d,built-ins" \
 	--with-fontdir=%{_datadir}/X11/fonts \
 	--with-xkb-output=%{_localstatedir}/lib/xkb \
@@ -295,6 +294,18 @@ fi
 - patches merged
   - tigervnc11-xorg111.patch
   - tigervnc11-xorg112.patch
+
+* Fri Aug 10 2012 Dave Airlie <airlied@redhat.com> 1.1.0-10
+- fix build against newer X server
+
+* Mon Jul 23 2012 Adam Jackson <ajax@redhat.com> 1.1.0-9
+- Build with the Composite extension for feature parity with other X servers
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jul 19 2012 Dave Airlie <airlied@redhat.com> 1.1.0-7
+- fix building against X.org 1.13
 
 * Wed Apr 04 2012 Adam Jackson <ajax@redhat.com> 1.1.0-6
 - RHEL exclusion for -server-module on ppc* too
