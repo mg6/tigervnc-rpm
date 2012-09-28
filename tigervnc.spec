@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.1.%{snap}%{?dist}
+Release:	0.2.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -41,6 +41,7 @@ Patch4:		tigervnc-cookie.patch
 Patch10:	tigervnc11-ldnow.patch
 Patch11:	tigervnc11-gethomedir.patch
 Patch13:	tigervnc11-rh692048.patch
+Patch14:	tigervnc12-xorg113-glx.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -134,6 +135,8 @@ for all in `find . -type f -perm -001`; do
 done
 patch -p1 -b --suffix .vnc < ../xserver113.patch
 popd
+
+%patch14 -p1 -b .glx
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS"
@@ -285,6 +288,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Fri Sep 28 2012 Adam Jackson <ajax@redhat.com> 1.2.80-0.2.
+- tigervnc12-xorg113-glx.patch: Re-enable GLX against xserver 1.13
+
 * Fri Aug 17 2012 Adam Tkac <atkac redhat com> 1.2.80-0.1.20120905svn4996
 - update to 1.2.80
 - remove deprecated patches
