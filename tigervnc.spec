@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.2.%{snap}%{?dist}
+Release:	0.3.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -288,7 +288,11 @@ fi
 %doc LICENCE.TXT
 
 %changelog
-* Fri Sep 28 2012 Adam Jackson <ajax@redhat.com> 1.2.80-0.2.
+* Wed Oct 31 2012 Adam Jackson <ajax@redhat.com> 1.2.80-0.3.20120905svn4996
+- tigervnc12-xorg113-glx.patch: Fix to only init glx on the first server
+  generation
+
+* Fri Sep 28 2012 Adam Jackson <ajax@redhat.com> 1.2.80-0.2.20120905svn4996
 - tigervnc12-xorg113-glx.patch: Re-enable GLX against xserver 1.13
 
 * Fri Aug 17 2012 Adam Tkac <atkac redhat com> 1.2.80-0.1.20120905svn4996
