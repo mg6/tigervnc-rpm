@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.3.%{snap}%{?dist}
+Release:	0.4.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -139,7 +139,7 @@ popd
 %patch14 -p1 -b .glx
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS"
+export CFLAGS="$RPM_OPT_FLAGS -fPIC"
 export CXXFLAGS="$CFLAGS"
 
 %{cmake} .
@@ -288,6 +288,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Wed Nov  7 2012 Peter Robinson <pbrobinson@fedoraproject.org> 1.2.80-0.4.20120905svn4996
+- Build with -fPIC to fix FTBFS on ARM
+
 * Wed Oct 31 2012 Adam Jackson <ajax@redhat.com> 1.2.80-0.3.20120905svn4996
 - tigervnc12-xorg113-glx.patch: Fix to only init glx on the first server
   generation
