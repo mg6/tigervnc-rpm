@@ -1,8 +1,8 @@
-%global		snap 20120905svn4996
+%global		snap 20121126svn5015
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.4.%{snap}%{?dist}
+Release:	0.5.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -139,7 +139,11 @@ popd
 %patch14 -p1 -b .glx
 
 %build
+%ifarch sparcv9 sparc64 s390 s390x
 export CFLAGS="$RPM_OPT_FLAGS -fPIC"
+%else
+export CFLAGS="$RPM_OPT_FLAGS -fpic"
+%endif
 export CXXFLAGS="$CFLAGS"
 
 %{cmake} .
@@ -288,6 +292,10 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Mon Nov 26 2012 Adam Tkac <atkac redhat com> 1.2.80-0.5.20121126svn5015
+- update to r5015
+- build with -fpic instead of -fPIC on all archs except s390/sparc
+
 * Wed Nov  7 2012 Peter Robinson <pbrobinson@fedoraproject.org> 1.2.80-0.4.20120905svn4996
 - Build with -fPIC to fix FTBFS on ARM
 
