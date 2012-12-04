@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.5.%{snap}%{?dist}
+Release:	0.6.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -292,6 +292,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Tue Dec 04 2012 Adam Tkac <atkac redhat com> 1.2.80-0.6.20121126svn5015
+- rebuild against new fltk
+
 * Mon Nov 26 2012 Adam Tkac <atkac redhat com> 1.2.80-0.5.20121126svn5015
 - update to r5015
 - build with -fpic instead of -fPIC on all archs except s390/sparc
