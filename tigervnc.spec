@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.7.%{snap}%{?dist}
+Release:	0.8.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -292,6 +292,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Mon Jan 21 2013 Adam Tkac <atkac redhat com> - 1.2.80-0.8.20121126svn5015
+- rebuild due to "jpeg8-ABI" feature drop
+
 * Wed Jan 16 2013 Adam Tkac <atkac redhat com> 1.2.80-0.7.20121126svn5015
 - rebuild
 
