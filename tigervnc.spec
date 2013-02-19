@@ -1,8 +1,8 @@
-%global		snap 20121126svn5015
+%global		snap 20130219svn5047
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.9.%{snap}%{?dist}
+Release:	0.10.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -133,7 +133,7 @@ pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
-patch -p1 -b --suffix .vnc < ../xserver113.patch
+patch -p1 -b --suffix .vnc < ../xserver114.patch
 popd
 
 %patch14 -p1 -b .glx
@@ -292,6 +292,9 @@ fi
 %doc LICENCE.TXT
 
 %changelog
+* Tue Feb 19 2013 Adam Tkac <atkac redhat com> - 1.2.80-0.10.20130219svn5047
+- update to r5047 (X.Org 1.14 support)
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.80-0.9.20121126svn5015
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
