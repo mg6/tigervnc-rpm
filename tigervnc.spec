@@ -1,8 +1,8 @@
-%global		snap 20130219svn5047
+%global		snap 20130307svn5060
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.10.%{snap}%{?dist}
+Release:	0.11.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -31,6 +31,7 @@ Requires(preun):systemd-units
 Requires(postun):systemd-units coreutils
 Requires:	hicolor-icon-theme
 Requires:	tigervnc-license
+Requires:	tigervnc-icons
 
 Provides:	vnc = 4.1.3-2, vnc-libs = 4.1.3-2
 Obsoletes:	vnc < 4.1.3-2, vnc-libs < 4.1.3-2
@@ -119,6 +120,14 @@ BuildArch:	noarch
 
 %description license
 This package contains license of the TigerVNC suite
+
+%package icons
+Summary:	Icons for TigerVNC viewer
+Group:		User Interface/X
+BuildArch:	noarch
+
+%description icons
+This package contains icons for TigerVNC viewer
 
 %prep
 %setup -q -n %{name}-%{version}-%{snap}
@@ -255,7 +264,6 @@ fi
 %defattr(-,root,root,-)
 %doc README.txt
 %{_bindir}/vncviewer
-%{_datadir}/icons/hicolor/*/apps/*
 %{_datadir}/applications/*
 %{_mandir}/man1/vncviewer.1*
 
@@ -291,7 +299,15 @@ fi
 %files license
 %doc LICENCE.TXT
 
+%files icons
+%defattr(-,root,root,-)
+%{_datadir}/icons/hicolor/*/apps/*
+
 %changelog
+* Tue Mar 12 2013 Adam Tkac <atkac redhat com> - 1.2.80-0.11.20130307svn5060
+- update to r5060
+- split icons to separate package to avoid multilib issues
+
 * Tue Feb 19 2013 Adam Tkac <atkac redhat com> - 1.2.80-0.10.20130219svn5047
 - update to r5047 (X.Org 1.14 support)
 
