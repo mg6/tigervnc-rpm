@@ -1,8 +1,8 @@
-%global		snap 20130307svn5060
+%global		snap 20130314svn5065
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.11.%{snap}%{?dist}
+Release:	0.12.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -12,6 +12,7 @@ URL:		http://www.tigervnc.com
 Source0:	%{name}-%{version}-%{snap}.tar.bz2
 Source1:	vncserver.service
 Source2:	vncserver.sysconfig
+Source3:	10-libvnc.conf
 Source6:	vncviewer.desktop
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -236,6 +237,9 @@ rm -f  $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/libvnc.la
 
 %ifarch s390 s390x %{?rhel:ppc ppc64}
 rm -f $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/libvnc.so
+%else
+mkdir -p %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/
+install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
 %endif
 
 %clean
@@ -289,6 +293,7 @@ fi
 %files server-module
 %defattr(-,root,root,-)
 %{_libdir}/xorg/modules/extensions/libvnc.so
+%config %{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
 %endif
 
 %files server-applet
@@ -304,6 +309,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Mar 14 2013 Adam Tkac <atkac redhat com> - 1.2.80-0.12.20130314svn5065
+- include /etc/X11/xorg.conf.d/10-libvnc.conf sample configuration (#712482)
+- vncserver now honors specified -geometry parameter (#755947)
+
 * Tue Mar 12 2013 Adam Tkac <atkac redhat com> - 1.2.80-0.11.20130307svn5060
 - update to r5060
 - split icons to separate package to avoid multilib issues
