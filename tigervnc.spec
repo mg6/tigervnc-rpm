@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.12.%{snap}%{?dist}
+Release:	0.13.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -88,7 +88,7 @@ variety of platforms. This package contains minimal installation
 of TigerVNC server, allowing others to access the desktop on your
 machine.
 
-%ifnarch s390 s390x %{?rhel:ppc ppc64}
+%ifnarch s390 s390x
 %package server-module
 Summary:	TigerVNC module to Xorg
 Group:		User Interface/X
@@ -235,7 +235,7 @@ popd
 # remove unwanted files
 rm -f  $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/libvnc.la
 
-%ifarch s390 s390x %{?rhel:ppc ppc64}
+%ifarch s390 s390x
 rm -f $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/libvnc.so
 %else
 mkdir -p %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/
@@ -289,7 +289,7 @@ fi
 %{_mandir}/man1/vncpasswd.1*
 %{_mandir}/man1/vncconfig.1*
 
-%ifnarch s390 s390x %{?rhel:ppc ppc64}
+%ifnarch s390 s390x
 %files server-module
 %defattr(-,root,root,-)
 %{_libdir}/xorg/modules/extensions/libvnc.so
@@ -309,6 +309,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Mar 14 2013 Adam Jackson <ajax@redhat.com> 1.2.80-0.13.20130314svn5065
+- Less RHEL customization
+
 * Thu Mar 14 2013 Adam Tkac <atkac redhat com> - 1.2.80-0.12.20130314svn5065
 - include /etc/X11/xorg.conf.d/10-libvnc.conf sample configuration (#712482)
 - vncserver now honors specified -geometry parameter (#755947)
