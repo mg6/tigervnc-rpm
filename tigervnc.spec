@@ -309,6 +309,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed May 22 2013 Tim Waugh <twaugh@redhat.com>
+- Fixed bogus changelog date.
+
 * Thu Mar 14 2013 Adam Jackson <ajax@redhat.com> 1.2.80-0.13.20130314svn5065
 - Less RHEL customization
 
@@ -402,7 +405,7 @@ fi
 * Thu Jul 28 2011 Adam Tkac <atkac redhat com> - 1.0.90-6
 - add systemd service file and remove legacy SysV initscript (#717227)
 
-* Tue May 12 2011 Adam Tkac <atkac redhat com> - 1.0.90-5
+* Thu May 12 2011 Adam Tkac <atkac redhat com> - 1.0.90-5
 - make Xvnc buildable against X.Org 1.11
 
 * Tue May 10 2011 Adam Tkac <atkac redhat com> - 1.0.90-4
