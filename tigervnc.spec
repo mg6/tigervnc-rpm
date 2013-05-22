@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.13.%{snap}%{?dist}
+Release:	0.14.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -63,6 +63,7 @@ Obsoletes:	tightvnc-server < 1.5.0-0.15.20090204svn3586
 Requires:	perl
 Requires:	tigervnc-server-minimal
 Requires:	xorg-x11-xauth
+Requires:	xorg-x11-xinit
 
 %description server
 The VNC system allows you to access the same desktop from a wide
@@ -309,7 +310,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
-* Wed May 22 2013 Tim Waugh <twaugh@redhat.com>
+* Wed May 22 2013 Tim Waugh <twaugh@redhat.com> 1.2.80-0.14.20130314svn5065
+- Added dependency on xorg-x11-xinit to server sub-package so that
+  default window manager can be found (bug #896284, bug #923655).
 - Fixed bogus changelog date.
 
 * Thu Mar 14 2013 Adam Jackson <ajax@redhat.com> 1.2.80-0.13.20130314svn5065
