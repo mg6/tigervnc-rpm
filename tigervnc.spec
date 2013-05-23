@@ -27,9 +27,9 @@ BuildRequires:	desktop-file-utils, java-devel, jpackage-utils
 BuildRequires:	libjpeg-turbo-devel, gnutls-devel, pam-devel
 BuildRequires:	systemd-units, cmake, fltk-devel
 
-Requires(post):	systemd-units systemd-sysv chkconfig coreutils
-Requires(preun):systemd-units
-Requires(postun):systemd-units coreutils
+Requires(post):	coreutils
+Requires(postun):coreutils
+
 Requires:	hicolor-icon-theme
 Requires:	tigervnc-license
 Requires:	tigervnc-icons
@@ -65,6 +65,8 @@ Requires:	perl
 Requires:	tigervnc-server-minimal
 Requires:	xorg-x11-xauth
 Requires:	xorg-x11-xinit
+%systemd_requires
+Requires(post):	systemd-sysv chkconfig
 
 %description server
 The VNC system allows you to access the same desktop from a wide
@@ -264,11 +266,17 @@ if [ -x %{_bindir}/gtk-update-icon-cache ]; then
 fi
 
 %post server
-/bin/systemctl daemon-reload > /dev/null 2>&1
+%systemd_post vncserver.service
 
 %triggerun -- tigervnc-server < 1.0.90-6
 %{_bindir}/systemd-sysv-convert --save vncserver >/dev/null 2>&1 ||:
 /sbin/chkconfig --del vncserver >/dev/null 2>&1 || :
+
+%preun server
+%systemd_preun vncserver.service
+
+%postun server
+%systemd_postun
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
@@ -316,6 +324,8 @@ fi
 
 %changelog
 * Thu May 23 2013 Tim Waugh <twaugh@redhat.com> 1.2.80-0.14.20130314svn5065
+- Use systemd rpm macros (bug #850340).  Moved systemd requirements
+  from main package to server sub-package.
 - Applied Debian patch to fix busy loop when run from inetd in nowait
   mode (bug #920373).
 - Added dependency on xorg-x11-xinit to server sub-package so that
