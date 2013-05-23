@@ -44,6 +44,7 @@ Patch10:	tigervnc11-ldnow.patch
 Patch11:	tigervnc11-gethomedir.patch
 Patch13:	tigervnc11-rh692048.patch
 Patch14:	tigervnc12-xorg113-glx.patch
+Patch15:	tigervnc-inetd-nowait.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -148,6 +149,10 @@ patch -p1 -b --suffix .vnc < ../xserver114.patch
 popd
 
 %patch14 -p1 -b .glx
+
+# Applied Debian patch to fix busy loop when run from inetd in nowait
+# mode (bug #920373).
+%patch15 -p1 -b .inetd-nowait
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -310,7 +315,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
-* Wed May 22 2013 Tim Waugh <twaugh@redhat.com> 1.2.80-0.14.20130314svn5065
+* Thu May 23 2013 Tim Waugh <twaugh@redhat.com> 1.2.80-0.14.20130314svn5065
+- Applied Debian patch to fix busy loop when run from inetd in nowait
+  mode (bug #920373).
 - Added dependency on xorg-x11-xinit to server sub-package so that
   default window manager can be found (bug #896284, bug #923655).
 - Fixed bogus changelog date.
