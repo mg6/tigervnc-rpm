@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.14.%{snap}%{?dist}
+Release:	0.15.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -323,6 +323,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Sat Jun 08 2013 Dennis Gilmore <dennis@ausil.us> 1.2.80-0.15.20130314svn5065
+- bump to rebuild and pick up bugfix causing X to crash on ppc and arm
+
 * Thu May 23 2013 Tim Waugh <twaugh@redhat.com> 1.2.80-0.14.20130314svn5065
 - Use systemd rpm macros (bug #850340).  Moved systemd requirements
   from main package to server sub-package.
