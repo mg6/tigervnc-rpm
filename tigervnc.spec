@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.15.%{snap}%{?dist}
+Release:	0.16.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -45,6 +45,7 @@ Patch11:	tigervnc11-gethomedir.patch
 Patch13:	tigervnc11-rh692048.patch
 Patch14:	tigervnc12-xorg113-glx.patch
 Patch15:	tigervnc-inetd-nowait.patch
+Patch16:	tigervnc-setcursor-crash.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -155,6 +156,8 @@ popd
 # Applied Debian patch to fix busy loop when run from inetd in nowait
 # mode (bug #920373).
 %patch15 -p1 -b .inetd-nowait
+
+%patch16 -p1 -b .setcursor-crash
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -323,6 +326,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Jun 17 2013 Adam Jackson <ajax@redhat.com> 1.2.80-0.16.20130314svn5065
+- tigervnc-setcursor-crash.patch: Attempt to paper over a crash in Xvnc when
+  setting the cursor.
+
 * Sat Jun 08 2013 Dennis Gilmore <dennis@ausil.us> 1.2.80-0.15.20130314svn5065
 - bump to rebuild and pick up bugfix causing X to crash on ppc and arm
 
