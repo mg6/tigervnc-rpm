@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.17.%{snap}%{?dist}
+Release:	0.18.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -25,7 +25,7 @@ BuildRequires:	mesa-libGL-devel, libXinerama-devel, ImageMagick
 BuildRequires:  freetype-devel, libXdmcp-devel
 BuildRequires:	desktop-file-utils, java-devel, jpackage-utils
 BuildRequires:	libjpeg-turbo-devel, gnutls-devel, pam-devel
-BuildRequires:	systemd-units, cmake, fltk-devel
+BuildRequires:	systemd, cmake, fltk-devel
 
 Requires(post):	coreutils
 Requires(postun):coreutils
@@ -330,6 +330,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Jul  3 2013 Tim Waugh <twaugh@redhat.com> 1.2.80-0.18.20130314svn5065
+- Changed build requirement from systemd-units to systemd for
+  systemd_requires macro.
+
 * Wed Jul  3 2013 Tim Waugh <twaugh@redhat.com> 1.2.80-0.17.20130314svn5065
 - Synchronise manpages and --help output (bug #980870).
 
