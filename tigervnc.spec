@@ -67,7 +67,9 @@ Requires:	perl
 Requires:	tigervnc-server-minimal
 Requires:	xorg-x11-xauth
 Requires:	xorg-x11-xinit
-%systemd_requires
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
 Requires(post):	systemd-sysv chkconfig
 
 %description server
@@ -331,8 +333,7 @@ fi
 
 %changelog
 * Wed Jul  3 2013 Tim Waugh <twaugh@redhat.com> 1.2.80-0.18.20130314svn5065
-- Changed build requirement from systemd-units to systemd for
-  systemd_requires macro.
+- Removed systemd_requires macro in order to fix the build.
 
 * Wed Jul  3 2013 Tim Waugh <twaugh@redhat.com> 1.2.80-0.17.20130314svn5065
 - Synchronise manpages and --help output (bug #980870).
