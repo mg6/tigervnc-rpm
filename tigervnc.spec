@@ -2,7 +2,7 @@
 
 Name:		tigervnc
 Version:	1.2.80
-Release:	0.16.%{snap}%{?dist}
+Release:	0.17.%{snap}%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -46,6 +46,7 @@ Patch13:	tigervnc11-rh692048.patch
 Patch14:	tigervnc12-xorg113-glx.patch
 Patch15:	tigervnc-inetd-nowait.patch
 Patch16:	tigervnc-setcursor-crash.patch
+Patch17:	tigervnc-manpages.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -158,6 +159,9 @@ popd
 %patch15 -p1 -b .inetd-nowait
 
 %patch16 -p1 -b .setcursor-crash
+
+# Synchronise manpages and --help output (bug #980870).
+%patch17 -p1 -b .manpages
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -326,6 +330,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Jul  3 2013 Tim Waugh <twaugh@redhat.com> 1.2.80-0.17.20130314svn5065
+- Synchronise manpages and --help output (bug #980870).
+
 * Mon Jun 17 2013 Adam Jackson <ajax@redhat.com> 1.2.80-0.16.20130314svn5065
 - tigervnc-setcursor-crash.patch: Attempt to paper over a crash in Xvnc when
   setting the cursor.
