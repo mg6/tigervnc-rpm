@@ -1,15 +1,13 @@
-%global		snap 20130314svn5065
-
 Name:		tigervnc
-Version:	1.2.80
-Release:	0.18.%{snap}%{?dist}
+Version:	1.3.0
+Release:	1%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://www.tigervnc.com
 
-Source0:	%{name}-%{version}-%{snap}.tar.bz2
+Source0:	%{name}-%{version}.tar.bz2
 Source1:	vncserver.service
 Source2:	vncserver.sysconfig
 Source3:	10-libvnc.conf
@@ -43,7 +41,6 @@ Patch4:		tigervnc-cookie.patch
 Patch10:	tigervnc11-ldnow.patch
 Patch11:	tigervnc11-gethomedir.patch
 Patch13:	tigervnc11-rh692048.patch
-Patch14:	tigervnc12-xorg113-glx.patch
 Patch15:	tigervnc-inetd-nowait.patch
 Patch16:	tigervnc-setcursor-crash.patch
 Patch17:	tigervnc-manpages.patch
@@ -139,7 +136,7 @@ BuildArch:	noarch
 This package contains icons for TigerVNC viewer
 
 %prep
-%setup -q -n %{name}-%{version}-%{snap}
+%setup -q
 
 %patch4 -p1 -b .cookie
 %patch10 -p1 -b .ldnow
@@ -153,8 +150,6 @@ for all in `find . -type f -perm -001`; do
 done
 patch -p1 -b --suffix .vnc < ../xserver114.patch
 popd
-
-%patch14 -p1 -b .glx
 
 # Applied Debian patch to fix busy loop when run from inetd in nowait
 # mode (bug #920373).
@@ -332,6 +327,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Jul  8 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-1
+- 1.3.0.
+
 * Wed Jul  3 2013 Tim Waugh <twaugh@redhat.com> 1.2.80-0.18.20130314svn5065
 - Removed systemd_requires macro in order to fix the build.
 
