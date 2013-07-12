@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -37,13 +37,14 @@ Obsoletes:	vnc < 4.1.3-2, vnc-libs < 4.1.3-2
 Provides:	tightvnc = 1.5.0-0.15.20090204svn3586
 Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 
-Patch4:		tigervnc-cookie.patch
-Patch10:	tigervnc11-ldnow.patch
-Patch11:	tigervnc11-gethomedir.patch
-Patch13:	tigervnc11-rh692048.patch
-Patch15:	tigervnc-inetd-nowait.patch
-Patch16:	tigervnc-setcursor-crash.patch
-Patch17:	tigervnc-manpages.patch
+Patch1:		tigervnc-cookie.patch
+Patch2:		tigervnc11-ldnow.patch
+Patch3:		tigervnc11-gethomedir.patch
+Patch4:		tigervnc11-rh692048.patch
+Patch5:		tigervnc-inetd-nowait.patch
+Patch6:		tigervnc-setcursor-crash.patch
+Patch7:		tigervnc-manpages.patch
+Patch8:		tigervnc-getmaster.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -138,10 +139,10 @@ This package contains icons for TigerVNC viewer
 %prep
 %setup -q
 
-%patch4 -p1 -b .cookie
-%patch10 -p1 -b .ldnow
-%patch11 -p1 -b .gethomedir
-%patch13 -p1 -b .rh692048
+%patch1 -p1 -b .cookie
+%patch2 -p1 -b .ldnow
+%patch3 -p1 -b .gethomedir
+%patch4 -p1 -b .rh692048
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -153,12 +154,15 @@ popd
 
 # Applied Debian patch to fix busy loop when run from inetd in nowait
 # mode (bug #920373).
-%patch15 -p1 -b .inetd-nowait
+%patch5 -p1 -b .inetd-nowait
 
-%patch16 -p1 -b .setcursor-crash
+%patch6 -p1 -b .setcursor-crash
 
 # Synchronise manpages and --help output (bug #980870).
-%patch17 -p1 -b .manpages
+%patch7 -p1 -b .manpages
+
+# libvnc.so: don't use unexpected GetMaster function (bug #744881 again).
+%patch8 -p1 -b .getmaster
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -327,6 +331,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Fri Jul 12 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-2
+- Renumbered patches.
+- libvnc.so: don't use unexported GetMaster function (bug #744881 again).
+
 * Mon Jul  8 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-1
 - 1.3.0.
 
