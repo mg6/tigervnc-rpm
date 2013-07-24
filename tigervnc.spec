@@ -46,6 +46,7 @@ Patch6:		tigervnc-setcursor-crash.patch
 Patch7:		tigervnc-manpages.patch
 Patch8:		tigervnc-getmaster.patch
 Patch9:		tigervnc-shebang.patch
+Patch10:	tigervnc-key_is_down.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -167,6 +168,9 @@ popd
 
 # Don't use shebang in vncserver script.
 %patch9 -p1 -b .shebang
+
+# libvnc.so: don't use unexported key_is_down function.
+%patch10 -p1 -b .key_is_down
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -336,6 +340,7 @@ fi
 
 %changelog
 * Wed Jul 24 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-3
+- libvnc.so: don't use unexported key_is_down function.
 - Don't use shebang in vncserver script.
 
 * Fri Jul 12 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-2
