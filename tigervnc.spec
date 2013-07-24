@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -45,6 +45,7 @@ Patch5:		tigervnc-inetd-nowait.patch
 Patch6:		tigervnc-setcursor-crash.patch
 Patch7:		tigervnc-manpages.patch
 Patch8:		tigervnc-getmaster.patch
+Patch9:		tigervnc-shebang.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -163,6 +164,9 @@ popd
 
 # libvnc.so: don't use unexpected GetMaster function (bug #744881 again).
 %patch8 -p1 -b .getmaster
+
+# Don't use shebang in vncserver script.
+%patch9 -p1 -b .shebang
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -331,6 +335,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Jul 24 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-3
+- Don't use shebang in vncserver script.
+
 * Fri Jul 12 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-2
 - Renumbered patches.
 - libvnc.so: don't use unexported GetMaster function (bug #744881 again).
