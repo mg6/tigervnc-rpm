@@ -162,7 +162,7 @@ popd
 # Synchronise manpages and --help output (bug #980870).
 %patch7 -p1 -b .manpages
 
-# libvnc.so: don't use unexpected GetMaster function (bug #744881 again).
+# libvnc.so: don't use unexported GetMaster function (bug #744881 again).
 %patch8 -p1 -b .getmaster
 
 # Don't use shebang in vncserver script.
