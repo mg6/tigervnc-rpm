@@ -340,6 +340,7 @@ fi
 
 %changelog
 * Wed Jul 24 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-3
+- Avoid PIDFile problems in systemd unit file (bug #983232).
 - libvnc.so: don't use unexported key_is_down function.
 - Don't use shebang in vncserver script.
 
