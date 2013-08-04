@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -339,6 +339,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Wed Jul 24 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-3
 - Avoid PIDFile problems in systemd unit file (bug #983232).
 - libvnc.so: don't use unexported key_is_down function.
