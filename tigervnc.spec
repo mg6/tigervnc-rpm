@@ -220,6 +220,7 @@ popd
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{README.txt,LICENCE.TXT}
 
 pushd unix/xserver/hw/vnc
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -339,8 +340,8 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
-* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+* Mon Aug  5 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-4
+- Fixed doc-related build failure (bug #992790).
 
 * Wed Jul 24 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-3
 - Avoid PIDFile problems in systemd unit file (bug #983232).
