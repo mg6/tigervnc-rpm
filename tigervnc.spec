@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -220,6 +220,7 @@ popd
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{README.txt,LICENCE.TXT}
 
 pushd unix/xserver/hw/vnc
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -339,6 +340,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Aug  5 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-4
+- Fixed doc-related build failure (bug #992790).
+
 * Wed Jul 24 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-3
 - Avoid PIDFile problems in systemd unit file (bug #983232).
 - libvnc.so: don't use unexported key_is_down function.
