@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -340,6 +340,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Sep 18 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-5
+- Better fix for PIDFile problem (bug #983232).
+
 * Mon Aug  5 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-4
 - Fixed doc-related build failure (bug #992790).
 
