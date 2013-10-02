@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -46,7 +46,6 @@ Patch6:		tigervnc-setcursor-crash.patch
 Patch7:		tigervnc-manpages.patch
 Patch8:		tigervnc-getmaster.patch
 Patch9:		tigervnc-shebang.patch
-Patch10:	tigervnc-key_is_down.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -168,9 +167,6 @@ popd
 
 # Don't use shebang in vncserver script.
 %patch9 -p1 -b .shebang
-
-# libvnc.so: don't use unexported key_is_down function.
-%patch10 -p1 -b .key_is_down
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -340,6 +336,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Sep 24 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-7
+- Removed incorrect patch (for unexpected key_is_down). Fixes stuck
+  keys bug (bug #989502).
+
 * Thu Sep 19 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-6
 - Fixed typo in 10-libvnc.conf (bug #1009111).
 
