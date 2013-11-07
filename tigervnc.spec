@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -46,6 +46,7 @@ Patch6:		tigervnc-setcursor-crash.patch
 Patch7:		tigervnc-manpages.patch
 Patch8:		tigervnc-getmaster.patch
 Patch9:		tigervnc-shebang.patch
+Patch10:	tigervnc-1.3.0-xserver-1.15.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -168,6 +169,8 @@ popd
 # Don't use shebang in vncserver script.
 %patch9 -p1 -b .shebang
 
+%patch10 -p1 -b .115
+
 %build
 %ifarch sparcv9 sparc64 s390 s390x
 export CFLAGS="$RPM_OPT_FLAGS -fPIC"
@@ -179,6 +182,7 @@ export CXXFLAGS="$CFLAGS"
 %{cmake} .
 make %{?_smp_mflags}
 
+# XXX revisit --disable-present
 pushd unix/xserver
 autoreconf -fiv
 %configure \
@@ -190,6 +194,9 @@ autoreconf -fiv
 	--with-xkb-output=%{_localstatedir}/lib/xkb \
 	--enable-install-libxf86config \
 	--enable-glx --disable-dri --enable-dri2 \
+	--disable-wayland \
+	--disable-present \
+	--disable-unit-tests \
 	--disable-config-dbus \
 	--disable-config-hal \
 	--disable-config-udev \
@@ -336,6 +343,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Nov 07 2013 Adam Jackson <ajax@redhat.com> 1.3.0-8
+- Rebuild against xserver 1.15RC1
+
 * Tue Sep 24 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-7
 - Removed incorrect patch (for unexpected key_is_down). Fixes stuck
   keys bug (bug #989502).
