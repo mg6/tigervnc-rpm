@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	8%{?dist}
+Release:	9%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -47,6 +47,7 @@ Patch7:		tigervnc-manpages.patch
 Patch8:		tigervnc-getmaster.patch
 Patch9:		tigervnc-shebang.patch
 Patch10:	tigervnc-1.3.0-xserver-1.15.patch
+Patch11:	tigervnc-format-security.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -170,6 +171,9 @@ popd
 %patch9 -p1 -b .shebang
 
 %patch10 -p1 -b .115
+
+# Fixed build failure with -Werror=format-security (bug #1037358).
+%patch11 -p1 -b .format-security
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -343,6 +347,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Dec  3 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-9
+- Fixed build failure with -Werror=format-security (bug #1037358).
+
 * Thu Nov 07 2013 Adam Jackson <ajax@redhat.com> 1.3.0-8
 - Rebuild against xserver 1.15RC1
 
