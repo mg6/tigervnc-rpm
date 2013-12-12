@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -46,6 +46,7 @@ Patch6:		tigervnc-setcursor-crash.patch
 Patch7:		tigervnc-manpages.patch
 Patch8:		tigervnc-getmaster.patch
 Patch9:		tigervnc-shebang.patch
+Patch12:	tigervnc-zrle-crash.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -167,6 +168,9 @@ popd
 
 # Don't use shebang in vncserver script.
 %patch9 -p1 -b .shebang
+
+# Avoid invalid read when ZRLE connection closed (upstream bug #133).
+%patch12 -p1 -b .zrle-crash
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -336,6 +340,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Dec 12 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-8
+- Avoid invalid read when ZRLE connection closed (upstream bug #133).
+
 * Tue Sep 24 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-7
 - Removed incorrect patch (for unexpected key_is_down). Fixes stuck
   keys bug (bug #989502).
