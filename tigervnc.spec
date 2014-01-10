@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	10%{?dist}
+Release:	11%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -49,6 +49,7 @@ Patch9:		tigervnc-shebang.patch
 Patch10:	tigervnc-1.3.0-xserver-1.15.patch
 Patch11:	tigervnc-format-security.patch
 Patch12:	tigervnc-zrle-crash.patch
+Patch13:	tigervnc-cursor.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -178,6 +179,9 @@ popd
 
 # Avoid invalid read when ZRLE connection closed (upstream bug #133).
 %patch12 -p1 -b .zrle-crash
+
+# Fixed viewer crash when cursor has not been set (bug #1038701).
+%patch13 -p1 -b .cursor
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -351,6 +355,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Fri Jan 10 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-11
+- Fixed viewer crash when cursor has not been set (bug #1038701).
+
 * Thu Dec 12 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-10
 - Avoid invalid read when ZRLE connection closed (upstream bug #133).
 
