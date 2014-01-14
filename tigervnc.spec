@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -355,6 +355,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Jan 14 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-12
+- Fixed instructions in systemd unit file.
+
 * Fri Jan 10 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-11
 - Fixed viewer crash when cursor has not been set (bug #1038701).
 
