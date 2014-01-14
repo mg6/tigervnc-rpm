@@ -344,7 +344,8 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
-* Thu Dec 12 2013 Tim Waugh <twaugh@redhat.com> 1.3.0-8
+* Tue Jan 21 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-8
+- Fixed instructions in systemd unit file.
 - Fixed viewer crash when cursor has not been set (bug #1038701).
 - Avoid invalid read when ZRLE connection closed (upstream bug #133).
 

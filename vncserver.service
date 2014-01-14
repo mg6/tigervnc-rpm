@@ -1,7 +1,7 @@
 # The vncserver service unit file
 #
 # Quick HowTo:
-# 1. Copy this file to /etc/systemd/system/vncserver@:<display>.service
+# 1. Copy this file to /etc/systemd/system/vncserver@.service
 # 2. Edit <USER> and vncserver parameters appropriately
 #   ("runuser -l <USER> -c /usr/bin/vncserver %i -arg1 -arg2")
 # 3. Run `systemctl daemon-reload`
