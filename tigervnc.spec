@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	12%{?dist}
+Release:	13%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -355,6 +355,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Feb 10 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-13
+- Clearer xstartup file (bug #923655).
+
 * Tue Jan 14 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-12
 - Fixed instructions in systemd unit file.
 
