@@ -50,6 +50,7 @@ Patch10:	tigervnc-1.3.0-xserver-1.15.patch
 Patch11:	tigervnc-format-security.patch
 Patch12:	tigervnc-zrle-crash.patch
 Patch13:	tigervnc-cursor.patch
+Patch14:	tigervnc-xstartup.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -182,6 +183,9 @@ popd
 
 # Fixed viewer crash when cursor has not been set (bug #1038701).
 %patch13 -p1 -b .cursor
+
+# Clearer xstartup file (bug #923655).
+%patch14 -p1 -b .xstartup
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
