@@ -1,7 +1,9 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	13%{?dist}
+Release:	14%{?dist}
 Summary:	A TigerVNC remote display system
+
+%global _hardened_build 1
 
 Group:		User Interface/Desktops
 License:	GPLv2+
@@ -359,6 +361,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Fri Feb 21 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-14
+- Enabled hardened build (bug #955206).
+
 * Mon Feb 10 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-13
 - Clearer xstartup file (bug #923655).
 
