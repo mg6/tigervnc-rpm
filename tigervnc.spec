@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	14%{?dist}
+Release:	15%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -53,6 +53,7 @@ Patch11:	tigervnc-format-security.patch
 Patch12:	tigervnc-zrle-crash.patch
 Patch13:	tigervnc-cursor.patch
 Patch14:	tigervnc-xstartup.patch
+Patch15:	tigervnc-CVE-2014-0011.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -188,6 +189,9 @@ popd
 
 # Clearer xstartup file (bug #923655).
 %patch14 -p1 -b .xstartup
+
+# Fixed heap-based buffer overflow (CVE-2014-0011, bug #1050928).
+%patch15 -p1 -b .CVE-2014-0011
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -361,6 +365,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Mar 19 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-15
+- Fixed heap-based buffer overflow (CVE-2014-0011, bug #1050928).
+
 * Fri Feb 21 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-14
 - Enabled hardened build (bug #955206).
 
