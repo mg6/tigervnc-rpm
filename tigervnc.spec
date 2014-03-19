@@ -215,7 +215,7 @@ autoreconf -fiv
 	--with-fontdir=%{_datadir}/X11/fonts \
 	--with-xkb-output=%{_localstatedir}/lib/xkb \
 	--enable-install-libxf86config \
-	--enable-glx --disable-dri --enable-dri2 \
+	--enable-glx --disable-dri --enable-dri2 --disable-dri3 \
 	--disable-wayland \
 	--disable-present \
 	--disable-unit-tests \
@@ -366,6 +366,7 @@ fi
 
 %changelog
 * Wed Mar 19 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-15
+- Disable dri3 to enable building (bug #1063392).
 - Fixed heap-based buffer overflow (CVE-2014-0011, bug #1050928).
 
 * Fri Feb 21 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-14
