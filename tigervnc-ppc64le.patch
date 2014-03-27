@@ -1,0 +1,32 @@
+From cf3b41ab32a894c19de50a2759a38c90cc2c8351 Mon Sep 17 00:00:00 2001
+From: Gustavo Luiz Duarte <gustavold@linux.vnet.ibm.com>
+Date: Wed, 19 Mar 2014 13:51:18 -0500
+Subject: [PATCH] Add support for ppc64le architecture.
+
+---
+ unix/xserver/include/servermd.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/unix/xserver/include/servermd.h b/unix/xserver/include/servermd.h
+index 11f6c10..17951da 100644
+--- a/unix/xserver/include/servermd.h
++++ b/unix/xserver/include/servermd.h
+@@ -114,9 +114,15 @@ SOFTWARE.
+ 
+ #if defined(__powerpc__) || defined(__ppc__) || defined(__ppc64__)
+ 
++#if defined(__BIG_ENDIAN__)
+ #define IMAGE_BYTE_ORDER        MSBFirst
+ #define BITMAP_BIT_ORDER        MSBFirst
+ #define GLYPHPADBYTES           4
++#else
++#define IMAGE_BYTE_ORDER	LSBFirst
++#define BITMAP_BIT_ORDER	LSBFirst
++#define GLYPHPADBYTES		4
++#endif
+ 
+ #endif                          /* PowerPC */
+ 
+-- 
+1.9.0
+

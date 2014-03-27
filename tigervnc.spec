@@ -53,6 +53,7 @@ Patch11:	tigervnc-format-security.patch
 Patch12:	tigervnc-zrle-crash.patch
 Patch13:	tigervnc-cursor.patch
 Patch14:	tigervnc-xstartup.patch
+Patch15:	tigervnc-ppc64le.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -188,6 +189,9 @@ popd
 
 # Clearer xstartup file (bug #923655).
 %patch14 -p1 -b .xstartup
+
+# Add ppc64le support (bug #1078495).
+%patch15 -p1 -b .ppc64le
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -363,6 +367,7 @@ fi
 %changelog
 * Thu Mar 27 2014 Tim Waugh <twaugh@redhat.com> 1.3.1-1
 - 1.3.1 (bug #1078806).
+- Add ppc64le support (bug #1078495).
 
 * Wed Mar 19 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-15
 - Disable dri3 to enable building (bug #1063392).
