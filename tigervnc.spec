@@ -204,7 +204,6 @@ export CXXFLAGS="$CFLAGS"
 %{cmake} .
 make %{?_smp_mflags}
 
-# XXX revisit --disable-present
 pushd unix/xserver
 autoreconf -fiv
 %configure \
@@ -215,9 +214,8 @@ autoreconf -fiv
 	--with-fontdir=%{_datadir}/X11/fonts \
 	--with-xkb-output=%{_localstatedir}/lib/xkb \
 	--enable-install-libxf86config \
-	--enable-glx --disable-dri --enable-dri2 --disable-dri3 \
+	--enable-glx --disable-dri --enable-dri2 --enable-dri3 \
 	--disable-wayland \
-	--disable-present \
 	--disable-unit-tests \
 	--disable-config-dbus \
 	--disable-config-hal \
