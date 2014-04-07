@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -363,6 +363,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Apr  7 2014 Tim Waugh <twaugh@redhat.com> 1.3.1-2
+- Allow build with dri3 and present extensions (bug #1063392).
+
 * Thu Mar 27 2014 Tim Waugh <twaugh@redhat.com> 1.3.1-1
 - 1.3.1 (bug #1078806).
 - Add ppc64le support (bug #1078495).
