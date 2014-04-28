@@ -54,6 +54,10 @@ Patch12:	tigervnc-zrle-crash.patch
 Patch13:	tigervnc-cursor.patch
 Patch14:	tigervnc-xstartup.patch
 Patch15:	tigervnc-ppc64le.patch
+Patch16:        tigervnc-1.3.1-xserver-1.16.patch
+
+# This is tigervnc-%{version}/unix/xserver114.patch rebased on the latest xorg
+Patch100:       0001-tigervnc-xserver-1.14-patch.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -158,7 +162,7 @@ pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
-patch -p1 -b --suffix .vnc < ../xserver114.patch
+%patch100 -p1 -b .vnc
 popd
 
 # Applied Debian patch to fix busy loop when run from inetd in nowait
@@ -193,6 +197,8 @@ popd
 # Add ppc64le support (bug #1078495).
 %patch15 -p1 -b .ppc64le
 
+%patch16 -p1 -b .116
+
 %build
 %ifarch sparcv9 sparc64 s390 s390x
 export CFLAGS="$RPM_OPT_FLAGS -fPIC"
@@ -208,8 +214,8 @@ pushd unix/xserver
 autoreconf -fiv
 %configure \
 	--disable-xorg --disable-xnest --disable-xvfb --disable-dmx \
-	--disable-xwin --disable-xephyr --disable-kdrive --with-pic \
-	--disable-static --disable-xinerama \
+	--disable-xwin --disable-xephyr --disable-kdrive --disable-xwayland \
+	--with-pic --disable-static --disable-xinerama \
 	--with-default-font-path="catalogue:%{_sysconfdir}/X11/fontpath.d,built-ins" \
 	--with-fontdir=%{_datadir}/X11/fonts \
 	--with-xkb-output=%{_localstatedir}/lib/xkb \
