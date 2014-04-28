@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.1
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -26,6 +26,9 @@ BuildRequires:  freetype-devel, libXdmcp-devel
 BuildRequires:	desktop-file-utils, java-devel, jpackage-utils
 BuildRequires:	libjpeg-turbo-devel, gnutls-devel, pam-devel
 BuildRequires:	systemd, cmake, fltk-devel
+%ifnarch s390 s390x
+BuildRequires:  xorg-x11-server-devel
+%endif
 
 Requires(post):	coreutils
 Requires(postun):coreutils
@@ -115,7 +118,7 @@ Provides:	vnc-server = 4.1.3-2, vnc-libs = 4.1.3-2
 Obsoletes:	vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
 Provides:	tightvnc-server-module = 1.5.0-0.15.20090204svn3586
 Obsoletes:	tightvnc-server-module < 1.5.0-0.15.20090204svn3586
-Requires:	xorg-x11-server-Xorg
+Requires:	xorg-x11-server-Xorg %(xserver-sdk-abi-requires ansic) %(xserver-sdk-abi-requires videodrv)
 Requires:	tigervnc-license
 
 %description server-module
@@ -369,6 +372,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Apr 28 2014 Adam Jackson <ajax@redhat.com> 1.3.1-4
+- Add version interlocks for -server-module
+
 * Mon Apr 28 2014 Hans de Goede <hdegoede@redhat.com> - 1.3.1-3
 - xserver 1.15.99-20140428 git snapshot ABI rebuild
 
