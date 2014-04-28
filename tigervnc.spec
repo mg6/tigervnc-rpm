@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -363,6 +363,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Apr 28 2014 Hans de Goede <hdegoede@redhat.com> - 1.3.1-3
+- xserver 1.15.99-20140428 git snapshot ABI rebuild
+
 * Mon Apr  7 2014 Tim Waugh <twaugh@redhat.com> 1.3.1-2
 - Allow build with dri3 and present extensions (bug #1063392).
 
