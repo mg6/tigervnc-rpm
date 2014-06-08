@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.1
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -376,6 +376,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Thu May 22 2014 Tim Waugh <twaugh@redhat.com> 1.3.1-5
 - Keep pointer in sync when using module (upstream bug #152).
 
