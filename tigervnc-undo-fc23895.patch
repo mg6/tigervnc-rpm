@@ -1,0 +1,48 @@
+diff -up tigervnc-1.3.0/unix/xserver/hw/vnc/xf86vncModule.cc.undo-fc23895 tigervnc-1.3.0/unix/xserver/hw/vnc/xf86vncModule.cc
+--- tigervnc-1.3.0/unix/xserver/hw/vnc/xf86vncModule.cc.undo-fc23895	2013-07-01 13:41:24.000000000 +0100
++++ tigervnc-1.3.0/unix/xserver/hw/vnc/xf86vncModule.cc	2014-07-09 11:02:00.737066640 +0100
+@@ -90,31 +90,26 @@ vncSetup(pointer module, pointer opts, i
+ 
+ static void vncExtensionInitWithParams(INITARGS)
+ {
+-  static char once = 0;
++  rfb::initStdIOLoggers();
++  rfb::LogWriter::setLogParams("*:stderr:30");
++  rfb::Configuration::enableServerParams();
+ 
+-  if (!once) {
+-    once++;
+-    rfb::initStdIOLoggers();
+-    rfb::LogWriter::setLogParams("*:stderr:30");
+-    rfb::Configuration::enableServerParams();
++  for (int scr = 0; scr < screenInfo.numScreens; scr++) {
++    ScrnInfoPtr pScrn = xf86Screens[scr];
+ 
+-    for (int scr = 0; scr < screenInfo.numScreens; scr++) {
+-      ScrnInfoPtr pScrn = xf86Screens[scr];
+-
+-      for (ParameterIterator i; i.param; i.next()) {
+-        const char *val;
++    for (ParameterIterator i; i.param; i.next()) {
++      const char *val;
+ #if XORG < 112
+-        val = xf86FindOptionValue(pScrn->options, i.param->getName());
++      val = xf86FindOptionValue(pScrn->options, i.param->getName());
+ #else
+-        val = xf86FindOptionValue((XF86OptionPtr)pScrn->options, i.param->getName());
++      val = xf86FindOptionValue((XF86OptionPtr)pScrn->options, i.param->getName());
+ #endif
+-        if (val)
+-          i.param->setParam(val);
+-      }
++      if (val)
++        i.param->setParam(val);
+     }
+-
+-    vncExtensionInit();
+   }
++
++  vncExtensionInit();
+ }
+ }
+ 
