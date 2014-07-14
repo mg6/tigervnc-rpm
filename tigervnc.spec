@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.0
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	A TigerVNC remote display system
 
 Group:		User Interface/Desktops
@@ -49,7 +49,8 @@ Patch9:		tigervnc-shebang.patch
 Patch12:	tigervnc-zrle-crash.patch
 Patch13:	tigervnc-cursor.patch
 Patch14:	tigervnc-CVE-2014-0011.patch
-Patch15:	tigervnc-pointersync.patch
+Patch15:	tigervnc-inputreset.patch
+Patch16:	tigervnc-pointersync.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -181,8 +182,11 @@ popd
 # Fixed heap-based buffer overflow (CVE-2014-0011, bug #1050928).
 %patch14 -p1 -b .CVE-2014-0011
 
+# Input reset fixes from upstream (bug #1116956).
+%patch15 -p1 -b .input-reset
+
 # Keep pointer in sync when using module (upstream bug #152).
-%patch15 -p1 -b .pointersync
+%patch16 -p1 -b .pointersync
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -352,6 +356,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Jul 14 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-12
+- Input reset fixes from upstream (bug #1116956).
+
 * Thu May 22 2014 Tim Waugh <twaugh@redhat.com> 1.3.0-11
 - Keep pointer in sync when using module (upstream bug #152).
 

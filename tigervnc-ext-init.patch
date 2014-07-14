@@ -1,0 +1,20 @@
+diff -up tigervnc-1.3.0/unix/xserver/hw/vnc/xf86vncModule.cc~ tigervnc-1.3.0/unix/xserver/hw/vnc/xf86vncModule.cc
+--- tigervnc-1.3.0/unix/xserver/hw/vnc/xf86vncModule.cc~	2014-07-09 12:27:54.624441987 +0100
++++ tigervnc-1.3.0/unix/xserver/hw/vnc/xf86vncModule.cc	2014-07-09 16:17:04.391345366 +0100
+@@ -90,9 +90,15 @@ vncSetup(pointer module, pointer opts, i
+ 
+ static void vncExtensionInitWithParams(INITARGS)
+ {
++  static bool once = false;
++
+   rfb::initStdIOLoggers();
+   rfb::LogWriter::setLogParams("*:stderr:30");
+-  rfb::Configuration::enableServerParams();
++
++  if (!once) {
++    rfb::Configuration::enableServerParams();
++    once = true;
++  }
+ 
+   for (int scr = 0; scr < screenInfo.numScreens; scr++) {
+     ScrnInfoPtr pScrn = xf86Screens[scr];
