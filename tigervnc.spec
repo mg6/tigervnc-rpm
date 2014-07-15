@@ -201,7 +201,7 @@ popd
 %patch15 -p1 -b .116
 
 # Input reset fixes from upstream (bug #1116956).
-%patch16 -p1 -b .input-reset
+%patch16 -p1 -b .inputreset
 
 # Keep pointer in sync when using module (upstream bug #152).
 %patch17 -p1 -b .pointersync
