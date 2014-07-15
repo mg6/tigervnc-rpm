@@ -184,7 +184,7 @@ popd
 %patch14 -p1 -b .CVE-2014-0011
 
 # Input reset fixes from upstream (bug #1116956).
-%patch15 -p1 -b .input-reset
+%patch15 -p1 -b .inputreset
 
 # Keep pointer in sync when using module (upstream bug #152).
 %patch16 -p1 -b .pointersync
