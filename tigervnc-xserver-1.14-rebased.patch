@@ -1,28 +1,15 @@
-From 28f093e6987bd7eb631714933ae3cf1ede250380 Mon Sep 17 00:00:00 2001
-From: Hans de Goede <hdegoede@redhat.com>
-Date: Mon, 28 Apr 2014 15:54:54 +0200
-Subject: [PATCH] tigervnc xserver 1.14 patch
-
----
- configure.ac   |  9 ++++++++-
- hw/Makefile.am |  3 ++-
- mi/miinitext.c |  7 +++++++
- os/WaitFor.c   | 19 ++++++++++++++++++-
- 4 files changed, 35 insertions(+), 3 deletions(-)
-
-diff --git a/configure.ac b/configure.ac
-index 0c8b516..722dbc3 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -74,6 +74,7 @@ dnl forcing an entire recompile.x
- AC_CONFIG_HEADERS(include/version-config.h)
+diff -up xorg-server-1.15.99.904/configure.ac.xserver-1.14-rebased xorg-server-1.15.99.904/configure.ac
+--- xorg-server-1.15.99.904/configure.ac.xserver-1.14-rebased	2014-07-15 09:08:45.084879742 +0100
++++ xorg-server-1.15.99.904/configure.ac	2014-07-15 09:09:25.421078698 +0100
+@@ -76,6 +76,7 @@ dnl os-strfeatures.h covers HAVE_STRFOO
+ AC_CONFIG_HEADERS(include/os-strfeatures.h)
  
  AM_PROG_AS
 +AC_PROG_CXX
  AC_PROG_LN_S
  LT_PREREQ([2.2])
  LT_INIT([disable-static win32-dll])
-@@ -1794,6 +1795,10 @@ if test "x$XVFB" = xyes; then
+@@ -1797,6 +1798,10 @@ if test "x$XVFB" = xyes; then
  	AC_SUBST([XVFB_SYS_LIBS])
  fi
  
@@ -33,7 +20,7 @@ index 0c8b516..722dbc3 100644
  
  dnl Xnest DDX
  
-@@ -1829,6 +1834,8 @@ if test "x$XORG" = xauto; then
+@@ -1832,6 +1837,8 @@ if test "x$XORG" = xauto; then
  fi
  AC_MSG_RESULT([$XORG])
  
@@ -42,7 +29,7 @@ index 0c8b516..722dbc3 100644
  if test "x$XORG" = xyes; then
  	XORG_DDXINCS='-I$(top_srcdir)/hw/xfree86 -I$(top_srcdir)/hw/xfree86/include -I$(top_srcdir)/hw/xfree86/common'
  	XORG_OSINCS='-I$(top_srcdir)/hw/xfree86/os-support -I$(top_srcdir)/hw/xfree86/os-support/bus -I$(top_srcdir)/os'
-@@ -2050,7 +2057,6 @@ if test "x$XORG" = xyes; then
+@@ -2053,7 +2060,6 @@ if test "x$XORG" = xyes; then
  	AC_DEFINE(XORG_SERVER, 1, [Building Xorg server])
  	AC_DEFINE(XORGSERVER, 1, [Building Xorg server])
  	AC_DEFINE(XFree86Server, 1, [Building XFree86 server])
@@ -50,7 +37,7 @@ index 0c8b516..722dbc3 100644
  	AC_DEFINE(NEED_XF86_TYPES, 1, [Need XFree86 typedefs])
  	AC_DEFINE(NEED_XF86_PROTOTYPES, 1, [Need XFree86 helper functions])
  	AC_DEFINE(__XSERVERNAME__, "Xorg", [Name of X server])
-@@ -2584,6 +2590,7 @@ hw/dmx/Makefile
+@@ -2591,6 +2597,7 @@ hw/dmx/Makefile
  hw/dmx/man/Makefile
  hw/vfb/Makefile
  hw/vfb/man/Makefile
@@ -58,10 +45,9 @@ index 0c8b516..722dbc3 100644
  hw/xnest/Makefile
  hw/xnest/man/Makefile
  hw/xwin/Makefile
-diff --git a/hw/Makefile.am b/hw/Makefile.am
-index 19895dc..b42fa6e 100644
---- a/hw/Makefile.am
-+++ b/hw/Makefile.am
+diff -up xorg-server-1.15.99.904/hw/Makefile.am.xserver-1.14-rebased xorg-server-1.15.99.904/hw/Makefile.am
+--- xorg-server-1.15.99.904/hw/Makefile.am.xserver-1.14-rebased	2014-07-15 09:09:25.422078703 +0100
++++ xorg-server-1.15.99.904/hw/Makefile.am	2014-07-15 09:10:09.560296411 +0100
 @@ -38,7 +38,8 @@ SUBDIRS =			\
  	$(DMX_SUBDIRS)		\
  	$(KDRIVE_SUBDIRS)	\
@@ -72,10 +58,9 @@ index 19895dc..b42fa6e 100644
  
  DIST_SUBDIRS = dmx xfree86 vfb xnest xwin xquartz kdrive xwayland
  
-diff --git a/mi/miinitext.c b/mi/miinitext.c
-index 1d90516..ace7dbf 100644
---- a/mi/miinitext.c
-+++ b/mi/miinitext.c
+diff -up xorg-server-1.15.99.904/mi/miinitext.c.xserver-1.14-rebased xorg-server-1.15.99.904/mi/miinitext.c
+--- xorg-server-1.15.99.904/mi/miinitext.c.xserver-1.14-rebased	2014-04-16 21:24:00.000000000 +0100
++++ xorg-server-1.15.99.904/mi/miinitext.c	2014-07-15 09:11:42.968757142 +0100
 @@ -111,6 +111,10 @@ SOFTWARE.
  #include "micmap.h"
  #include "globals.h"
@@ -87,7 +72,7 @@ index 1d90516..ace7dbf 100644
  /* The following is only a small first step towards run-time
   * configurable extensions.
   */
-@@ -235,6 +239,9 @@ EnableDisableExtensionError(const char *name, Bool enable)
+@@ -235,6 +239,9 @@ EnableDisableExtensionError(const char *
  
  /* List of built-in (statically linked) extensions */
  static const ExtensionModule staticExtensions[] = {
@@ -97,11 +82,10 @@ index 1d90516..ace7dbf 100644
      {GEExtensionInit, "Generic Event Extension", &noGEExtension},
      {ShapeExtensionInit, "SHAPE", NULL},
  #ifdef MITSHM
-diff --git a/os/WaitFor.c b/os/WaitFor.c
-index 3eb15b9..9235f20 100644
---- a/os/WaitFor.c
-+++ b/os/WaitFor.c
-@@ -125,6 +125,9 @@ static void DoTimer(OsTimerPtr timer, CARD32 now, OsTimerPtr *prev);
+diff -up xorg-server-1.15.99.904/os/WaitFor.c.xserver-1.14-rebased xorg-server-1.15.99.904/os/WaitFor.c
+--- xorg-server-1.15.99.904/os/WaitFor.c.xserver-1.14-rebased	2014-02-05 03:08:57.000000000 +0000
++++ xorg-server-1.15.99.904/os/WaitFor.c	2014-07-15 09:12:30.496991572 +0100
+@@ -125,6 +125,9 @@ static void DoTimer(OsTimerPtr timer, CA
  static void CheckAllTimers(void);
  static OsTimerPtr timers = NULL;
  
@@ -129,28 +113,3 @@ index 3eb15b9..9235f20 100644
          BlockHandler((void *) &wt, (void *) &LastSelectMask);
          if (NewOutputPending)
              FlushAllOutput();
-@@ -223,10 +230,20 @@ WaitForSomething(int *pClientsReady)
-             i = Select(MaxClients, &LastSelectMask, &clientsWritable, NULL, wt);
-         }
-         else {
--            i = Select(MaxClients, &LastSelectMask, NULL, NULL, wt);
-+            if (AnyClientsWriteBlocked)
-+            XFD_ORSET(&socketsWritable, &ClientsWriteBlocked, &socketsWritable);
-+
-+            if (XFD_ANYSET(&socketsWritable)) {
-+                i = Select (MaxClients, &LastSelectMask, &socketsWritable, NULL, wt);
-+                if (AnyClientsWriteBlocked)
-+                    XFD_ANDSET(&clientsWritable, &socketsWritable, &ClientsWriteBlocked);
-+            } else {
-+                i = Select (MaxClients, &LastSelectMask, NULL, NULL, wt);
-+            }
-         }
-         selecterr = GetErrno();
-         WakeupHandler(i, (void *) &LastSelectMask);
-+        vncWriteWakeupHandler(i, &socketsWritable);
-         if (i <= 0) {           /* An error or timeout occurred */
-             if (dispatchException)
-                 return 0;
--- 
-1.9.0
-
