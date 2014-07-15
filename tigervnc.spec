@@ -57,7 +57,8 @@ Patch12:	tigervnc-zrle-crash.patch
 Patch13:	tigervnc-cursor.patch
 Patch14:	tigervnc-xstartup.patch
 Patch15:        tigervnc-1.3.1-xserver-1.16.patch
-Patch16:	tigervnc-pointersync.patch
+Patch16:	tigervnc-inputreset.patch
+Patch17:	tigervnc-pointersync.patch
 
 # This is tigervnc-%{version}/unix/xserver114.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver-1.14-rebased.patch
@@ -199,8 +200,11 @@ popd
 
 %patch15 -p1 -b .116
 
+# Input reset fixes from upstream (bug #1116956).
+%patch16 -p1 -b .input-reset
+
 # Keep pointer in sync when using module (upstream bug #152).
-%patch16 -p1 -b .pointersync
+%patch17 -p1 -b .pointersync
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -373,6 +377,7 @@ fi
 
 %changelog
 * Tue Jul 15 2014 Tim Waugh <twaugh@redhat.com> - 1.3.1-8
+- Input reset fixes from upstream (bug #1116956).
 - No longer need ppc64le patch as it's now in xorg-x11-server.
 - Rebased xserver114.patch again.
 
