@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.1
-Release:	8%{?dist}
+Release:	9%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -376,6 +376,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.1-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Tue Jul 15 2014 Tim Waugh <twaugh@redhat.com> - 1.3.1-8
 - Input reset fixes from upstream (bug #1116956).
 - No longer need ppc64le patch as it's now in xorg-x11-server.
