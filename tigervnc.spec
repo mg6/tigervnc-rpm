@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.3.1
-Release:	10%{?dist}
+Release:	11%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -376,6 +376,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Sep  9 2014 Tim Waugh <twaugh@redhat.com> - 1.3.1-11
+- Added missing part of xserver114.patch (bug #1137023).
+
 * Wed Sep  3 2014 Tim Waugh <twaugh@redhat.com> - 1.3.1-10
 - Fix build against xorg-x11-server-1.16.0 (bug #1136532).
 
