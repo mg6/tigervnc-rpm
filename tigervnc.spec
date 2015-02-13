@@ -52,6 +52,7 @@ Patch8:		tigervnc-getmaster.patch
 Patch9:		tigervnc-shebang.patch
 Patch11:	tigervnc-format-security.patch
 Patch14:	tigervnc-xstartup.patch
+Patch15:	tigervnc-xserver117.patch
 
 # This is tigervnc-%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver116-rebased.patch
@@ -180,6 +181,9 @@ popd
 
 # Clearer xstartup file (bug #923655).
 %patch14 -p1 -b .xstartup
+
+# Allow build against xorg-x11-server-1.17.
+%patch15 -p1 -b .xserver117
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -353,6 +357,7 @@ fi
 %changelog
 * Fri Feb 13 2015 Tim Waugh <twaugh@redhat.com> - 1.4.2-1
 - Rebased xserver116.patch against xorg-x11-server-1.17.1.
+- Allow build against xorg-x11-server-1.17.
 - 1.4.2.
 
 * Tue Sep  9 2014 Tim Waugh <twaugh@redhat.com> - 1.3.1-11
