@@ -53,6 +53,9 @@ Patch9:		tigervnc-shebang.patch
 Patch11:	tigervnc-format-security.patch
 Patch14:	tigervnc-xstartup.patch
 
+# This is tigervnc-%{version}/unix/xserver116.patch rebased on the latest xorg
+Patch100:       tigervnc-xserver116-rebased.patch
+
 %description
 Virtual Network Computing (VNC) is a remote display system which
 allows you to view a computing 'desktop' environment not only on the
@@ -156,7 +159,7 @@ pushd unix/xserver
 for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
-patch -p1 -i ../xserver116.patch
+%patch100 -p1 -b .xserver116-rebased
 popd
 
 # Applied Debian patch to fix busy loop when run from inetd in nowait
@@ -349,6 +352,7 @@ fi
 
 %changelog
 * Fri Feb 13 2015 Tim Waugh <twaugh@redhat.com> - 1.4.2-1
+- Rebased xserver116.patch against xorg-x11-server-1.17.1.
 - 1.4.2.
 
 * Tue Sep  9 2014 Tim Waugh <twaugh@redhat.com> - 1.3.1-11
