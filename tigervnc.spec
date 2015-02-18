@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.4.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -355,6 +355,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Feb 18 2015 Rex Dieter <rdieter@fedoraproject.org> 1.4.2-2
+- rebuild (fltk)
+
 * Fri Feb 13 2015 Tim Waugh <twaugh@redhat.com> - 1.4.2-1
 - Rebased xserver116.patch against xorg-x11-server-1.17.1.
 - Allow build against xorg-x11-server-1.17.
