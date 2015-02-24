@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.4.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -353,6 +353,7 @@ fi
 
 %changelog
 * Tue Feb 24 2015 Tim Waugh <twaugh@redhat.com> - 1.4.2-3
+- Use calloc instead of xmalloc.
 - Removed unnecessary configure flags.
 
 * Wed Feb 18 2015 Rex Dieter <rdieter@fedoraproject.org> 1.4.2-2
