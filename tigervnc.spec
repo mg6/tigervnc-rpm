@@ -207,14 +207,11 @@ autoreconf -fiv
 	--with-xkb-output=%{_localstatedir}/lib/xkb \
 	--enable-install-libxf86config \
 	--enable-glx --disable-dri --enable-dri2 --enable-dri3 \
-	--disable-wayland \
 	--disable-unit-tests \
-	--disable-config-dbus \
 	--disable-config-hal \
 	--disable-config-udev \
 	--with-dri-driver-path=%{_libdir}/dri \
 	--without-dtrace \
-	--disable-unit-tests \
 	--disable-devel-docs \
 	--disable-selective-werror
 
@@ -355,6 +352,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Feb 24 2015 Tim Waugh <twaugh@redhat.com> - 1.4.2-3
+- Removed unnecessary configure flags.
+
 * Wed Feb 18 2015 Rex Dieter <rdieter@fedoraproject.org> 1.4.2-2
 - rebuild (fltk)
 
