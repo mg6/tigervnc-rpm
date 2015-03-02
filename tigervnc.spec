@@ -1,6 +1,6 @@
 Name:		tigervnc
-Version:	1.4.2
-Release:	2%{?dist}
+Version:	1.4.3
+Release:	1%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -345,6 +345,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Mar  2 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-1
+- 1.4.3.
+
 * Tue Feb 24 2015 Tim Waugh <twaugh@redhat.com> - 1.4.2-2
 - Removed unnecessary configure flags.
 
