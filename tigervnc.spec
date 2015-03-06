@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.4.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -194,7 +194,7 @@ autoreconf -fiv
 %configure \
 	--disable-xorg --disable-xnest --disable-xvfb --disable-dmx \
 	--disable-xwin --disable-xephyr --disable-kdrive --disable-xwayland \
-	--with-pic --disable-static --disable-xinerama \
+	--with-pic --disable-static \
 	--with-default-font-path="catalogue:%{_sysconfdir}/X11/fontpath.d,built-ins" \
 	--with-fontdir=%{_datadir}/X11/fonts \
 	--with-xkb-output=%{_localstatedir}/lib/xkb \
@@ -345,6 +345,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Fri Mar  6 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-2
+- Don't disable Xinerama extension (upstream #147).
+
 * Mon Mar  2 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-1
 - 1.4.3.
 
