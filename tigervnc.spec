@@ -57,6 +57,9 @@ Patch15:	tigervnc-xserver117.patch
 # This is tigervnc-%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver116-rebased.patch
 
+# Apply upstream patch to fix byte order (bug #1206060).
+Patch101:	xorg-x11-server-byte-order.patch
+
 %description
 Virtual Network Computing (VNC) is a remote display system which
 allows you to view a computing 'desktop' environment not only on the
@@ -161,6 +164,7 @@ for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
 %patch100 -p1 -b .xserver116-rebased
+%patch101 -p1 -b .byte-order
 popd
 
 # Applied Debian patch to fix busy loop when run from inetd in nowait
@@ -353,7 +357,7 @@ fi
 
 %changelog
 * Thu Apr  9 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-3
-- Rebuild against fixed xorg-x11-server (bug #1206060).
+- Apply upstream patch to fix byte order (bug #1206060).
 
 * Fri Mar  6 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-2
 - Don't disable Xinerama extension (upstream #147).
