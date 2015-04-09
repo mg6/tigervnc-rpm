@@ -1,0 +1,60 @@
+From ofourdan@redhat.com Thu Apr  9 09:33:43 2015
+Return-Path: ofourdan@redhat.com
+Received: from zmta06.collab.prod.int.phx2.redhat.com (LHLO
+ zmta06.collab.prod.int.phx2.redhat.com) (10.5.81.13) by
+ zmail17.collab.prod.int.phx2.redhat.com with LMTP; Thu, 9 Apr 2015 09:33:43
+ -0400 (EDT)
+Received: from int-mx11.intmail.prod.int.phx2.redhat.com
+ (int-mx11.intmail.prod.int.phx2.redhat.com [10.5.11.24]) by
+ zmta06.collab.prod.int.phx2.redhat.com (Postfix) with ESMTP id 59651168FFC;
+ Thu,  9 Apr 2015 09:33:43 -0400 (EDT)
+Received: from t440s.redhat.com (vpn1-6-83.ams2.redhat.com [10.36.6.83]) by
+ int-mx11.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP id
+ t39DXffr009466; Thu, 9 Apr 2015 09:33:42 -0400
+From: Olivier Fourdan <ofourdan@redhat.com>
+To: xorg-devel@lists.x.org
+Cc: Tim Waugh <twaugh@redhat.com>, Adam Jackson <ajax@redhat.com>, Olivier
+ Fourdan <ofourdan@redhat.com>
+Subject: [PATCH] dix: Fix endianess detection
+Date: Thu,  9 Apr 2015 15:33:22 +0200
+Message-Id: <1428586402-15949-1-git-send-email-ofourdan@redhat.com>
+X-Scanned-By: MIMEDefang 2.68 on 10.5.11.24
+X-Evolution-Source: 1359477224.12743.18@rubik
+Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+
+Make sure X_BIG_ENDIAN/X_LITTLE_ENDIAN are defined before actually using
+them.
+
+Otherwise, byte order could be wrong even though endianess detection is
+correct.
+
+Reported-by: Tim Waugh <twaugh@redhat.com>
+Signed-off-by: Olivier Fourdan <ofourdan@redhat.com>
+---
+ include/dix-config.h.in | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/include/dix-config.h.in b/include/dix-config.h.in
+index 1aa77a5..192c558 100644
+--- a/include/dix-config.h.in
++++ b/include/dix-config.h.in
+@@ -3,6 +3,14 @@
+ #ifndef _DIX_CONFIG_H_
+ #define _DIX_CONFIG_H_
+ 
++#ifndef X_BIG_ENDIAN
++#  define X_BIG_ENDIAN 4321
++#endif
++
++#ifndef X_LITTLE_ENDIAN
++#  define X_LITTLE_ENDIAN 1234
++#endif
++
+ /* Support BigRequests extension */
+ #undef BIGREQS
+ 
+-- 
+2.3.5
+
+

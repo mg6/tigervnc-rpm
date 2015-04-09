@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.4.3
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -56,6 +56,9 @@ Patch15:	tigervnc-xserver117.patch
 
 # This is tigervnc-%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver116-rebased.patch
+
+# Apply patch to fix xorg-x11-server byte order issue (bug #1206060).
+Patch101:	xorg-x11-server-byteorder.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -161,6 +164,7 @@ for all in `find . -type f -perm -001`; do
 	chmod -x "$all"
 done
 %patch100 -p1 -b .xserver116-rebased
+%patch101 -p1 -b .byteorder
 popd
 
 # Applied Debian patch to fix busy loop when run from inetd in nowait
@@ -352,6 +356,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Apr  9 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-3
+- Apply patch to fix xorg-x11-server byte order issue (bug #1206060).
+
 * Fri Mar  6 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-2
 - Don't disable Xinerama extension (upstream #147).
 
