@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.4.3
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -25,7 +25,10 @@ BuildRequires:	mesa-libGL-devel, libXinerama-devel, ImageMagick
 BuildRequires:  freetype-devel, libXdmcp-devel
 BuildRequires:	desktop-file-utils, java-devel, jpackage-utils
 BuildRequires:	libjpeg-turbo-devel, gnutls-devel, pam-devel
-BuildRequires:	systemd, cmake, fltk-devel
+BuildRequires:	systemd, cmake
+# TigerVNC 1.4.x requires fltk 1.3.3 for keyboard handling support
+# See https://github.com/TigerVNC/tigervnc/issues/8, also bug #1208814
+BuildRequires:	fltk-devel >= 1.3.3
 %ifnarch s390 s390x
 BuildRequires:  xorg-x11-server-devel
 %endif
@@ -352,6 +355,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Fri Apr 10 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-5
+- Explicit version build dependency for fltk (bug #1208814).
+
 * Thu Apr  9 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-4
 - Drop upstream xorg-x11-server patch as it is now built (bug #1210407).
 
