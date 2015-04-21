@@ -1,6 +1,11 @@
+# https://fedoraproject.org/wiki/Packaging:SourceURL?rd=Packaging/SourceURL#Github
+# Full hash for v1.4.3 tag:
+%global commit 49d0629dd87c0eb695d72dec7481e9169f55ae9e
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
+
 Name:		tigervnc
 Version:	1.4.3
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -9,7 +14,7 @@ Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://www.tigervnc.com
 
-Source0:	%{name}-%{version}.tar.gz
+Source0:	https://github.com/TigerVNC/tigervnc/archive/%{commit}/tigervnc-%{commit}.tar.gz
 Source1:	vncserver.service
 Source2:	vncserver.sysconfig
 Source3:	10-libvnc.conf
@@ -151,7 +156,7 @@ BuildArch:	noarch
 This package contains icons for TigerVNC viewer
 
 %prep
-%setup -q
+%setup -qn %{name}-%{commit}
 
 %patch1 -p1 -b .cookie
 %patch2 -p1 -b .ldnow
@@ -355,6 +360,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Apr 21 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-6
+- Use full git hash for GitHub tarball release.
+
 * Fri Apr 10 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-5
 - Explicit version build dependency for fltk (bug #1208814).
 
