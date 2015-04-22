@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.4.3
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -355,6 +355,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Apr 22 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-6
+- Removed incorrect parameters from vncviewer manpage (bug #1213199).
+
 * Fri Apr 10 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-5
 - Explicit version build dependency for fltk (bug #1208814).
 
