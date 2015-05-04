@@ -5,7 +5,7 @@
 
 Name:		tigervnc
 Version:	1.4.3
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -360,6 +360,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon May 04 2015 Kalev Lember <kalevlember@gmail.com> - 1.4.3-8
+- Rebuilt for nettle soname bump
+
 * Wed Apr 22 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-7
 - Removed incorrect parameters from vncviewer manpage (bug #1213199).
 
