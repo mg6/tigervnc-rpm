@@ -5,7 +5,7 @@
 
 Name:		tigervnc
 Version:	1.4.3
-Release:	8%{?dist}
+Release:	9%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -61,6 +61,7 @@ Patch9:		tigervnc-shebang.patch
 Patch11:	tigervnc-format-security.patch
 Patch14:	tigervnc-xstartup.patch
 Patch15:	tigervnc-xserver117.patch
+Patch16:	tigervnc-gnutls-3.4.patch
 
 # This is tigervnc-%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver116-rebased.patch
@@ -192,6 +193,9 @@ popd
 
 # Allow build against xorg-x11-server-1.17.
 %patch15 -p1 -b .xserver117
+
+# Fix the build with gnutls 3.4 (bug #1218518).
+%patch16 -p1 -b .gnutls-3.4
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
