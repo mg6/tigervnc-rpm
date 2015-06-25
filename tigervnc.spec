@@ -5,7 +5,7 @@
 
 Name:		tigervnc
 Version:	1.4.3
-Release:	10%{?dist}
+Release:	11%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -364,6 +364,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Jun 25 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-11
+- Rebuilt (bug #1235603).
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.3-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
