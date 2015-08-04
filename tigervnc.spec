@@ -5,7 +5,7 @@
 
 Name:		tigervnc
 Version:	1.4.3
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -60,10 +60,11 @@ Patch8:		tigervnc-getmaster.patch
 Patch9:		tigervnc-shebang.patch
 Patch11:	tigervnc-format-security.patch
 Patch14:	tigervnc-xstartup.patch
-Patch15:	tigervnc-xserver117.patch
+Patch15:	tigervnc-xserver118.patch
 Patch16:	tigervnc-gnutls-3.4.patch
+Patch17:        tigervnc-xorg118-QueueKeyboardEvents.patch
 
-# This is tigervnc-%{version}/unix/xserver116.patch rebased on the latest xorg
+# This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver116-rebased.patch
 
 %description
@@ -191,11 +192,12 @@ popd
 # Clearer xstartup file (bug #923655).
 %patch14 -p1 -b .xstartup
 
-# Allow build against xorg-x11-server-1.17.
-%patch15 -p1 -b .xserver117
+# Allow build against xorg-x11-server-1.18.
+%patch15 -p1 -b .xserver118
 
 # Fix the build with gnutls 3.4 (bug #1218518).
 %patch16 -p1 -b .gnutls-3.4
+%patch17 -p1
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -364,6 +366,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Aug 04 2015 Kevin Fenzi <kevin@scrye.com> 1.4.3-12
+- Rebuild to fix broken deps and build against xorg 1.18 prerelease
+
 * Thu Jun 25 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-11
 - Rebuilt (bug #1235603).
 

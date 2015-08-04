@@ -1,0 +1,12 @@
+diff -Nur tigervnc-49d0629dd87c0eb695d72dec7481e9169f55ae9e.orig/unix/xserver/hw/vnc/Input.cc tigervnc-49d0629dd87c0eb695d72dec7481e9169f55ae9e/unix/xserver/hw/vnc/Input.cc
+--- tigervnc-49d0629dd87c0eb695d72dec7481e9169f55ae9e.orig/unix/xserver/hw/vnc/Input.cc	2015-03-01 12:58:35.000000000 -0700
++++ tigervnc-49d0629dd87c0eb695d72dec7481e9169f55ae9e/unix/xserver/hw/vnc/Input.cc	2015-08-04 10:02:26.234604801 -0600
+@@ -378,7 +378,7 @@
+ 	n = GetKeyboardEvents(eventq, dev, action, kc);
+ 	enqueueEvents(dev, n);
+ #else
+-	QueueKeyboardEvents(dev, action, kc, NULL);
++	QueueKeyboardEvents(dev, action, kc);
+ #endif
+ }
+ 
