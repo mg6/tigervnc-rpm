@@ -1,11 +1,6 @@
-# https://fedoraproject.org/wiki/Packaging:SourceURL?rd=Packaging/SourceURL#Github
-# Full hash for v1.4.3 tag:
-%global commit 49d0629dd87c0eb695d72dec7481e9169f55ae9e
-%global shortcommit %(c=%{commit}; echo ${c:0:7})
-
 Name:		tigervnc
-Version:	1.4.3
-Release:	12%{?dist}
+Version:	1.5.0
+Release:	1%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -14,7 +9,7 @@ Group:		User Interface/Desktops
 License:	GPLv2+
 URL:		http://www.tigervnc.com
 
-Source0:	https://github.com/TigerVNC/tigervnc/archive/%{commit}/tigervnc-%{commit}.tar.gz
+Source0:	%{name}-%{version}.tar.gz
 Source1:	vncserver.service
 Source2:	vncserver.sysconfig
 Source3:	10-libvnc.conf
@@ -51,18 +46,15 @@ Provides:	tightvnc = 1.5.0-0.15.20090204svn3586
 Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 
 Patch1:		tigervnc-cookie.patch
-Patch2:		tigervnc11-ldnow.patch
 Patch3:		tigervnc-libvnc-os.patch
 Patch4:		tigervnc11-rh692048.patch
 Patch5:		tigervnc-inetd-nowait.patch
 Patch7:		tigervnc-manpages.patch
 Patch8:		tigervnc-getmaster.patch
 Patch9:		tigervnc-shebang.patch
-Patch11:	tigervnc-format-security.patch
 Patch14:	tigervnc-xstartup.patch
 Patch15:	tigervnc-xserver118.patch
-Patch16:	tigervnc-gnutls-3.4.patch
-Patch17:        tigervnc-xorg118-QueueKeyboardEvents.patch
+Patch17:	tigervnc-xorg118-QueueKeyboardEvents.patch
 
 # This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver116-rebased.patch
@@ -158,10 +150,9 @@ BuildArch:	noarch
 This package contains icons for TigerVNC viewer
 
 %prep
-%setup -qn %{name}-%{commit}
+%setup -q
 
 %patch1 -p1 -b .cookie
-%patch2 -p1 -b .ldnow
 %patch3 -p1 -b .libvnc-os
 %patch4 -p1 -b .rh692048
 
@@ -186,18 +177,15 @@ popd
 # Don't use shebang in vncserver script.
 %patch9 -p1 -b .shebang
 
-# Fixed build failure with -Werror=format-security (bug #1037358).
-%patch11 -p1 -b .format-security
-
 # Clearer xstartup file (bug #923655).
 %patch14 -p1 -b .xstartup
 
 # Allow build against xorg-x11-server-1.18.
 %patch15 -p1 -b .xserver118
 
-# Fix the build with gnutls 3.4 (bug #1218518).
-%patch16 -p1 -b .gnutls-3.4
-%patch17 -p1
+%if 0%{?fedora} > 23
+%patch17 -p1 -b .xorg118-QueueKeyboardEvents
+%endif
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -366,7 +354,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
-* Tue Aug 04 2015 Kevin Fenzi <kevin@scrye.com> 1.4.3-12
+* Wed Aug 19 2015 Jan Grulich <jgrulich@redhat.com> - 1.5.0-1
+- 1.5.0
+
+* Tue Aug 04 2015 Kevin Fenzi <kevin@scrye.com> - 1.4.3-12
 - Rebuild to fix broken deps and build against xorg 1.18 prerelease
 
 * Thu Jun 25 2015 Tim Waugh <twaugh@redhat.com> - 1.4.3-11
