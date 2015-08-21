@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.5.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -46,6 +46,7 @@ Provides:	tightvnc = 1.5.0-0.15.20090204svn3586
 Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 
 Patch1:		tigervnc-cookie.patch
+Patch2:		tigervnc-fix-reversed-logic.patch
 Patch3:		tigervnc-libvnc-os.patch
 Patch4:		tigervnc11-rh692048.patch
 Patch5:		tigervnc-inetd-nowait.patch
@@ -153,6 +154,7 @@ This package contains icons for TigerVNC viewer
 %setup -q
 
 %patch1 -p1 -b .cookie
+%patch2 -p1 -b .fix-reversed-logic
 %patch3 -p1 -b .libvnc-os
 %patch4 -p1 -b .rh692048
 
@@ -354,6 +356,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Fri Aug 21 2015 Jan Grulich <jgrulich@redhat.com> - 1.5.0-2
+- Do not fail with -inetd option
+
 * Wed Aug 19 2015 Jan Grulich <jgrulich@redhat.com> - 1.5.0-1
 - 1.5.0
 
