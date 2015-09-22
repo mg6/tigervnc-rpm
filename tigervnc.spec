@@ -185,7 +185,7 @@ popd
 # Allow build against xorg-x11-server-1.18.
 %patch15 -p1 -b .xserver118
 
-%if 0%{?fedora} > 23
+%if 0%{?fedora} >= 23
 %patch17 -p1 -b .xorg118-QueueKeyboardEvents
 %endif
 
