@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.5.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -356,6 +356,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Nov 19 2015 Jan Grulich <jgrulich@redhat.com> - 1.5.0-4
+- rebuild against final xorg server 1.18 release (bug #1279146)
+
 * Tue Sep 22 2015 Kalev Lember <klember@redhat.com> - 1.5.0-3
 - xorg server 1.18 ABI rebuild
 
