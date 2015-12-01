@@ -1,6 +1,6 @@
 Name:		tigervnc
-Version:	1.5.0
-Release:	4%{?dist}
+Version:	1.5.90
+Release:	1%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -22,7 +22,7 @@ BuildRequires:	xorg-x11-xtrans-devel, xorg-x11-util-macros, libXtst-devel
 BuildRequires:	libdrm-devel, libXt-devel, pixman-devel libXfont-devel
 BuildRequires:	libxkbfile-devel, openssl-devel, libpciaccess-devel
 BuildRequires:	mesa-libGL-devel, libXinerama-devel, ImageMagick
-BuildRequires:  freetype-devel, libXdmcp-devel
+BuildRequires:  freetype-devel, libXdmcp-devel, libxshmfence-devel
 BuildRequires:	desktop-file-utils, java-devel, jpackage-utils
 BuildRequires:	libjpeg-turbo-devel, gnutls-devel, pam-devel
 BuildRequires:	systemd, cmake
@@ -46,7 +46,6 @@ Provides:	tightvnc = 1.5.0-0.15.20090204svn3586
 Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
 
 Patch1:		tigervnc-cookie.patch
-Patch2:		tigervnc-fix-reversed-logic.patch
 Patch3:		tigervnc-libvnc-os.patch
 Patch4:		tigervnc11-rh692048.patch
 Patch5:		tigervnc-inetd-nowait.patch
@@ -154,7 +153,6 @@ This package contains icons for TigerVNC viewer
 %setup -q
 
 %patch1 -p1 -b .cookie
-%patch2 -p1 -b .fix-reversed-logic
 %patch3 -p1 -b .libvnc-os
 %patch4 -p1 -b .rh692048
 
@@ -356,6 +354,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Dec 01 2015 Jan Grulich <jgrulich@redhat.com> - 1.5.90-1
+- Update to 1.5.90 (1.6.0 beta)
+
 * Thu Nov 19 2015 Jan Grulich <jgrulich@redhat.com> - 1.5.0-4
 - rebuild against final xorg server 1.18 release (bug #1279146)
 

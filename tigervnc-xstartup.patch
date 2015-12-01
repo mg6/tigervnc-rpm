@@ -1,7 +1,8 @@
-diff -up tigervnc-1.3.0/unix/vncserver.xstartup tigervnc-1.3.0/unix/vncserver
---- tigervnc-1.3.0/unix/vncserver.xstartup	2014-02-10 14:52:39.902673875 +0000
-+++ tigervnc-1.3.0/unix/vncserver	2014-02-10 14:53:30.398847723 +0000
-@@ -59,27 +59,7 @@ $defaultXStartup
+diff --git a/unix/vncserver b/unix/vncserver
+index c4d0535..64c6744 100755
+--- a/unix/vncserver
++++ b/unix/vncserver
+@@ -61,27 +61,7 @@ $defaultXStartup
      = ("#!/bin/sh\n\n".
         "unset SESSION_MANAGER\n".
         "unset DBUS_SESSION_BUS_ADDRESS\n".
@@ -28,5 +29,5 @@ diff -up tigervnc-1.3.0/unix/vncserver.xstartup tigervnc-1.3.0/unix/vncserver
 -       "twm &\n");
 +       "exec /etc/X11/xinit/xinitrc\n");
  
- chop($host = `uname -n`);
- 
+ $defaultConfig
+     = ("## Supported server options to pass to vncserver upon invocation can be listed\n".
