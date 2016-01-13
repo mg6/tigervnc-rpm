@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.6.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -354,6 +354,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Jan 13 2016 Jan Grulich <jgrulich@redhat.com> - 1.6.0-2
+- Update systemd service file
+  Resolves: bz#1211789
+
 * Mon Jan 04 2016 Jan Grulich <jgrulich@redhat.com> - 1.6.0-1
 - Update to 1.6.0
 
