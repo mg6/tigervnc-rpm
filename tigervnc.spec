@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.6.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -354,6 +354,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Fri Feb 05 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Wed Jan 13 2016 Jan Grulich <jgrulich@redhat.com> - 1.6.0-2
 - Update systemd service file
   Resolves: bz#1211789
