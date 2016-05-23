@@ -1,60 +1,61 @@
-Name:		tigervnc
-Version:	1.6.0
-Release:	3%{?dist}
-Summary:	A TigerVNC remote display system
+Name:           tigervnc
+Version:        1.6.0
+Release:        4%{?dist}
+Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
 
-Group:		User Interface/Desktops
-License:	GPLv2+
-URL:		http://www.tigervnc.com
+Group:          User Interface/Desktops
+License:        GPLv2+
+URL:            http://www.tigervnc.com
 
-Source0:	%{name}-%{version}.tar.gz
-Source1:	vncserver.service
-Source2:	vncserver.sysconfig
-Source3:	10-libvnc.conf
-Source6:	vncviewer.desktop
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        %{name}-%{version}.tar.gz
+Source1:        vncserver.service
+Source2:        vncserver.sysconfig
+Source3:        10-libvnc.conf
+Source6:        vncviewer.desktop
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:	libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
-BuildRequires:	libXext-devel, xorg-x11-server-source, libXi-devel
-BuildRequires:	xorg-x11-xtrans-devel, xorg-x11-util-macros, libXtst-devel
-BuildRequires:	libdrm-devel, libXt-devel, pixman-devel libXfont-devel
-BuildRequires:	libxkbfile-devel, openssl-devel, libpciaccess-devel
-BuildRequires:	mesa-libGL-devel, libXinerama-devel, ImageMagick
+BuildRequires:  libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
+BuildRequires:  libXext-devel, xorg-x11-server-source, libXi-devel
+BuildRequires:  xorg-x11-xtrans-devel, xorg-x11-util-macros, libXtst-devel
+BuildRequires:  libdrm-devel, libXt-devel, pixman-devel libXfont-devel
+BuildRequires:  libxkbfile-devel, openssl-devel, libpciaccess-devel
+BuildRequires:  mesa-libGL-devel, libXinerama-devel, ImageMagick
 BuildRequires:  freetype-devel, libXdmcp-devel, libxshmfence-devel
-BuildRequires:	desktop-file-utils, java-devel, jpackage-utils
-BuildRequires:	libjpeg-turbo-devel, gnutls-devel, pam-devel
-BuildRequires:	systemd, cmake
+BuildRequires:  desktop-file-utils, java-devel, jpackage-utils
+BuildRequires:  libjpeg-turbo-devel, gnutls-devel, pam-devel
+BuildRequires:  systemd, cmake
 # TigerVNC 1.4.x requires fltk 1.3.3 for keyboard handling support
 # See https://github.com/TigerVNC/tigervnc/issues/8, also bug #1208814
-BuildRequires:	fltk-devel >= 1.3.3
+BuildRequires:  fltk-devel >= 1.3.3
 %ifnarch s390 s390x
 BuildRequires:  xorg-x11-server-devel
 %endif
 
-Requires(post):	coreutils
+Requires(post): coreutils
 Requires(postun):coreutils
 
-Requires:	hicolor-icon-theme
-Requires:	tigervnc-license
-Requires:	tigervnc-icons
+Requires:       hicolor-icon-theme
+Requires:       tigervnc-license
+Requires:       tigervnc-icons
 
-Provides:	vnc = 4.1.3-2, vnc-libs = 4.1.3-2
-Obsoletes:	vnc < 4.1.3-2, vnc-libs < 4.1.3-2
-Provides:	tightvnc = 1.5.0-0.15.20090204svn3586
-Obsoletes:	tightvnc < 1.5.0-0.15.20090204svn3586
+Provides:       vnc = 4.1.3-2, vnc-libs = 4.1.3-2
+Obsoletes:      vnc < 4.1.3-2, vnc-libs < 4.1.3-2
+Provides:       tightvnc = 1.5.0-0.15.20090204svn3586
+Obsoletes:      tightvnc < 1.5.0-0.15.20090204svn3586
 
-Patch1:		tigervnc-cookie.patch
-Patch3:		tigervnc-libvnc-os.patch
-Patch4:		tigervnc11-rh692048.patch
-Patch5:		tigervnc-inetd-nowait.patch
-Patch7:		tigervnc-manpages.patch
-Patch8:		tigervnc-getmaster.patch
-Patch9:		tigervnc-shebang.patch
-Patch14:	tigervnc-xstartup.patch
-Patch15:	tigervnc-xserver118.patch
-Patch17:	tigervnc-xorg118-QueueKeyboardEvents.patch
+Patch1:         tigervnc-cookie.patch
+Patch3:         tigervnc-libvnc-os.patch
+# Patch4:         tigervnc11-rh692048.patch
+Patch5:         tigervnc-inetd-nowait.patch
+Patch7:         tigervnc-manpages.patch
+Patch8:         tigervnc-getmaster.patch
+Patch9:         tigervnc-shebang.patch
+Patch14:        tigervnc-xstartup.patch
+Patch15:        tigervnc-xserver118.patch
+Patch17:        tigervnc-xorg118-QueueKeyboardEvents.patch
+Patch18:        tigervnc-utilize-system-crypto-policies.patch
 
 # This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver116-rebased.patch
@@ -68,20 +69,20 @@ client which will allow you to connect to other desktops running a VNC
 server.
 
 %package server
-Summary:	A TigerVNC server
-Group:		User Interface/X
-Provides:	vnc-server = 4.1.3-2, vnc-libs = 4.1.3-2
-Obsoletes:	vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
-Provides:	tightvnc-server = 1.5.0-0.15.20090204svn3586
-Obsoletes:	tightvnc-server < 1.5.0-0.15.20090204svn3586
-Requires:	perl
-Requires:	tigervnc-server-minimal
-Requires:	xorg-x11-xauth
-Requires:	xorg-x11-xinit
+Summary:        A TigerVNC server
+Group:          User Interface/X
+Provides:       vnc-server = 4.1.3-2, vnc-libs = 4.1.3-2
+Obsoletes:      vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
+Provides:       tightvnc-server = 1.5.0-0.15.20090204svn3586
+Obsoletes:      tightvnc-server < 1.5.0-0.15.20090204svn3586
+Requires:       perl
+Requires:       tigervnc-server-minimal
+Requires:       xorg-x11-xauth
+Requires:       xorg-x11-xinit
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
-Requires(post):	systemd-sysv chkconfig
+Requires(post): systemd-sysv chkconfig
 
 %description server
 The VNC system allows you to access the same desktop from a wide
@@ -91,15 +92,15 @@ contains x0vncserver program which can export your active
 X session.
 
 %package server-minimal
-Summary:	A minimal installation of TigerVNC server
-Group:		User Interface/X
-Requires(post):	chkconfig
+Summary:        A minimal installation of TigerVNC server
+Group:          User Interface/X
+Requires(post): chkconfig
 Requires(preun):chkconfig
 Requires(preun):initscripts
 Requires(postun):initscripts
 
-Requires:	mesa-dri-drivers, xkeyboard-config, xorg-x11-xkb-utils
-Requires:	tigervnc-license
+Requires:       mesa-dri-drivers, xkeyboard-config, xorg-x11-xkb-utils
+Requires:       tigervnc-license
 
 %description server-minimal
 The VNC system allows you to access the same desktop from a wide
@@ -109,14 +110,14 @@ machine.
 
 %ifnarch s390 s390x
 %package server-module
-Summary:	TigerVNC module to Xorg
-Group:		User Interface/X
-Provides:	vnc-server = 4.1.3-2, vnc-libs = 4.1.3-2
-Obsoletes:	vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
-Provides:	tightvnc-server-module = 1.5.0-0.15.20090204svn3586
-Obsoletes:	tightvnc-server-module < 1.5.0-0.15.20090204svn3586
-Requires:	xorg-x11-server-Xorg %(xserver-sdk-abi-requires ansic) %(xserver-sdk-abi-requires videodrv)
-Requires:	tigervnc-license
+Summary:        TigerVNC module to Xorg
+Group:          User Interface/X
+Provides:       vnc-server = 4.1.3-2, vnc-libs = 4.1.3-2
+Obsoletes:      vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
+Provides:       tightvnc-server-module = 1.5.0-0.15.20090204svn3586
+Obsoletes:      tightvnc-server-module < 1.5.0-0.15.20090204svn3586
+Requires:       xorg-x11-server-Xorg %(xserver-sdk-abi-requires ansic) %(xserver-sdk-abi-requires videodrv)
+Requires:       tigervnc-license
 
 %description server-module
 This package contains libvnc.so module to X server, allowing others
@@ -124,27 +125,27 @@ to access the desktop on your machine.
 %endif
 
 %package server-applet
-Summary:	Java TigerVNC viewer applet for TigerVNC server
-Group:		User Interface/X
-Requires:	tigervnc-server, java, jpackage-utils
-BuildArch:	noarch
+Summary:        Java TigerVNC viewer applet for TigerVNC server
+Group:          User Interface/X
+Requires:       tigervnc-server, java, jpackage-utils
+BuildArch:      noarch
 
 %description server-applet
 The Java TigerVNC viewer applet for web browsers. Install this package to allow
 clients to use web browser when connect to the TigerVNC server.
 
 %package license
-Summary:	License of TigerVNC suite
-Group:		User Interface/X
-BuildArch:	noarch
+Summary:        License of TigerVNC suite
+Group:          User Interface/X
+BuildArch:      noarch
 
 %description license
 This package contains license of the TigerVNC suite
 
 %package icons
-Summary:	Icons for TigerVNC viewer
-Group:		User Interface/X
-BuildArch:	noarch
+Summary:        Icons for TigerVNC viewer
+Group:          User Interface/X
+BuildArch:      noarch
 
 %description icons
 This package contains icons for TigerVNC viewer
@@ -154,12 +155,12 @@ This package contains icons for TigerVNC viewer
 
 %patch1 -p1 -b .cookie
 %patch3 -p1 -b .libvnc-os
-%patch4 -p1 -b .rh692048
+# %patch4 -p1 -b .rh692048
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
 for all in `find . -type f -perm -001`; do
-	chmod -x "$all"
+        chmod -x "$all"
 done
 %patch100 -p1 -b .xserver116-rebased
 popd
@@ -187,6 +188,10 @@ popd
 %patch17 -p1 -b .xorg118-QueueKeyboardEvents
 %endif
 
+# Utilize system-wide crypto policies
+%patch18 -p1 -b .utilize-system-crypto-policies.patch
+
+
 %build
 %ifarch sparcv9 sparc64 s390 s390x
 export CFLAGS="$RPM_OPT_FLAGS -fPIC"
@@ -201,21 +206,21 @@ make %{?_smp_mflags}
 pushd unix/xserver
 autoreconf -fiv
 %configure \
-	--disable-xorg --disable-xnest --disable-xvfb --disable-dmx \
-	--disable-xwin --disable-xephyr --disable-kdrive --disable-xwayland \
-	--with-pic --disable-static \
-	--with-default-font-path="catalogue:%{_sysconfdir}/X11/fontpath.d,built-ins" \
-	--with-fontdir=%{_datadir}/X11/fonts \
-	--with-xkb-output=%{_localstatedir}/lib/xkb \
-	--enable-install-libxf86config \
-	--enable-glx --disable-dri --enable-dri2 --enable-dri3 \
-	--disable-unit-tests \
-	--disable-config-hal \
-	--disable-config-udev \
-	--with-dri-driver-path=%{_libdir}/dri \
-	--without-dtrace \
-	--disable-devel-docs \
-	--disable-selective-werror
+        --disable-xorg --disable-xnest --disable-xvfb --disable-dmx \
+        --disable-xwin --disable-xephyr --disable-kdrive --disable-xwayland \
+        --with-pic --disable-static \
+        --with-default-font-path="catalogue:%{_sysconfdir}/X11/fontpath.d,built-ins" \
+        --with-fontdir=%{_datadir}/X11/fonts \
+        --with-xkb-output=%{_localstatedir}/lib/xkb \
+        --enable-install-libxf86config \
+        --enable-glx --disable-dri --enable-dri2 --enable-dri3 \
+        --disable-unit-tests \
+        --disable-config-hal \
+        --disable-config-udev \
+        --with-dri-driver-path=%{_libdir}/dri \
+        --without-dtrace \
+        --disable-devel-docs \
+        --disable-selective-werror
 
 make %{?_smp_mflags}
 popd
@@ -259,8 +264,8 @@ popd
 
 mkdir $RPM_BUILD_ROOT%{_datadir}/applications
 desktop-file-install \
-	--dir $RPM_BUILD_ROOT%{_datadir}/applications \
-	%{SOURCE6}
+        --dir $RPM_BUILD_ROOT%{_datadir}/applications \
+        %{SOURCE6}
 
 # Install Java applet
 pushd java
@@ -287,13 +292,13 @@ rm -rf $RPM_BUILD_ROOT
 %post
 touch -c %{_datadir}/icons/hicolor
 if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-	%{_bindir}/gtk-update-icon-cache -q %{_datadir}/icons/hicolor || :
+        %{_bindir}/gtk-update-icon-cache -q %{_datadir}/icons/hicolor || :
 fi
 
 %postun
 touch -c %{_datadir}/icons/hicolor
 if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-	%{_bindir}/gtk-update-icon-cache -q %{_datadir}/icons/hicolor || :
+        %{_bindir}/gtk-update-icon-cache -q %{_datadir}/icons/hicolor || :
 fi
 
 %post server
@@ -354,6 +359,13 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon May 23 2016 Jan Grulich <jgrulich@redhat.com> - 1.6.0-4
+- Utilize system-wide crypto policies
+  Resolves: bz#1179345
+- Try to disable patch4 as it was previously written to support an
+  older version of a different client and breaks some other usage
+  Resolves: bz#1280440
+
 * Fri Feb 05 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
