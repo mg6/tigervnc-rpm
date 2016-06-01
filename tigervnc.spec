@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.6.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -47,7 +47,7 @@ Obsoletes:      tightvnc < 1.5.0-0.15.20090204svn3586
 
 Patch1:         tigervnc-cookie.patch
 Patch3:         tigervnc-libvnc-os.patch
-# Patch4:         tigervnc11-rh692048.patch
+Patch4:         tigervnc11-rh692048.patch
 Patch5:         tigervnc-inetd-nowait.patch
 Patch7:         tigervnc-manpages.patch
 Patch8:         tigervnc-getmaster.patch
@@ -155,7 +155,7 @@ This package contains icons for TigerVNC viewer
 
 %patch1 -p1 -b .cookie
 %patch3 -p1 -b .libvnc-os
-# %patch4 -p1 -b .rh692048
+%patch4 -p1 -b .rh692048
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -359,6 +359,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Jun 01 2016 Jan Grulich <jgrulich@redhat.com> - 1.6.0-5
+- Re-enable patch4 again, will need to find a way to make this work on both sides
+
 * Mon May 23 2016 Jan Grulich <jgrulich@redhat.com> - 1.6.0-4
 - Utilize system-wide crypto policies
   Resolves: bz#1179345
