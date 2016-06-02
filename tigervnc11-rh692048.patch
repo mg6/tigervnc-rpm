@@ -1,44 +1,30 @@
-diff -up tigervnc-1.4.2/common/rfb/SecurityClient.cxx.rh692048 tigervnc-1.4.2/common/rfb/SecurityClient.cxx
---- tigervnc-1.4.2/common/rfb/SecurityClient.cxx.rh692048	2015-02-12 18:32:50.168861186 +0000
-+++ tigervnc-1.4.2/common/rfb/SecurityClient.cxx	2015-02-12 18:33:13.168003696 +0000
-@@ -49,7 +49,7 @@ StringParameter SecurityClient::secTypes
- #endif
-  ")",
- #ifdef HAVE_GNUTLS
-- "X509Plain,TLSPlain,X509Vnc,TLSVnc,X509None,TLSNone,VncAuth,None",
-+ "VeNCrypt,X509Plain,TLSPlain,X509Vnc,TLSVnc,X509None,TLSNone,VncAuth,None",
- #else
-  "VncAuth,None",
- #endif
-diff -up tigervnc-1.4.2/common/rfb/Security.cxx.rh692048 tigervnc-1.4.2/common/rfb/Security.cxx
---- tigervnc-1.4.2/common/rfb/Security.cxx.rh692048	2015-01-23 23:37:23.000000000 +0000
-+++ tigervnc-1.4.2/common/rfb/Security.cxx	2015-02-12 18:32:50.168861186 +0000
-@@ -68,7 +68,6 @@ const std::list<rdr::U8> Security::GetEn
+From 1f8aba3147ec13aaa70a44372775b72bb4e59941 Mon Sep 17 00:00:00 2001
+From: Pierre Ossman <ossman@cendio.se>
+Date: Tue, 29 Dec 2015 15:02:11 +0100
+Subject: Add workaround for Vino's VeNCrypt implementation
+
+
+diff --git a/common/rfb/Security.cxx b/common/rfb/Security.cxx
+index e623ab5..0666041 100644
+--- a/common/rfb/Security.cxx
++++ b/common/rfb/Security.cxx
+@@ -74,7 +74,18 @@ const std::list<rdr::U8> Security::GetEnabledSecTypes(void)
    list<rdr::U8> result;
    list<U32>::iterator i;
- 
+
 -  result.push_back(secTypeVeNCrypt);
++  /* Partial workaround for Vino's stupid behaviour. It doesn't allow
++   * the basic authentication types as part of the VeNCrypt handshake,
++   * making it impossible for a client to do opportunistic encryption.
++   * At least make it possible to connect when encryption is explicitly
++   * disabled. */
++  for (i = enabledSecTypes.begin(); i != enabledSecTypes.end(); i++) {
++    if (*i >= 0x100) {
++      result.push_back(secTypeVeNCrypt);
++      break;
++    }
++  }
++
    for (i = enabledSecTypes.begin(); i != enabledSecTypes.end(); i++)
      if (*i < 0x100)
        result.push_back(*i);
-@@ -106,8 +105,6 @@ bool Security::IsSupported(U32 secType)
-   for (i = enabledSecTypes.begin(); i != enabledSecTypes.end(); i++)
-     if (*i == secType)
-       return true;
--  if (secType == secTypeVeNCrypt)
--    return true;
- 
-   return false;
- }
-diff -up tigervnc-1.4.2/common/rfb/SecurityServer.cxx.rh692048 tigervnc-1.4.2/common/rfb/SecurityServer.cxx
---- tigervnc-1.4.2/common/rfb/SecurityServer.cxx.rh692048	2015-02-12 18:32:50.168861186 +0000
-+++ tigervnc-1.4.2/common/rfb/SecurityServer.cxx	2015-02-12 18:33:24.977076868 +0000
-@@ -43,7 +43,7 @@ StringParameter SecurityServer::secTypes
- #endif
-  ")",
- #ifdef HAVE_GNUTLS
-- "TLSVnc,VncAuth",
-+ "VncAuth",
- #else
-  "VncAuth",
- #endif

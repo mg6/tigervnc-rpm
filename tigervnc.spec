@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.6.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -359,6 +359,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Jun 01 2016 Jan Grulich <jgrulich@redhat.com> - 1.6.0-6
+- Try to pickup upstream fix for compatibility with gtk vnc clients
+
 * Wed Jun 01 2016 Jan Grulich <jgrulich@redhat.com> - 1.6.0-5
 - Re-enable patch4 again, will need to find a way to make this work on both sides
 
