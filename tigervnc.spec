@@ -13,7 +13,6 @@ Source0:        %{name}-%{version}.tar.gz
 Source1:        vncserver.service
 Source2:        vncserver.sysconfig
 Source3:        10-libvnc.conf
-Source6:        vncviewer.desktop
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
@@ -215,7 +214,7 @@ popd
 # Build Java applet
 pushd java
 %{cmake} .
-make
+JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF8" make
 popd
 
 %install
@@ -244,10 +243,6 @@ install -m644 tigervnc_$s.png $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x$s/a
 done
 popd
 
-mkdir $RPM_BUILD_ROOT%{_datadir}/applications
-desktop-file-install \
-        --dir $RPM_BUILD_ROOT%{_datadir}/applications \
-        %{SOURCE6}
 
 # Install Java applet
 pushd java
