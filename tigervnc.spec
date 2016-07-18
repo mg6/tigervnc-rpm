@@ -1,6 +1,6 @@
 Name:           tigervnc
-Version:        1.6.0
-Release:        6%{?dist}
+Version:        1.6.90
+Release:        1%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -45,16 +45,11 @@ Obsoletes:      vnc < 4.1.3-2, vnc-libs < 4.1.3-2
 Provides:       tightvnc = 1.5.0-0.15.20090204svn3586
 Obsoletes:      tightvnc < 1.5.0-0.15.20090204svn3586
 
-Patch1:         tigervnc-cookie.patch
 Patch3:         tigervnc-libvnc-os.patch
-Patch4:         tigervnc11-rh692048.patch
-Patch5:         tigervnc-inetd-nowait.patch
 Patch7:         tigervnc-manpages.patch
 Patch8:         tigervnc-getmaster.patch
 Patch9:         tigervnc-shebang.patch
 Patch14:        tigervnc-xstartup.patch
-Patch15:        tigervnc-xserver118.patch
-Patch17:        tigervnc-xorg118-QueueKeyboardEvents.patch
 Patch18:        tigervnc-utilize-system-crypto-policies.patch
 
 # This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
@@ -153,9 +148,7 @@ This package contains icons for TigerVNC viewer
 %prep
 %setup -q
 
-%patch1 -p1 -b .cookie
 %patch3 -p1 -b .libvnc-os
-%patch4 -p1 -b .rh692048
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -164,10 +157,6 @@ for all in `find . -type f -perm -001`; do
 done
 %patch100 -p1 -b .xserver116-rebased
 popd
-
-# Applied Debian patch to fix busy loop when run from inetd in nowait
-# mode (bug #920373).
-%patch5 -p1 -b .inetd-nowait
 
 # Synchronise manpages and --help output (bug #980870).
 %patch7 -p1 -b .manpages
@@ -180,13 +169,6 @@ popd
 
 # Clearer xstartup file (bug #923655).
 %patch14 -p1 -b .xstartup
-
-# Allow build against xorg-x11-server-1.18.
-%patch15 -p1 -b .xserver118
-
-%if 0%{?fedora} >= 23
-%patch17 -p1 -b .xorg118-QueueKeyboardEvents
-%endif
 
 # Utilize system-wide crypto policies
 %patch18 -p1 -b .utilize-system-crypto-policies.patch
@@ -359,6 +341,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Jul 18 2016 Jan Grulich <jgrulich@redhat.com> - 1.6.90-1
+- Update to 1.6.90 (1.7.0 beta)
+
 * Wed Jun 01 2016 Jan Grulich <jgrulich@redhat.com> - 1.6.0-6
 - Try to pickup upstream fix for compatibility with gtk vnc clients
 
