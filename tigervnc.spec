@@ -1,5 +1,5 @@
 Name:           tigervnc
-Version:        1.6.90
+Version:        1.7.0
 Release:        1%{?dist}
 Summary:        A TigerVNC remote display system
 
@@ -336,6 +336,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Sep 12 2016 Jan Grulich <jgrulich@redhat.com> - 1.7.0-1
+- Update to 1.7.0
+
 * Mon Jul 18 2016 Jan Grulich <jgrulich@redhat.com> - 1.6.90-1
 - Update to 1.6.90 (1.7.0 beta)
 
