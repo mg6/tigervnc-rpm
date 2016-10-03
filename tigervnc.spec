@@ -1,11 +1,10 @@
 Name:           tigervnc
 Version:        1.7.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
 
-Group:          User Interface/Desktops
 License:        GPLv2+
 URL:            http://www.tigervnc.com
 
@@ -13,7 +12,6 @@ Source0:        %{name}-%{version}.tar.gz
 Source1:        vncserver.service
 Source2:        vncserver.sysconfig
 Source3:        10-libvnc.conf
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
 BuildRequires:  libXext-devel, xorg-x11-server-source, libXi-devel
@@ -44,6 +42,7 @@ Obsoletes:      vnc < 4.1.3-2, vnc-libs < 4.1.3-2
 Provides:       tightvnc = 1.5.0-0.15.20090204svn3586
 Obsoletes:      tightvnc < 1.5.0-0.15.20090204svn3586
 
+Patch1:         tigervnc-1.7.0-xserver119-support.patch
 Patch3:         tigervnc-libvnc-os.patch
 Patch7:         tigervnc-manpages.patch
 Patch8:         tigervnc-getmaster.patch
@@ -52,7 +51,7 @@ Patch14:        tigervnc-xstartup.patch
 Patch18:        tigervnc-utilize-system-crypto-policies.patch
 
 # This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
-Patch100:       tigervnc-xserver116-rebased.patch
+Patch100:       tigervnc-xserver119.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -64,7 +63,6 @@ server.
 
 %package server
 Summary:        A TigerVNC server
-Group:          User Interface/X
 Provides:       vnc-server = 4.1.3-2, vnc-libs = 4.1.3-2
 Obsoletes:      vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
 Provides:       tightvnc-server = 1.5.0-0.15.20090204svn3586
@@ -87,7 +85,6 @@ X session.
 
 %package server-minimal
 Summary:        A minimal installation of TigerVNC server
-Group:          User Interface/X
 Requires(post): chkconfig
 Requires(preun):chkconfig
 Requires(preun):initscripts
@@ -105,7 +102,6 @@ machine.
 %ifnarch s390 s390x
 %package server-module
 Summary:        TigerVNC module to Xorg
-Group:          User Interface/X
 Provides:       vnc-server = 4.1.3-2, vnc-libs = 4.1.3-2
 Obsoletes:      vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
 Provides:       tightvnc-server-module = 1.5.0-0.15.20090204svn3586
@@ -120,7 +116,6 @@ to access the desktop on your machine.
 
 %package server-applet
 Summary:        Java TigerVNC viewer applet for TigerVNC server
-Group:          User Interface/X
 Requires:       tigervnc-server, java, jpackage-utils
 BuildArch:      noarch
 
@@ -130,7 +125,6 @@ clients to use web browser when connect to the TigerVNC server.
 
 %package license
 Summary:        License of TigerVNC suite
-Group:          User Interface/X
 BuildArch:      noarch
 
 %description license
@@ -138,7 +132,6 @@ This package contains license of the TigerVNC suite
 
 %package icons
 Summary:        Icons for TigerVNC viewer
-Group:          User Interface/X
 BuildArch:      noarch
 
 %description icons
@@ -146,7 +139,7 @@ This package contains icons for TigerVNC viewer
 
 %prep
 %setup -q
-
+%patch1 -p1
 %patch3 -p1 -b .libvnc-os
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
@@ -218,8 +211,7 @@ JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF8" make
 popd
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+%make_install
 rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{README.txt,LICENCE.TXT}
 
 pushd unix/xserver/hw/vnc
@@ -263,9 +255,6 @@ mkdir -p %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/
 install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
 %endif
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %post
 touch -c %{_datadir}/icons/hicolor
 if [ -x %{_bindir}/gtk-update-icon-cache ]; then
@@ -292,14 +281,12 @@ fi
 %systemd_postun
 
 %files -f %{name}.lang
-%defattr(-,root,root,-)
 %doc README.txt
 %{_bindir}/vncviewer
 %{_datadir}/applications/*
 %{_mandir}/man1/vncviewer.1*
 
 %files server
-%defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/sysconfig/vncservers
 %{_unitdir}/vncserver@.service
 %{_bindir}/x0vncserver
@@ -308,7 +295,6 @@ fi
 %{_mandir}/man1/x0vncserver.1*
 
 %files server-minimal
-%defattr(-,root,root,-)
 %{_bindir}/vncconfig
 %{_bindir}/vncpasswd
 %{_bindir}/Xvnc
@@ -318,24 +304,26 @@ fi
 
 %ifnarch s390 s390x
 %files server-module
-%defattr(-,root,root,-)
 %{_libdir}/xorg/modules/extensions/libvnc.so
 %config %{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
 %endif
 
 %files server-applet
-%defattr(-,root,root,-)
 %doc java/com/tigervnc/vncviewer/README
 %{_datadir}/vnc/classes/*
 
 %files license
-%doc LICENCE.TXT
+%license LICENCE.TXT
 
 %files icons
-%defattr(-,root,root,-)
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Oct  3 2016 Hans de Goede <hdegoede@redhat.com> - 1.7.0-2
+- Add patches for use with xserver-1.19
+- Rebuild against xserver-1.19
+- Cleanup specfile a bit
+
 * Mon Sep 12 2016 Jan Grulich <jgrulich@redhat.com> - 1.7.0-1
 - Update to 1.7.0
 
