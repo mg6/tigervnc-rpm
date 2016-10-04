@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.7.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -139,7 +139,7 @@ This package contains icons for TigerVNC viewer
 
 %prep
 %setup -q
-%patch1 -p1
+%patch1 -p1 -b .xserver119
 %patch3 -p1 -b .libvnc-os
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
@@ -319,6 +319,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Oct  4 2016 Hans de Goede <hdegoede@redhat.com> - 1.7.0-3
+- Update tigervnc-1.7.0-xserver119-support.patch to also request write
+  notfication when necessary
+
 * Mon Oct  3 2016 Hans de Goede <hdegoede@redhat.com> - 1.7.0-2
 - Add patches for use with xserver-1.19
 - Rebuild against xserver-1.19
