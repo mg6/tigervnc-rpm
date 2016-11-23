@@ -2,8 +2,9 @@
 #
 # Quick HowTo:
 # 1. Copy this file to /etc/systemd/system/vncserver@.service
-# 2. Edit User=
-#   ("User=foo")
+# 2. Replace <USER> with the actual user name and edit vncserver
+     parameters appropriately
+#   ("User=<USER>" and "/home/<USER>/.vnc/%H%i.pid")
 # 3. Run `systemctl daemon-reload`
 # 4. Run `systemctl enable vncserver@:<display>.service`
 #
@@ -35,7 +36,7 @@ After=syslog.target network.target
 
 [Service]
 Type=forking
-User=
+User=<USER>
 
 # Clean any existing files in /tmp/.X11-unix environment
 ExecStartPre=-/usr/bin/vncserver -kill %i
