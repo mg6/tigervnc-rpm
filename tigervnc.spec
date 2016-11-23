@@ -16,13 +16,19 @@ Source3:        10-libvnc.conf
 BuildRequires:  libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
 BuildRequires:  libXext-devel, xorg-x11-server-source, libXi-devel
 BuildRequires:  xorg-x11-xtrans-devel, xorg-x11-util-macros, libXtst-devel
-BuildRequires:  libdrm-devel, libXt-devel, pixman-devel libXfont2-devel
 BuildRequires:  libxkbfile-devel, openssl-devel, libpciaccess-devel
 BuildRequires:  mesa-libGL-devel, libXinerama-devel, ImageMagick
 BuildRequires:  freetype-devel, libXdmcp-devel, libxshmfence-devel
 BuildRequires:  desktop-file-utils, java-devel, jpackage-utils
 BuildRequires:  libjpeg-turbo-devel, gnutls-devel, pam-devel
+BuildRequires:  libdrm-devel, libXt-devel, pixman-devel
 BuildRequires:  systemd, cmake
+%if 0%{?fedora} > 24
+BuildRequires:  libXfont2-devel
+%else
+BuildRequires:  libXfont-devel
+%endif
+
 # TigerVNC 1.4.x requires fltk 1.3.3 for keyboard handling support
 # See https://github.com/TigerVNC/tigervnc/issues/8, also bug #1208814
 BuildRequires:  fltk-devel >= 1.3.3
