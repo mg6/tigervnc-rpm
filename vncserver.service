@@ -3,7 +3,7 @@
 # Quick HowTo:
 # 1. Copy this file to /etc/systemd/system/vncserver@.service
 # 2. Replace <USER> with the actual user name and edit vncserver
-     parameters appropriately
+#    parameters appropriately
 #   ("User=<USER>" and "/home/<USER>/.vnc/%H%i.pid")
 # 3. Run `systemctl daemon-reload`
 # 4. Run `systemctl enable vncserver@:<display>.service`

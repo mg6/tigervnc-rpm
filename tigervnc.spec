@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.7.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -325,6 +325,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Nov 30 2016 Jan Grulich <jgrulich@redhat.com> - 1.7.0-5
+- Fix broken vncserver.service file
+
 * Wed Nov 23 2016 Jan Grulich <jgrulich@redhat.com> - 1.7.0-4
 - Improve instructions in vncserver.service
   Resolves: bz#1397207
