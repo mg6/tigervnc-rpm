@@ -1,0 +1,38 @@
+From 372ff9d6754cd1b375836e5d4559061fb7be3496 Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Mon, 9 Jan 2017 16:03:30 +0100
+Subject: [PATCH] Fix -inetd not working with xserver >= 1.19
+
+xserver 1.19's OsInit will create a pollfd, followed by checking if fd 2 /
+stderr is writable and if it is not, replacing fd 2 with /dev/null.
+
+Since we close stderr in inetd mode to avoid xserver messages being send
+to the client as vnc data, the pollfd becomes fd 2, only to be replaced
+by /dev/null since a pollfd is not writable.
+
+This commit fixes this by opening /dev/null directly after the close(2),
+avoiding that the pollfd becomes fd 2.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ unix/xserver/hw/vnc/xvnc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/unix/xserver/hw/vnc/xvnc.c b/unix/xserver/hw/vnc/xvnc.c
+index 2f3cd4a..a747654 100644
+--- a/unix/xserver/hw/vnc/xvnc.c
++++ b/unix/xserver/hw/vnc/xvnc.c
+@@ -575,6 +575,10 @@ ddxProcessArgument(int argc, char *argv[], int i)
+ 	dup2(0,3);
+ 	vncInetdSock = 3;
+ 	close(2);
++	/* Avoid xserver >= 1.19's epoll-fd becoming fd 2 / stderr only to be
++	   replaced by /dev/null by OsInit() because the pollfd is not
++	   writable, breaking ospoll_wait(). */
++	open("/dev/null", O_WRONLY);
+ 	
+ 	if (!displaySpecified) {
+ 	    int port = vncGetSocketPort(vncInetdSock);
+-- 
+2.9.3
+

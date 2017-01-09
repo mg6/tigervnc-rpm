@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.7.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -49,6 +49,7 @@ Provides:       tightvnc = 1.5.0-0.15.20090204svn3586
 Obsoletes:      tightvnc < 1.5.0-0.15.20090204svn3586
 
 Patch1:         tigervnc-1.7.0-xserver119-support.patch
+Patch2:         0001-Fix-inetd-not-working-with-xserver-1.19.patch
 Patch3:         tigervnc-libvnc-os.patch
 Patch7:         tigervnc-manpages.patch
 Patch8:         tigervnc-getmaster.patch
@@ -146,6 +147,7 @@ This package contains icons for TigerVNC viewer
 %prep
 %setup -q
 %patch1 -p1 -b .xserver119
+%patch2 -p1 -b .inetd
 %patch3 -p1 -b .libvnc-os
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
@@ -325,6 +327,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Jan  9 2017 Hans de Goede <hdegoede@redhat.com> - 1.7.0-6
+- Fix -inetd no longer working (rhbz#1408724)
+
 * Wed Nov 30 2016 Jan Grulich <jgrulich@redhat.com> - 1.7.0-5
 - Fix broken vncserver.service file
 
