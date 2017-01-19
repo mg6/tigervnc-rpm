@@ -147,7 +147,9 @@ This package contains icons for TigerVNC viewer
 %prep
 %setup -q
 %patch1 -p1 -b .xserver119
+%if 0%{?fedora} > 24
 %patch2 -p1 -b .inetd
+%endif
 %patch3 -p1 -b .libvnc-os
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
