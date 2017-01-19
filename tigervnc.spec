@@ -1,6 +1,6 @@
 Name:           tigervnc
-Version:        1.7.0
-Release:        6%{?dist}
+Version:        1.7.1
+Release:        1%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -327,6 +327,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Jan 19 2017 Jan Grulich <jgrulich@redhat.com> - 1.7.1-1
+- Update to 1.7.1
+
 * Mon Jan  9 2017 Hans de Goede <hdegoede@redhat.com> - 1.7.0-6
 - Fix -inetd no longer working (rhbz#1408724)
 
