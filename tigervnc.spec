@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.7.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -56,6 +56,23 @@ Patch8:         tigervnc-getmaster.patch
 Patch9:         tigervnc-shebang.patch
 Patch14:        tigervnc-xstartup.patch
 Patch18:        tigervnc-utilize-system-crypto-policies.patch
+
+# Upstream fixes for CVEs
+# Bug 1438694 - (CVE-2017-7392) CVE-2017-7392 tigervnc: SSecurityVeNCrypt memory leak
+Patch50:        tigervnc-delete-underlying-ssecurity.patch
+# Bug 1438697 - (CVE-2017-7393) CVE-2017-7393 tigervnc: Double free via crafted fences
+Patch51:        tigervnc-prevent-double-free-by-crafted-fences.patch
+# Bug 1438700 - (CVE-2017-7394) CVE-2017-7394 tigervnc: Server crash via long filenames
+Patch52:        tigervnc-limit-max-username-password-size-in-ssecurityplain.patch
+# Bug 1438701 - (CVE-2017-7395) CVE-2017-7395 tigervnc: Integer overflow in SMsgReader::readClientCutText
+Patch53:        tigervnc-fix-crash-from-integer-overflow.patch
+# Bug 1438703 - (CVE-2017-7396) CVE-2017-7396 tigervnc: SecurityServer and ClientServer memory leaks
+Patch54:        tigervnc-prevent-leak-of-securityserver-and-clientserver.patch
+
+# Other important fixes
+Patch60:        tigervnc-avoid-leaking-shared-memory.patch
+Patch61:        tigervnc-be-more-restrictive-with-shared-memory-mode-bits.patch
+Patch62:        tigervnc-fix-checknowait-logic-in-ssecurityplain.patch
 
 # This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver119.patch
@@ -175,6 +192,21 @@ popd
 # Utilize system-wide crypto policies
 %patch18 -p1 -b .utilize-system-crypto-policies.patch
 
+# Bug 1438694 - (CVE-2017-7392) CVE-2017-7392 tigervnc: SSecurityVeNCrypt memory leak
+%patch50 -p1 -b .delete-underlying-ssecurity.patch
+# Bug 1438697 - (CVE-2017-7393) CVE-2017-7393 tigervnc: Double free via crafted fences
+%patch51 -p1 -b .prevent-double-free-by-crafted-fences.patch
+# Bug 1438700 - (CVE-2017-7394) CVE-2017-7394 tigervnc: Server crash via long filenames
+%patch52 -p1 -b .limit-max-username-password-size-in-ssecurityplain.patch
+# Bug 1438701 - (CVE-2017-7395) CVE-2017-7395 tigervnc: Integer overflow in SMsgReader::readClientCutText
+%patch53 -p1 -b .fix-crash-from-integer-overflow.patch
+# Bug 1438703 - (CVE-2017-7396) CVE-2017-7396 tigervnc: SecurityServer and ClientServer memory leaks
+%patch54 -p1 -b .prevent-leak-of-securityserver-and-clientserver.patch
+
+# Other important fixes
+%patch60 -p1 -b .avoid-leaking-shared-memory.patch
+%patch61 -p1 -b .be-more-restrictive-with-shared-memory-mode-bits.patch
+%patch62 -p1 -b .fix-checknowait-logic-in-ssecurityplain.patch
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -329,6 +361,11 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Apr 04 2017 Jan Grulich <jgrulich@redhat.com> - 1.7.1-3
+- Bug 1438704 - CVE-2017-7392 CVE-2017-7393 CVE-2017-7394
+                CVE-2017-7395 CVE-2017-7396 tigervnc: various flaws
+  + other upstream related fixes
+
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.7.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 

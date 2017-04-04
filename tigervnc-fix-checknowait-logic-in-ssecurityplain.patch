@@ -1,0 +1,23 @@
+From 9801c5efcf8c1774d9c807ebd5d27ac7049ad993 Mon Sep 17 00:00:00 2001
+From: Michal Srb <michalsrb@gmail.com>
+Date: Wed, 29 Mar 2017 17:00:30 +0300
+Subject: Fix checkNoWait logic in SSecurityPlain.
+
+Currently it proceeds only if there aren't enough data in queue and then it blocks waiting.
+Also the required amount to receive from network is (ulen + plen), not (ulen + plen + 2).
+
+This allowed not authenticated clients to deny service to everyone.
+
+diff --git a/common/rfb/SSecurityPlain.cxx b/common/rfb/SSecurityPlain.cxx
+index f5a5cc7..0531549 100644
+--- a/common/rfb/SSecurityPlain.cxx
++++ b/common/rfb/SSecurityPlain.cxx
+@@ -92,7 +92,7 @@ bool SSecurityPlain::processMsg(SConnection* sc)
+   }
+ 
+   if (state == 1) {
+-    if (is->checkNoWait(ulen + plen + 2))
++    if (!is->checkNoWait(ulen + plen))
+       return false;
+     state = 2;
+     pw = new char[plen + 1];

@@ -1,0 +1,20 @@
+From fbbd48b35e53fb156b91715dae4aab9008533565 Mon Sep 17 00:00:00 2001
+From: Pierre Ossman <ossman@cendio.se>
+Date: Wed, 29 Mar 2017 13:27:32 +0200
+Subject: Avoid leaking shared memory via X server
+
+It's not enough that we detach from the shared memory, we must also
+tell the X server to do so for it to be freed properly.
+
+diff --git a/vncviewer/X11PixelBuffer.cxx b/vncviewer/X11PixelBuffer.cxx
+index ce5c4d8..ac35dfc 100644
+--- a/vncviewer/X11PixelBuffer.cxx
++++ b/vncviewer/X11PixelBuffer.cxx
+@@ -126,6 +126,7 @@ X11PixelBuffer::~X11PixelBuffer()
+ {
+   if (shminfo) {
+     vlog.debug("Freeing shared memory XImage");
++    XShmDetach(fl_display, shminfo);
+     shmList.remove(this);
+     Fl::remove_system_handler(handleSystemEvent);
+     shmdt(shminfo->shmaddr);
