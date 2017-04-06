@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.7.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -12,6 +12,8 @@ Source0:        %{name}-%{version}.tar.gz
 Source1:        vncserver.service
 Source2:        vncserver.sysconfig
 Source3:        10-libvnc.conf
+Source4:        xvnc.service
+Source5:        xvnc.socket
 
 BuildRequires:  libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
 BuildRequires:  libXext-devel, xorg-x11-server-source, libXi-devel
@@ -263,6 +265,8 @@ popd
 # Install systemd unit file
 mkdir -p %{buildroot}%{_unitdir}
 install -m644 %{SOURCE1} %{buildroot}%{_unitdir}/vncserver@.service
+install -m644 %{SOURCE4} %{buildroot}%{_unitdir}/xvnc@.service
+install -m644 %{SOURCE5} %{buildroot}%{_unitdir}/xvnc.socket
 rm -rf %{buildroot}%{_initrddir}
 
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
@@ -311,6 +315,8 @@ fi
 
 %post server
 %systemd_post vncserver.service
+%systemd_post xvnc.service
+%systemd_post xvnc.socket
 
 %triggerun -- tigervnc-server < 1.0.90-6
 %{_bindir}/systemd-sysv-convert --save vncserver >/dev/null 2>&1 ||:
@@ -318,6 +324,8 @@ fi
 
 %preun server
 %systemd_preun vncserver.service
+%systemd_preun xvnc.service
+%systemd_preun xvnc.socket
 
 %postun server
 %systemd_postun
@@ -331,6 +339,8 @@ fi
 %files server
 %config(noreplace) %{_sysconfdir}/sysconfig/vncservers
 %{_unitdir}/vncserver@.service
+%{_unitdir}/xvnc@.service
+%{_unitdir}/xvnc.socket
 %{_bindir}/x0vncserver
 %{_bindir}/vncserver
 %{_mandir}/man1/vncserver.1*
@@ -361,6 +371,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Apr 06 2017 Jan Grulich <jgrulich@redhat.com> - 1.7.1-4
+- Added systemd unit file for xvnc
+  Resolves: bz#891802
+
 * Tue Apr 04 2017 Jan Grulich <jgrulich@redhat.com> - 1.7.1-3
 - Bug 1438704 - CVE-2017-7392 CVE-2017-7393 CVE-2017-7394
                 CVE-2017-7395 CVE-2017-7396 tigervnc: various flaws
