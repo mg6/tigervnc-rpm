@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.8.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -73,7 +73,7 @@ Provides:       vnc-server = 4.1.3-2, vnc-libs = 4.1.3-2
 Obsoletes:      vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
 Provides:       tightvnc-server = 1.5.0-0.15.20090204svn3586
 Obsoletes:      tightvnc-server < 1.5.0-0.15.20090204svn3586
-Requires:       perl
+Requires:       perl-interpreter
 Requires:       tigervnc-server-minimal
 Requires:       xorg-x11-xauth
 Requires:       xorg-x11-xinit
@@ -331,6 +331,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Jul 13 2017 Petr Pisar <ppisar@redhat.com> - 1.8.0-2
+- perl dependency renamed to perl-interpreter
+  <https://fedoraproject.org/wiki/Changes/perl_Package_to_Install_Core_Modules>
+
 * Wed May 17 2017 Jan Grulich <jgrulich@redhat.com> - 1.8.0-1
 - Update to 1.8.0
 
