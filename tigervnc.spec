@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.8.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -331,6 +331,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.8.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Thu Jul 13 2017 Petr Pisar <ppisar@redhat.com> - 1.8.0-2
 - perl dependency renamed to perl-interpreter
   <https://fedoraproject.org/wiki/Changes/perl_Package_to_Install_Core_Modules>
