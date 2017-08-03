@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.8.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -331,6 +331,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.8.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
+
 * Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.8.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
