@@ -25,7 +25,7 @@ BuildRequires:  desktop-file-utils, java-devel, jpackage-utils
 BuildRequires:  libjpeg-turbo-devel, gnutls-devel, pam-devel
 BuildRequires:  libdrm-devel, libXt-devel, pixman-devel
 BuildRequires:  systemd, cmake
-%if 0%{?fedora} > 24
+%if 0%{?fedora} > 24 || 0%{?rhel} >= 7
 BuildRequires:  libXfont2-devel
 %else
 BuildRequires:  libXfont-devel
