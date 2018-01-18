@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.8.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -261,18 +261,6 @@ mkdir -p %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/
 install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
 %endif
 
-%post
-touch -c %{_datadir}/icons/hicolor
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-        %{_bindir}/gtk-update-icon-cache -q %{_datadir}/icons/hicolor || :
-fi
-
-%postun
-touch -c %{_datadir}/icons/hicolor
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-        %{_bindir}/gtk-update-icon-cache -q %{_datadir}/icons/hicolor || :
-fi
-
 %post server
 %systemd_post vncserver.service
 %systemd_post xvnc.service
@@ -331,6 +319,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Jan 18 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 1.8.0-6
+- Remove obsolete scriptlets
+
 * Fri Dec 15 2017 Jan Grulich <jgrulich@redhat.com> - 1.8.0-5
 - Properly initialize tigervnc when started as systemd service
 
