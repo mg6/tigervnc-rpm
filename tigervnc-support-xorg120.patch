@@ -34,3 +34,25 @@ index 93d8af4..1517809 100644
 
  #if XORG < 111
  void ddxGiveUp()
+@@ -1491,6 +1491,12 @@ vfbCloseScreen(ScreenPtr pScreen)
+ #endif
+ }
+
++#if XORG >= 120
++static void vncDPMS(ScreenPtr pScreen, int level)
++{
++}
++#endif
++
+ static Bool
+ #if XORG < 113
+ vfbScreenInit(int index, ScreenPtr pScreen, int argc, char **argv)
+@@ -1661,6 +1667,9 @@ vfbScreenInit(ScreenPtr pScreen, int arg
+     if (!ret) return FALSE;
+ #endif
+
++#if XORG >= 120
++    pScreen->DPMS = vncDPMS;
++#endif
+
+   return TRUE;
