@@ -19,7 +19,7 @@ BuildRequires:  libX11-devel, automake, autoconf, libtool, gettext, gettext-auto
 BuildRequires:  libXext-devel, xorg-x11-server-source, libXi-devel
 BuildRequires:  xorg-x11-xtrans-devel, xorg-x11-util-macros, libXtst-devel
 BuildRequires:  libxkbfile-devel, openssl-devel, libpciaccess-devel
-BuildRequires:  mesa-libGL-devel, libXinerama-devel, ImageMagick
+BuildRequires:  mesa-libGL-devel, libXinerama-devel,
 BuildRequires:  freetype-devel, libXdmcp-devel, libxshmfence-devel
 BuildRequires:  desktop-file-utils, java-devel, jpackage-utils
 BuildRequires:  libjpeg-turbo-devel, gnutls-devel, pam-devel
@@ -55,6 +55,7 @@ Patch8:         tigervnc-getmaster.patch
 Patch9:         tigervnc-shebang.patch
 Patch14:        tigervnc-xstartup.patch
 Patch18:        tigervnc-utilize-system-crypto-policies.patch
+Patch19:        tigervnc-support-xorg120.patch
 
 # This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver119.patch
@@ -167,8 +168,9 @@ popd
 %patch14 -p1 -b .xstartup
 
 # Utilize system-wide crypto policies
-%patch18 -p1 -b .utilize-system-crypto-policies.patch
+%patch18 -p1 -b .utilize-system-crypto-policies
 
+%patch19 -p1 -b .tigervnc-support-xorg120
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -191,7 +193,7 @@ autoreconf -fiv
         --with-fontdir=%{_datadir}/X11/fonts \
         --with-xkb-output=%{_localstatedir}/lib/xkb \
         --enable-install-libxf86config \
-        --enable-glx --disable-dri --enable-dri2 --enable-dri3 \
+        --enable-glx --disable-dri --enable-dri2 --disable-dri3 \
         --disable-unit-tests \
         --disable-config-hal \
         --disable-config-udev \
