@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.8.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -321,6 +321,9 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Jun 06 2018 Adam Jackson <ajax@redhat.com> - 1.8.0-9
+- Fix GLX initialization with 1.20
+
 * Wed Apr 04 2018 Adam Jackson <ajax@redhat.com> - 1.8.0-8
 - Rebuild for xserver 1.20
 
