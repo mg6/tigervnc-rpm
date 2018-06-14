@@ -1,6 +1,6 @@
 Name:           tigervnc
-Version:        1.8.0
-Release:        10%{?dist}
+Version:        1.8.90
+Release:        1%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -55,10 +55,8 @@ Patch8:         tigervnc-getmaster.patch
 Patch9:         tigervnc-shebang.patch
 Patch14:        tigervnc-xstartup.patch
 Patch18:        tigervnc-utilize-system-crypto-policies.patch
-Patch19:        tigervnc-support-xorg120.patch
 
-# This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
-Patch100:       tigervnc-xserver119.patch
+Patch100:       tigervnc-xserver120.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which
@@ -152,7 +150,7 @@ pushd unix/xserver
 for all in `find . -type f -perm -001`; do
         chmod -x "$all"
 done
-%patch100 -p1 -b .xserver116-rebased
+%patch100 -p1 -b .xserver120-rebased
 popd
 
 # Synchronise manpages and --help output (bug #980870).
@@ -169,8 +167,6 @@ popd
 
 # Utilize system-wide crypto policies
 %patch18 -p1 -b .utilize-system-crypto-policies
-
-%patch19 -p1 -b .tigervnc-support-xorg120
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -218,7 +214,7 @@ popd
 
 %install
 %make_install
-rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{README.txt,LICENCE.TXT}
+rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{README.rst,LICENCE.TXT}
 
 pushd unix/xserver/hw/vnc
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -281,7 +277,7 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %systemd_postun
 
 %files -f %{name}.lang
-%doc README.txt
+%doc README.rst
 %{_bindir}/vncviewer
 %{_datadir}/applications/*
 %{_mandir}/man1/vncviewer.1*
@@ -321,6 +317,9 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Jun 14 2018 Jan Grulich <jgrulich@redhat.com> - 1.8.90-1
+- Update to 1.8.90
+
 * Wed Jun 13 2018 Jan Grulich <jgrulich@redhat.com> - 1.8.0-10
 - Fix tigervnc systemd unit file
   Resolves: bz#1583159
