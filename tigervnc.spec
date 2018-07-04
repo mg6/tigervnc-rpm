@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.8.90
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -14,6 +14,12 @@ Source2:        vncserver.sysconfig
 Source3:        10-libvnc.conf
 Source4:        xvnc.service
 Source5:        xvnc.socket
+Patch7:         tigervnc-manpages.patch
+Patch8:         tigervnc-getmaster.patch
+Patch9:         tigervnc-shebang.patch
+Patch14:        tigervnc-xstartup.patch
+Patch18:        tigervnc-utilize-system-crypto-policies.patch
+Patch100:       tigervnc-xserver120.patch
 
 BuildRequires:  libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
 BuildRequires:  libXext-devel, xorg-x11-server-source, libXi-devel
@@ -45,19 +51,6 @@ Requires:       hicolor-icon-theme
 Requires:       tigervnc-license
 Requires:       tigervnc-icons
 
-Provides:       vnc = 4.1.3-2, vnc-libs = 4.1.3-2
-Obsoletes:      vnc < 4.1.3-2, vnc-libs < 4.1.3-2
-Provides:       tightvnc = 1.5.0-0.15.20090204svn3586
-Obsoletes:      tightvnc < 1.5.0-0.15.20090204svn3586
-
-Patch7:         tigervnc-manpages.patch
-Patch8:         tigervnc-getmaster.patch
-Patch9:         tigervnc-shebang.patch
-Patch14:        tigervnc-xstartup.patch
-Patch18:        tigervnc-utilize-system-crypto-policies.patch
-
-Patch100:       tigervnc-xserver120.patch
-
 %description
 Virtual Network Computing (VNC) is a remote display system which
 allows you to view a computing 'desktop' environment not only on the
@@ -68,10 +61,6 @@ server.
 
 %package server
 Summary:        A TigerVNC server
-Provides:       vnc-server = 4.1.3-2, vnc-libs = 4.1.3-2
-Obsoletes:      vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
-Provides:       tightvnc-server = 1.5.0-0.15.20090204svn3586
-Obsoletes:      tightvnc-server < 1.5.0-0.15.20090204svn3586
 Requires:       perl-interpreter
 Requires:       tigervnc-server-minimal
 Requires:       xorg-x11-xauth
@@ -79,7 +68,7 @@ Requires:       xorg-x11-xinit
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
-Requires(post): systemd-sysv chkconfig
+Requires(post): systemd
 
 %description server
 The VNC system allows you to access the same desktop from a wide
@@ -90,10 +79,10 @@ X session.
 
 %package server-minimal
 Summary:        A minimal installation of TigerVNC server
-Requires(post): chkconfig
-Requires(preun):chkconfig
-Requires(preun):initscripts
-Requires(postun):initscripts
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
+Requires(post): systemd
 
 Requires:       mesa-dri-drivers, xkeyboard-config, xorg-x11-xkb-utils
 Requires:       tigervnc-license
@@ -107,10 +96,6 @@ machine.
 %ifnarch s390 s390x
 %package server-module
 Summary:        TigerVNC module to Xorg
-Provides:       vnc-server = 4.1.3-2, vnc-libs = 4.1.3-2
-Obsoletes:      vnc-server < 4.1.3-2, vnc-libs < 4.1.3-2
-Provides:       tightvnc-server-module = 1.5.0-0.15.20090204svn3586
-Obsoletes:      tightvnc-server-module < 1.5.0-0.15.20090204svn3586
 Requires:       xorg-x11-server-Xorg %(xserver-sdk-abi-requires ansic) %(xserver-sdk-abi-requires videodrv)
 Requires:       tigervnc-license
 
@@ -214,10 +199,10 @@ popd
 
 %install
 %make_install
-rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{README.rst,LICENCE.TXT}
+rm -f %{buildroot}%{_docdir}/%{name}-%{version}/{README.rst,LICENCE.TXT}
 
 pushd unix/xserver/hw/vnc
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=%{buildroot}
 popd
 
 # Install systemd unit file
@@ -227,33 +212,33 @@ install -m644 %{SOURCE4} %{buildroot}%{_unitdir}/xvnc@.service
 install -m644 %{SOURCE5} %{buildroot}%{_unitdir}/xvnc.socket
 rm -rf %{buildroot}%{_initrddir}
 
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
-install -m644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/vncservers
+mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
+install -m644 %{SOURCE2} %{buildroot}%{_sysconfdir}/sysconfig/vncservers
 
 # Install desktop stuff
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/{16x16,24x24,48x48}/apps
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/{16x16,24x24,48x48}/apps
 
 pushd media/icons
 for s in 16 24 48; do
-install -m644 tigervnc_$s.png $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${s}x$s/apps/tigervnc.png
+install -m644 tigervnc_$s.png %{buildroot}%{_datadir}/icons/hicolor/${s}x$s/apps/tigervnc.png
 done
 popd
 
 
 # Install Java applet
 pushd java
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/vnc/classes
-install -m755 VncViewer.jar $RPM_BUILD_ROOT%{_datadir}/vnc/classes
-install -m644 com/tigervnc/vncviewer/index.vnc $RPM_BUILD_ROOT%{_datadir}/vnc/classes
+mkdir -p %{buildroot}%{_datadir}/vnc/classes
+install -m755 VncViewer.jar %{buildroot}%{_datadir}/vnc/classes
+install -m644 com/tigervnc/vncviewer/index.vnc %{buildroot}%{_datadir}/vnc/classes
 popd
 
 %find_lang %{name} %{name}.lang
 
 # remove unwanted files
-rm -f  $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/libvnc.la
+rm -f  %{buildroot}%{_libdir}/xorg/modules/extensions/libvnc.la
 
 %ifarch s390 s390x
-rm -f $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/libvnc.so
+rm -f %{buildroot}%{_libdir}/xorg/modules/extensions/libvnc.so
 %else
 mkdir -p %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/
 install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
@@ -263,10 +248,6 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %systemd_post vncserver.service
 %systemd_post xvnc.service
 %systemd_post xvnc.socket
-
-%triggerun -- tigervnc-server < 1.0.90-6
-%{_bindir}/systemd-sysv-convert --save vncserver >/dev/null 2>&1 ||:
-/sbin/chkconfig --del vncserver >/dev/null 2>&1 || :
 
 %preun server
 %systemd_preun vncserver.service
@@ -317,6 +298,10 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Jul  4 2018 Peter Robinson <pbrobinson@fedoraproject.org> 1.8.90-2
+- Clean up spec: use macros consistenly, drop old sys-v migrations
+- Drop ancient obsolete/provides
+
 * Thu Jun 14 2018 Jan Grulich <jgrulich@redhat.com> - 1.8.90-1
 - Update to 1.8.90
 
