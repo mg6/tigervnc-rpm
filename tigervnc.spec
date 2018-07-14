@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.8.90
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -298,6 +298,9 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Sat Jul 14 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.8.90-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Wed Jul  4 2018 Peter Robinson <pbrobinson@fedoraproject.org> 1.8.90-2
 - Clean up spec: use macros consistenly, drop old sys-v migrations
 - Drop ancient obsolete/provides
