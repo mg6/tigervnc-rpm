@@ -21,6 +21,7 @@ Patch14:        tigervnc-xstartup.patch
 Patch18:        tigervnc-utilize-system-crypto-policies.patch
 Patch100:       tigervnc-xserver120.patch
 
+BuildRequires:  gcc-c++
 BuildRequires:  libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
 BuildRequires:  libXext-devel, xorg-x11-server-source, libXi-devel
 BuildRequires:  xorg-x11-xtrans-devel, xorg-x11-util-macros, libXtst-devel
