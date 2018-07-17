@@ -299,7 +299,7 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
-* Tue Jul 16 2018 Jan Grulich <jgrulich@redhat.com> - 1.9.0-1
+* Tue Jul 17 2018 Jan Grulich <jgrulich@redhat.com> - 1.9.0-1
 - Update to 1.9.0
 
 * Sat Jul 14 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.8.90-3
