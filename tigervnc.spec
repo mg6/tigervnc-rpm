@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.9.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -14,11 +14,14 @@ Source2:        vncserver.sysconfig
 Source3:        10-libvnc.conf
 Source4:        xvnc.service
 Source5:        xvnc.socket
-Patch7:         tigervnc-manpages.patch
-Patch8:         tigervnc-getmaster.patch
-Patch9:         tigervnc-shebang.patch
-Patch14:        tigervnc-xstartup.patch
-Patch18:        tigervnc-utilize-system-crypto-policies.patch
+
+Patch1:         tigervnc-manpages.patch
+Patch2:         tigervnc-getmaster.patch
+Patch3:         tigervnc-shebang.patch
+Patch4:         tigervnc-xstartup.patch
+Patch5:         tigervnc-utilize-system-crypto-policies.patch
+Patch6:         tigervnc-ignore-buttons-in-mouse-leave-event.patch
+
 Patch100:       tigervnc-xserver120.patch
 
 BuildRequires:  gcc-c++
@@ -140,19 +143,21 @@ done
 popd
 
 # Synchronise manpages and --help output (bug #980870).
-%patch7 -p1 -b .manpages
+%patch1 -p1 -b .manpages
 
 # libvnc.so: don't use unexported GetMaster function (bug #744881 again).
-%patch8 -p1 -b .getmaster
+%patch2 -p1 -b .getmaster
 
 # Don't use shebang in vncserver script.
-%patch9 -p1 -b .shebang
+%patch3 -p1 -b .shebang
 
 # Clearer xstartup file (bug #923655).
-%patch14 -p1 -b .xstartup
+%patch4 -p1 -b .xstartup
 
 # Utilize system-wide crypto policies
-%patch18 -p1 -b .utilize-system-crypto-policies
+%patch5 -p1 -b .utilize-system-crypto-policies
+
+%patch6 -p1 -b .ignore-buttons-in-mouse-leave-event
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -299,6 +304,10 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Aug 01 2018 Jan Grulich <jgrulich@redhat.com> - 1.9.0-2
+- Ignore buttons in mouse leave events
+  Resolves: bz#1609516
+
 * Tue Jul 17 2018 Jan Grulich <jgrulich@redhat.com> - 1.9.0-1
 - Update to 1.9.0
 
