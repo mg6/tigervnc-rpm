@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.9.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -21,6 +21,7 @@ Patch3:         tigervnc-shebang.patch
 Patch4:         tigervnc-xstartup.patch
 Patch5:         tigervnc-utilize-system-crypto-policies.patch
 Patch6:         tigervnc-ignore-buttons-in-mouse-leave-event.patch
+Patch7:         tigervnc-passwd-crash-with-malloc-checks.patch
 
 Patch100:       tigervnc-xserver120.patch
 
@@ -158,6 +159,8 @@ popd
 %patch5 -p1 -b .utilize-system-crypto-policies
 
 %patch6 -p1 -b .ignore-buttons-in-mouse-leave-event
+
+%patch7 -p1 -b .tigervnc-passwd-crash-with-malloc-checks
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -304,6 +307,10 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Sep 25 2018 Jan Grulich <jgrulich@redhat.com> - 1.9.0-3
+- Do not crash passwd when using malloc perturb checks
+  Resolves: bz#1631483
+
 * Wed Aug 01 2018 Jan Grulich <jgrulich@redhat.com> - 1.9.0-2
 - Ignore buttons in mouse leave events
   Resolves: bz#1609516
