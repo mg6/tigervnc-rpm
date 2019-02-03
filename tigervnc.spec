@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.9.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -307,6 +307,9 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Sun Feb 03 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Tue Sep 25 2018 Jan Grulich <jgrulich@redhat.com> - 1.9.0-3
 - Do not crash passwd when using malloc perturb checks
   Resolves: bz#1631483
