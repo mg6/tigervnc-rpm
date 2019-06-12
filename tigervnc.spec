@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.9.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -264,7 +264,9 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %systemd_preun xvnc.socket
 
 %postun server
-%systemd_postun
+%systemd_postun vncserver.service
+%systemd_postun xvnc.service
+%systemd_postun xvnc.socket
 
 %files -f %{name}.lang
 %doc README.rst
@@ -307,6 +309,10 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Jun 12 2019 Jan Grulich <jgrulich@redhat.com> - 1.9.0-5
+- Add missing arguments to systemd_postun scriptlets
+  Resolves: bz#1716411
+
 * Sun Feb 03 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
