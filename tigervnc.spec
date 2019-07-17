@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.9.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -45,9 +45,7 @@ BuildRequires:  libXfont-devel
 # TigerVNC 1.4.x requires fltk 1.3.3 for keyboard handling support
 # See https://github.com/TigerVNC/tigervnc/issues/8, also bug #1208814
 BuildRequires:  fltk-devel >= 1.3.3
-%ifnarch s390 s390x
 BuildRequires:  xorg-x11-server-devel
-%endif
 
 Requires(post): coreutils
 Requires(postun):coreutils
@@ -98,7 +96,6 @@ variety of platforms. This package contains minimal installation
 of TigerVNC server, allowing others to access the desktop on your
 machine.
 
-%ifnarch s390 s390x
 %package server-module
 Summary:        TigerVNC module to Xorg
 Requires:       xorg-x11-server-Xorg %(xserver-sdk-abi-requires ansic) %(xserver-sdk-abi-requires videodrv)
@@ -107,7 +104,6 @@ Requires:       tigervnc-license
 %description server-module
 This package contains libvnc.so module to X server, allowing others
 to access the desktop on your machine.
-%endif
 
 %package server-applet
 Summary:        Java TigerVNC viewer applet for TigerVNC server
@@ -246,12 +242,8 @@ popd
 # remove unwanted files
 rm -f  %{buildroot}%{_libdir}/xorg/modules/extensions/libvnc.la
 
-%ifarch s390 s390x
-rm -f %{buildroot}%{_libdir}/xorg/modules/extensions/libvnc.so
-%else
 mkdir -p %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/
 install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
-%endif
 
 %post server
 %systemd_post vncserver.service
@@ -292,11 +284,9 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_mandir}/man1/vncpasswd.1*
 %{_mandir}/man1/vncconfig.1*
 
-%ifnarch s390 s390x
 %files server-module
 %{_libdir}/xorg/modules/extensions/libvnc.so
 %config %{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
-%endif
 
 %files server-applet
 %doc java/com/tigervnc/vncviewer/README
@@ -309,6 +299,9 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Wed Jul 19 2019 Dan Horák <dan[at]danny.cz> - 1.9.0-6
+- drop the s390x special handling (related #1727029)
+
 * Wed Jun 12 2019 Jan Grulich <jgrulich@redhat.com> - 1.9.0-5
 - Add missing arguments to systemd_postun scriptlets
   Resolves: bz#1716411
