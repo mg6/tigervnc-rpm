@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.9.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -299,6 +299,9 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Sat Jul 27 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.0-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Wed Jul 19 2019 Dan Horák <dan[at]danny.cz> - 1.9.0-6
 - drop the s390x special handling (related #1727029)
 
