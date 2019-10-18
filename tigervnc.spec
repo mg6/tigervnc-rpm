@@ -31,7 +31,7 @@ BuildRequires:  libX11-devel, automake, autoconf, libtool, gettext, gettext-auto
 BuildRequires:  libXext-devel, xorg-x11-server-source, libXi-devel
 BuildRequires:  xorg-x11-xtrans-devel, xorg-x11-util-macros, libXtst-devel
 BuildRequires:  libxkbfile-devel, openssl-devel, libpciaccess-devel
-BuildRequires:  mesa-libGL-devel, libXinerama-devel,
+BuildRequires:  mesa-libGL-devel, libXinerama-devel, xorg-x11-font-utils
 BuildRequires:  freetype-devel, libXdmcp-devel, libxshmfence-devel
 BuildRequires:  libjpeg-turbo-devel, gnutls-devel, pam-devel
 BuildRequires:  libdrm-devel, libXt-devel, pixman-devel
