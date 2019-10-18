@@ -3,7 +3,7 @@
 # Quick HowTo:
 # 1. Copy this file to /etc/systemd/system/vncserver@.service
 # 2. Replace <USER> with the actual user name and edit vncserver
-#    parameters appropriately
+#    parameters in the wrapper script located in /usr/bin/vncserver_wrapper
 # 3. Run `systemctl daemon-reload`
 # 4. Run `systemctl enable vncserver@:<display>.service`
 #
@@ -34,19 +34,12 @@ Description=Remote desktop service (VNC)
 After=syslog.target network.target
 
 [Service]
-Type=forking
-WorkingDirectory=/home/<USER>
-User=<USER>
-Group=<USER>
+Type=simple
 
-PIDFile=/home/<USER>/.vnc/%H%i.pid
-
+# Clean any existing files in /tmp/.X11-unix environment
 ExecStartPre=/bin/sh -c '/usr/bin/vncserver -kill %i > /dev/null 2>&1 || :'
-ExecStart=/usr/bin/vncserver -autokill %i
-ExecStop=/usr/bin/vncserver -kill %i
-
-Restart=on-success
-RestartSec=15
+ExecStart=/usr/bin/vncserver_wrapper <USER> %i
+ExecStop=/bin/sh -c '/usr/bin/vncserver -kill %i > /dev/null 2>&1 || :'
 
 [Install]
 WantedBy=multi-user.target

@@ -1,6 +1,6 @@
 Name:           tigervnc
-Version:        1.9.0
-Release:        7%{?dist}
+Version:        1.9.90
+Release:        1%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -9,18 +9,19 @@ License:        GPLv2+
 URL:            http://www.tigervnc.com
 
 Source0:        %{name}-%{version}.tar.gz
-Source1:        vncserver.service
-Source2:        vncserver.sysconfig
-Source3:        10-libvnc.conf
-Source4:        xvnc.service
-Source5:        xvnc.socket
+Source1:        vncserver-system.service
+Source2:        vncserver-user.service
+Source3:        vncserver.sysconfig
+Source4:        10-libvnc.conf
+Source5:        xvnc.service
+Source6:        xvnc.socket
+Source7:        vncserver_wrapper
 
 Patch1:         tigervnc-manpages.patch
 Patch2:         tigervnc-getmaster.patch
 Patch3:         tigervnc-shebang.patch
 Patch4:         tigervnc-xstartup.patch
 Patch5:         tigervnc-utilize-system-crypto-policies.patch
-Patch6:         tigervnc-ignore-buttons-in-mouse-leave-event.patch
 Patch7:         tigervnc-passwd-crash-with-malloc-checks.patch
 
 Patch100:       tigervnc-xserver120.patch
@@ -32,10 +33,9 @@ BuildRequires:  xorg-x11-xtrans-devel, xorg-x11-util-macros, libXtst-devel
 BuildRequires:  libxkbfile-devel, openssl-devel, libpciaccess-devel
 BuildRequires:  mesa-libGL-devel, libXinerama-devel,
 BuildRequires:  freetype-devel, libXdmcp-devel, libxshmfence-devel
-BuildRequires:  desktop-file-utils, java-devel, jpackage-utils
 BuildRequires:  libjpeg-turbo-devel, gnutls-devel, pam-devel
 BuildRequires:  libdrm-devel, libXt-devel, pixman-devel
-BuildRequires:  systemd, cmake
+BuildRequires:  systemd, cmake, desktop-file-utils,
 %if 0%{?fedora} > 24 || 0%{?rhel} >= 7
 BuildRequires:  libXfont2-devel
 %else
@@ -105,15 +105,6 @@ Requires:       tigervnc-license
 This package contains libvnc.so module to X server, allowing others
 to access the desktop on your machine.
 
-%package server-applet
-Summary:        Java TigerVNC viewer applet for TigerVNC server
-Requires:       tigervnc-server, java, jpackage-utils
-BuildArch:      noarch
-
-%description server-applet
-The Java TigerVNC viewer applet for web browsers. Install this package to allow
-clients to use web browser when connect to the TigerVNC server.
-
 %package license
 Summary:        License of TigerVNC suite
 BuildArch:      noarch
@@ -153,8 +144,6 @@ popd
 
 # Utilize system-wide crypto policies
 %patch5 -p1 -b .utilize-system-crypto-policies
-
-%patch6 -p1 -b .ignore-buttons-in-mouse-leave-event
 
 %patch7 -p1 -b .tigervnc-passwd-crash-with-malloc-checks
 
@@ -196,12 +185,6 @@ pushd media
 make
 popd
 
-# Build Java applet
-pushd java
-%{cmake} .
-JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF8" make
-popd
-
 %install
 %make_install
 rm -f %{buildroot}%{_docdir}/%{name}-%{version}/{README.rst,LICENCE.TXT}
@@ -212,10 +195,15 @@ popd
 
 # Install systemd unit file
 mkdir -p %{buildroot}%{_unitdir}
+mkdir -p %{buildroot}%{_userunitdir}
 install -m644 %{SOURCE1} %{buildroot}%{_unitdir}/vncserver@.service
+install -m644 %{SOURCE2} %{buildroot}%{_userunitdir}/vncserver@.service
 install -m644 %{SOURCE4} %{buildroot}%{_unitdir}/xvnc@.service
 install -m644 %{SOURCE5} %{buildroot}%{_unitdir}/xvnc.socket
 rm -rf %{buildroot}%{_initrddir}
+
+# Install vncserver wrapper script
+install -m744 %{SOURCE7} %{buildroot}%{_bindir}/vncserver_wrapper
 
 mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
 install -m644 %{SOURCE2} %{buildroot}%{_sysconfdir}/sysconfig/vncservers
@@ -227,14 +215,6 @@ pushd media/icons
 for s in 16 24 48; do
 install -m644 tigervnc_$s.png %{buildroot}%{_datadir}/icons/hicolor/${s}x$s/apps/tigervnc.png
 done
-popd
-
-
-# Install Java applet
-pushd java
-mkdir -p %{buildroot}%{_datadir}/vnc/classes
-install -m755 VncViewer.jar %{buildroot}%{_datadir}/vnc/classes
-install -m644 com/tigervnc/vncviewer/index.vnc %{buildroot}%{_datadir}/vnc/classes
 popd
 
 %find_lang %{name} %{name}.lang
@@ -268,11 +248,13 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 
 %files server
 %config(noreplace) %{_sysconfdir}/sysconfig/vncservers
+%{_userunitdir}/vncserver@.service
 %{_unitdir}/vncserver@.service
 %{_unitdir}/xvnc@.service
 %{_unitdir}/xvnc.socket
 %{_bindir}/x0vncserver
 %{_bindir}/vncserver
+%{_bindir}/vncserver_wrapper
 %{_mandir}/man1/vncserver.1*
 %{_mandir}/man1/x0vncserver.1*
 
@@ -288,10 +270,6 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_libdir}/xorg/modules/extensions/libvnc.so
 %config %{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
 
-%files server-applet
-%doc java/com/tigervnc/vncviewer/README
-%{_datadir}/vnc/classes/*
-
 %files license
 %license LICENCE.TXT
 
@@ -299,10 +277,15 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Fri Oct 18 2019 Jan Grulich <jgrulich@redhat.com> - 1.9.90-1
+- Update to 1.9.90 (1.10 beta)
+- Add systemd user service file
+- Use a wrapper for systemd system service file to workaround systemd limitations
+
 * Sat Jul 27 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.0-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
-* Wed Jul 19 2019 Dan Horák <dan[at]danny.cz> - 1.9.0-6
+* Fri Jul 19 2019 Dan Horák <dan[at]danny.cz> - 1.9.0-6
 - drop the s390x special handling (related #1727029)
 
 * Wed Jun 12 2019 Jan Grulich <jgrulich@redhat.com> - 1.9.0-5

@@ -1,8 +1,8 @@
 diff --git a/unix/vncserver b/unix/vncserver
-index 9e7a6ac..139f960 100755
+index 68be032..ac0e993 100755
 --- a/unix/vncserver
 +++ b/unix/vncserver
-@@ -684,6 +684,7 @@ sub Usage
+@@ -678,6 +678,7 @@ sub Usage
  	"                 [-geometry <width>x<height>]\n".
  	"                 [-pixelformat rgbNNN|bgrNNN]\n".
  	"                 [-fp <font-path>]\n".
@@ -10,19 +10,3 @@ index 9e7a6ac..139f960 100755
  	"                 [-fg]\n".
  	"                 [-autokill]\n".
  	"                 [-noxstartup]\n".
-diff --git a/vncviewer/vncviewer.cxx b/vncviewer/vncviewer.cxx
-index f076565..05669a4 100644
---- a/vncviewer/vncviewer.cxx
-+++ b/vncviewer/vncviewer.cxx
-@@ -352,6 +352,11 @@ static void usage(const char *programName)
-           "       %s [parameters] -listen [port] [parameters]\n"
-           "       %s [parameters] [.tigervnc file]\n",
-           programName, programName, programName);
-+  fprintf(stderr,"\n"
-+	  "Options:\n\n"
-+	  "  -display Xdisplay - Specifies the X display for the viewer window\n"
-+	  "  -geometry geometry - Standard X position and sizing specification.\n");
-+
-   fprintf(stderr,"\n"
-           "Parameters can be turned on with -<param> or off with -<param>=0\n"
-           "Parameters which take a value can be specified as "
