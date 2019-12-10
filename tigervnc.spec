@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.10.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -198,15 +198,15 @@ mkdir -p %{buildroot}%{_unitdir}
 mkdir -p %{buildroot}%{_userunitdir}
 install -m644 %{SOURCE1} %{buildroot}%{_unitdir}/vncserver@.service
 install -m644 %{SOURCE2} %{buildroot}%{_userunitdir}/vncserver@.service
-install -m644 %{SOURCE4} %{buildroot}%{_unitdir}/xvnc@.service
-install -m644 %{SOURCE5} %{buildroot}%{_unitdir}/xvnc.socket
+install -m644 %{SOURCE5} %{buildroot}%{_unitdir}/xvnc@.service
+install -m644 %{SOURCE6} %{buildroot}%{_unitdir}/xvnc.socket
 rm -rf %{buildroot}%{_initrddir}
 
 # Install vncserver wrapper script
 install -m744 %{SOURCE7} %{buildroot}%{_bindir}/vncserver_wrapper
 
 mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
-install -m644 %{SOURCE2} %{buildroot}%{_sysconfdir}/sysconfig/vncservers
+install -m644 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/vncservers
 
 # Install desktop stuff
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/{16x16,24x24,48x48}/apps
@@ -223,7 +223,7 @@ popd
 rm -f  %{buildroot}%{_libdir}/xorg/modules/extensions/libvnc.la
 
 mkdir -p %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/
-install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
+install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
 
 %post server
 %systemd_post vncserver.service
@@ -277,6 +277,9 @@ install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Dec 10 2019 Jan Grulich <jgrulich@redhat.com> - 1.10.0-2
+- Properly install systemd files
+
 * Mon Nov 18 2019 Jan Grulich <jgrulich@redhat.com> - 1.10.0-1
 - Update to 1.10.0
 
