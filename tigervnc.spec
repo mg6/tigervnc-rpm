@@ -1,6 +1,6 @@
 Name:           tigervnc
-Version:        1.10.0
-Release:        2%{?dist}
+Version:        1.10.1
+Release:        1%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -277,6 +277,9 @@ install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Fri Dec 20 2019 Jan Grulich <jgrulich@redhat.com> - 1.10.1-1
+- Update to 1.10.1
+
 * Tue Dec 10 2019 Jan Grulich <jgrulich@redhat.com> - 1.10.0-2
 - Properly install systemd files
 
