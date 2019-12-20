@@ -1,5 +1,5 @@
 diff --git a/common/rfb/Password.cxx b/common/rfb/Password.cxx
-index 240c9d4..eb830d9 100644
+index e4a508c..f555c57 100644
 --- a/common/rfb/Password.cxx
 +++ b/common/rfb/Password.cxx
 @@ -55,7 +55,7 @@ PlainPasswd::~PlainPasswd() {
@@ -12,13 +12,13 @@ index 240c9d4..eb830d9 100644
  }
  
 diff --git a/common/rfb/util.h b/common/rfb/util.h
-index 8503519..d463316 100644
+index 3100f90..764692a 100644
 --- a/common/rfb/util.h
 +++ b/common/rfb/util.h
 @@ -51,16 +51,21 @@ namespace rfb {
      CharArray() : buf(0) {}
      CharArray(char* str) : buf(str) {} // note: assumes ownership
-     CharArray(int len) {
+     CharArray(size_t len) {
 +      length = len;
        buf = new char[len]();
      }
@@ -35,7 +35,7 @@ index 8503519..d463316 100644
 -    void replaceBuf(char* b) {delete [] buf; buf = b;}
 +    void replaceBuf(char* b) {if (buf) delete [] buf; buf = b;}
      char* buf;
-+    int length = 0;
++    size_t length = 0;
    private:
      CharArray(const CharArray&);
      CharArray& operator=(const CharArray&);
