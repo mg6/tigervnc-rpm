@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.10.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -153,7 +153,7 @@ export CFLAGS="$RPM_OPT_FLAGS -fPIC"
 %else
 export CFLAGS="$RPM_OPT_FLAGS -fpic"
 %endif
-export CXXFLAGS="$CFLAGS"
+export CXXFLAGS="$CFLAGS -std=c++11"
 
 %{cmake} .
 make %{?_smp_mflags}
@@ -277,6 +277,9 @@ install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Mon Jan 13 2019 Jan Grulich <jgrulich@redhat.com> - 1.10.1-2
+- Build with -std=c++11
+
 * Fri Dec 20 2019 Jan Grulich <jgrulich@redhat.com> - 1.10.1-1
 - Update to 1.10.1
 
