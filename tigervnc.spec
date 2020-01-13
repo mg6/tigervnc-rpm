@@ -277,7 +277,7 @@ install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
-* Mon Jan 13 2019 Jan Grulich <jgrulich@redhat.com> - 1.10.1-2
+* Mon Jan 13 2020 Jan Grulich <jgrulich@redhat.com> - 1.10.1-2
 - Build with -std=c++11
 
 * Fri Dec 20 2019 Jan Grulich <jgrulich@redhat.com> - 1.10.1-1
