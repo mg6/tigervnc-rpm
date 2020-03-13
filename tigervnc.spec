@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.10.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -23,6 +23,7 @@ Patch3:         tigervnc-shebang.patch
 Patch4:         tigervnc-xstartup.patch
 Patch5:         tigervnc-utilize-system-crypto-policies.patch
 Patch7:         tigervnc-passwd-crash-with-malloc-checks.patch
+Patch8:	0001-xserver-add-no-op-input-thread-init-function.patch
 
 Patch100:       tigervnc-xserver120.patch
 
@@ -146,6 +147,8 @@ popd
 %patch5 -p1 -b .utilize-system-crypto-policies
 
 %patch7 -p1 -b .tigervnc-passwd-crash-with-malloc-checks
+
+%patch8 -p1 -b .inputthread
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -277,6 +280,9 @@ install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Fri Mar 13 2020 Olivier Fourdan <ofourdan@redhat.com> - 1.10.1-4
+- Fix build with xserver 1.20.7
+
 * Fri Jan 31 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.10.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
