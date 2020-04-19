@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.10.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -89,7 +89,7 @@ Requires(postun): systemd
 Requires(post): systemd
 
 Requires:       mesa-dri-drivers, xkeyboard-config, xorg-x11-xkb-utils
-Requires:       tigervnc-license
+Requires:       tigervnc-license, dbus-x11
 
 %description server-minimal
 The VNC system allows you to access the same desktop from a wide
@@ -280,6 +280,10 @@ install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Sun Apr 19 2020 Jan Grulich <jgrulich@redhat.com> - 1.10.1-5
+- Requires: dbus-x11
+  Resolves: bz#1825331
+
 * Fri Mar 13 2020 Olivier Fourdan <ofourdan@redhat.com> - 1.10.1-4
 - Fix build with xserver 1.20.7
 
