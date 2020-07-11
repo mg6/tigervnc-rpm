@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.10.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -280,6 +280,9 @@ install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Sat Jul 11 2020 Jiri Vanek <jvanek@redhat.com> - 1.10.1-6
+- Rebuilt for JDK-11, see https://fedoraproject.org/wiki/Changes/Java11
+
 * Sun Apr 19 2020 Jan Grulich <jgrulich@redhat.com> - 1.10.1-5
 - Requires: dbus-x11
   Resolves: bz#1825331
