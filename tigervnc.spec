@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.10.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -159,7 +159,7 @@ export CFLAGS="$RPM_OPT_FLAGS -fpic"
 export CXXFLAGS="$CFLAGS -std=c++11"
 
 %{cmake} .
-make %{?_smp_mflags}
+%make_build
 
 pushd unix/xserver
 autoreconf -fiv
@@ -180,7 +180,7 @@ autoreconf -fiv
         --disable-devel-docs \
         --disable-selective-werror
 
-make %{?_smp_mflags}
+%make_build
 popd
 
 # Build icons
@@ -193,7 +193,7 @@ popd
 rm -f %{buildroot}%{_docdir}/%{name}-%{version}/{README.rst,LICENCE.TXT}
 
 pushd unix/xserver/hw/vnc
-make install DESTDIR=%{buildroot}
+%make_install
 popd
 
 # Install systemd unit file
@@ -280,6 +280,10 @@ install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Jul 14 2020 Tom Stellard <tstellar@redhat.com> - 1.10.1-7
+- Use make macros
+- https://fedoraproject.org/wiki/Changes/UseMakeBuildInstallMacro
+
 * Sat Jul 11 2020 Jiri Vanek <jvanek@redhat.com> - 1.10.1-6
 - Rebuilt for JDK-11, see https://fedoraproject.org/wiki/Changes/Java11
 
