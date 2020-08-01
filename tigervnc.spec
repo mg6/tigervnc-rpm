@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.10.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -280,6 +280,10 @@ install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Sat Aug 01 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.10.1-9
+- Second attempt - Rebuilt for
+  https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
 * Wed Jul 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.10.1-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
