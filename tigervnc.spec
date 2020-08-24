@@ -1,6 +1,6 @@
 Name:           tigervnc
-Version:        1.10.1
-Release:        9%{?dist}
+Version:        1.10.90
+Release:        1%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -9,21 +9,14 @@ License:        GPLv2+
 URL:            http://www.tigervnc.com
 
 Source0:        %{name}-%{version}.tar.gz
-Source1:        vncserver-system.service
-Source2:        vncserver-user.service
-Source3:        vncserver.sysconfig
-Source4:        10-libvnc.conf
-Source5:        xvnc.service
-Source6:        xvnc.socket
-Source7:        vncserver_wrapper
+Source1:        xvnc.service
+Source2:        xvnc.socket
+Source3:        10-libvnc.conf
+Source4:        HOWTO.md
 
-Patch1:         tigervnc-manpages.patch
 Patch2:         tigervnc-getmaster.patch
-Patch3:         tigervnc-shebang.patch
-Patch4:         tigervnc-xstartup.patch
 Patch5:         tigervnc-utilize-system-crypto-policies.patch
 Patch7:         tigervnc-passwd-crash-with-malloc-checks.patch
-Patch8:	0001-xserver-add-no-op-input-thread-init-function.patch
 
 Patch100:       tigervnc-xserver120.patch
 
@@ -35,8 +28,8 @@ BuildRequires:  libxkbfile-devel, openssl-devel, libpciaccess-devel
 BuildRequires:  mesa-libGL-devel, libXinerama-devel, xorg-x11-font-utils
 BuildRequires:  freetype-devel, libXdmcp-devel, libxshmfence-devel
 BuildRequires:  libjpeg-turbo-devel, gnutls-devel, pam-devel
-BuildRequires:  libdrm-devel, libXt-devel, pixman-devel
-BuildRequires:  systemd, cmake, desktop-file-utils,
+BuildRequires:  libdrm-devel, libXt-devel, pixman-devel,
+BuildRequires:  systemd, cmake, desktop-file-utils, selinux-policy-devel
 %if 0%{?fedora} > 24 || 0%{?rhel} >= 7
 BuildRequires:  libXfont2-devel
 %else
@@ -66,7 +59,8 @@ server.
 %package server
 Summary:        A TigerVNC server
 Requires:       perl-interpreter
-Requires:       tigervnc-server-minimal
+Requires:       tigervnc-server-minimal = %{version}-%{release}
+Requires:       tigervnc-selinux = %{version}-%{release}
 Requires:       xorg-x11-xauth
 Requires:       xorg-x11-xinit
 Requires(post): systemd
@@ -120,6 +114,18 @@ BuildArch:      noarch
 %description icons
 This package contains icons for TigerVNC viewer
 
+%package selinux
+Summary:        SELinux module for TigerVNC
+BuildArch:      noarch
+Requires(pre):  libselinux-utils
+Requires(post): selinux-policy >= %{_selinux_policy_version}
+Requires(post): policycoreutils
+Requires(post): libselinux-utils
+
+%description selinux
+This package provides the SELinux policy module to ensure TigerVNC
+runs properly under an environment with SELinux enabled.
+
 %prep
 %setup -q
 
@@ -131,24 +137,13 @@ done
 %patch100 -p1 -b .xserver120-rebased
 popd
 
-# Synchronise manpages and --help output (bug #980870).
-%patch1 -p1 -b .manpages
-
 # libvnc.so: don't use unexported GetMaster function (bug #744881 again).
 %patch2 -p1 -b .getmaster
-
-# Don't use shebang in vncserver script.
-%patch3 -p1 -b .shebang
-
-# Clearer xstartup file (bug #923655).
-%patch4 -p1 -b .xstartup
 
 # Utilize system-wide crypto policies
 %patch5 -p1 -b .utilize-system-crypto-policies
 
 %patch7 -p1 -b .tigervnc-passwd-crash-with-malloc-checks
-
-%patch8 -p1 -b .inputthread
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -158,10 +153,13 @@ export CFLAGS="$RPM_OPT_FLAGS -fpic"
 %endif
 export CXXFLAGS="$CFLAGS -std=c++11"
 
-%{cmake} .
-%make_build
+%cmake
+
+%cmake_build
 
 pushd unix/xserver
+sed -i 's@TIGERVNC_BUILDDIR=${TIGERVNC_SRCDIR}@TIGERVNC_BUILDDIR=${TIGERVNC_SRCDIR}/%{_target_platform}@g' hw/vnc/Makefile.am
+
 autoreconf -fiv
 %configure \
         --disable-xorg --disable-xnest --disable-xvfb --disable-dmx \
@@ -180,16 +178,21 @@ autoreconf -fiv
         --disable-devel-docs \
         --disable-selective-werror
 
-%make_build
+make %{?_smp_mflags}
 popd
 
 # Build icons
-pushd media
+pushd %{_target_platform}/media
+make
+popd
+
+# SELinux
+pushd unix/vncserver/selinux
 make
 popd
 
 %install
-%make_install
+%cmake_install
 rm -f %{buildroot}%{_docdir}/%{name}-%{version}/{README.rst,LICENCE.TXT}
 
 pushd unix/xserver/hw/vnc
@@ -197,19 +200,13 @@ pushd unix/xserver/hw/vnc
 popd
 
 # Install systemd unit file
-mkdir -p %{buildroot}%{_unitdir}
-mkdir -p %{buildroot}%{_userunitdir}
-install -m644 %{SOURCE1} %{buildroot}%{_unitdir}/vncserver@.service
-install -m644 %{SOURCE2} %{buildroot}%{_userunitdir}/vncserver@.service
-install -m644 %{SOURCE5} %{buildroot}%{_unitdir}/xvnc@.service
-install -m644 %{SOURCE6} %{buildroot}%{_unitdir}/xvnc.socket
-rm -rf %{buildroot}%{_initrddir}
+pushd unix/vncserver/selinux
+make install DESTDIR=%{buildroot}
+popd
 
-# Install vncserver wrapper script
-install -m744 %{SOURCE7} %{buildroot}%{_bindir}/vncserver_wrapper
-
-mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
-install -m644 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/vncservers
+# Install systemd unit file
+install -m644 %{SOURCE1} %{buildroot}%{_unitdir}/xvnc@.service
+install -m644 %{SOURCE2} %{buildroot}%{_unitdir}/xvnc.socket
 
 # Install desktop stuff
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/{16x16,24x24,48x48}/apps
@@ -226,22 +223,36 @@ popd
 rm -f  %{buildroot}%{_libdir}/xorg/modules/extensions/libvnc.la
 
 mkdir -p %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/
-install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
+install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
 
 %post server
-%systemd_post vncserver.service
 %systemd_post xvnc.service
 %systemd_post xvnc.socket
 
 %preun server
-%systemd_preun vncserver.service
 %systemd_preun xvnc.service
 %systemd_preun xvnc.socket
 
 %postun server
-%systemd_postun vncserver.service
 %systemd_postun xvnc.service
 %systemd_postun xvnc.socket
+
+%pre selinux
+%selinux_relabel_pre
+
+%post selinux
+%selinux_modules_install %{_datadir}/selinux/packages/vncsession.pp
+%selinux_relabel_post
+
+%posttrans selinux
+%selinux_relabel_post
+
+%postun selinux
+%selinux_modules_uninstall vncsession
+if [ $1 -eq 0 ]; then
+    %selinux_relabel_post
+fi
+
 
 %files -f %{name}.lang
 %doc README.rst
@@ -250,16 +261,20 @@ install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %{_mandir}/man1/vncviewer.1*
 
 %files server
-%config(noreplace) %{_sysconfdir}/sysconfig/vncservers
-%{_userunitdir}/vncserver@.service
+%config(noreplace) %{_sysconfdir}/pam.d/tigervnc
+%config(noreplace) %{_sysconfdir}/tigervnc/vncserver-config-defaults
+%config(noreplace) %{_sysconfdir}/tigervnc/vncserver-config-mandatory
+%config(noreplace) %{_sysconfdir}/tigervnc/vncserver.users
 %{_unitdir}/vncserver@.service
 %{_unitdir}/xvnc@.service
 %{_unitdir}/xvnc.socket
 %{_bindir}/x0vncserver
-%{_bindir}/vncserver
-%{_bindir}/vncserver_wrapper
-%{_mandir}/man1/vncserver.1*
+%{_sbindir}/vncsession
+%{_libexecdir}/vncserver
+%{_libexecdir}/vncsession-start
 %{_mandir}/man1/x0vncserver.1*
+%{_mandir}/man8/vncserver.8*
+%{_mandir}/man8/vncsession.8*
 
 %files server-minimal
 %{_bindir}/vncconfig
@@ -274,12 +289,18 @@ install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.c
 %config %{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
 
 %files license
-%license LICENCE.TXT
+%{_docdir}/tigervnc/LICENCE.TXT
 
 %files icons
 %{_datadir}/icons/hicolor/*/apps/*
 
+%files selinux
+%{_datadir}/selinux/packages/vncsession.pp
+
 %changelog
+* Mon Aug 24 2020 Jan Grulich <jgrulich@redhat.com. - 1.10.90-1
+- Update to 1.10.90 (1.11.0 beta)
+
 * Sat Aug 01 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.10.1-9
 - Second attempt - Rebuilt for
   https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
