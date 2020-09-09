@@ -158,7 +158,10 @@ export CXXFLAGS="$CFLAGS -std=c++11"
 %cmake_build
 
 pushd unix/xserver
+
+%if 0%{?fedora} > 32
 sed -i 's@TIGERVNC_BUILDDIR=${TIGERVNC_SRCDIR}@TIGERVNC_BUILDDIR=${TIGERVNC_SRCDIR}/%{_target_platform}@g' hw/vnc/Makefile.am
+%endif
 
 autoreconf -fiv
 %configure \
@@ -182,7 +185,11 @@ make %{?_smp_mflags}
 popd
 
 # Build icons
+%if 0%{?fedora} > 32
 pushd %{_target_platform}/media
+%else
+pushd media
+%endif
 make
 popd
 
