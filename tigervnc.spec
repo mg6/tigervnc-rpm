@@ -1,5 +1,5 @@
 Name:           tigervnc
-Version:        1.10.90
+Version:        1.11.0
 Release:        1%{?dist}
 Summary:        A TigerVNC remote display system
 
@@ -298,6 +298,9 @@ fi
 %{_datadir}/selinux/packages/vncsession.pp
 
 %changelog
+* Wed Sep 09 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-1
+- 1.11.0
+
 * Mon Aug 24 2020 Jan Grulich <jgrulich@redhat.com. - 1.10.90-1
 - Update to 1.10.90 (1.11.0 beta)
 
