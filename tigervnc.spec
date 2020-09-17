@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.11.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -224,6 +224,15 @@ install -m644 tigervnc_$s.png %{buildroot}%{_datadir}/icons/hicolor/${s}x$s/apps
 done
 popd
 
+# Install a replacement for /usr/bin/vncserver which will tell the user to read the
+# HOWTO.md file
+cat <<EOF > %{buildroot}/%{_bindir}/vncserver
+#!/bin/bash
+echo "vncserver has been replaced by a systemd unit."
+echo "Please read /usr/share/doc/tigervnc/HOWTO.md for more information."
+EOF
+chmod +x %{buildroot}/%{_bindir}/vncserver
+
 %find_lang %{name} %{name}.lang
 
 # remove unwanted files
@@ -275,6 +284,7 @@ fi
 %{_unitdir}/vncserver@.service
 %{_unitdir}/xvnc@.service
 %{_unitdir}/xvnc.socket
+%{_bindir}/vncserver
 %{_bindir}/x0vncserver
 %{_sbindir}/vncsession
 %{_libexecdir}/vncserver
@@ -305,6 +315,9 @@ fi
 %{_datadir}/selinux/packages/vncsession.pp
 
 %changelog
+* Thu Sep 17 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-2
+- Add /usr/bin/vncserver file informing users to read the HOWTO.md file
+
 * Wed Sep 09 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-1
 - 1.11.0
 
