@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.11.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -303,7 +303,7 @@ fi
 
 %files server-module
 %{_libdir}/xorg/modules/extensions/libvnc.so
-%config %{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
+%config(noreplace) %{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
 
 %files license
 %{_docdir}/tigervnc/LICENCE.TXT
@@ -315,6 +315,9 @@ fi
 %{_datadir}/selinux/packages/vncsession.pp
 
 %changelog
+* Tue Sep 22 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-3
+- Do not overwrite libvnc.conf config file
+
 * Thu Sep 17 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-2
 - Add /usr/bin/vncserver file informing users to read the HOWTO.md file
 
