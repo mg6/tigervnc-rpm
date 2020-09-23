@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.11.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -242,15 +242,15 @@ mkdir -p %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/
 install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
 
 %post server
-%systemd_post xvnc.service
+%systemd_post xvnc@.service
 %systemd_post xvnc.socket
 
 %preun server
-%systemd_preun xvnc.service
+%systemd_preun xvnc@.service
 %systemd_preun xvnc.socket
 
 %postun server
-%systemd_postun xvnc.service
+%systemd_postun xvnc@.service
 %systemd_postun xvnc.socket
 
 %pre selinux
@@ -315,6 +315,9 @@ fi
 %{_datadir}/selinux/packages/vncsession.pp
 
 %changelog
+* Wed Sep 23 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-4
+- Call systemd macros on correct service file
+
 * Tue Sep 22 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-3
 - Do not overwrite libvnc.conf config file
 
