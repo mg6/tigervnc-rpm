@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.11.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -241,6 +241,8 @@ rm -f  %{buildroot}%{_libdir}/xorg/modules/extensions/libvnc.la
 mkdir -p %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/
 install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
 
+install -m 644 %{SOURCE4} %{buildroot}/%{_docdir}/tigervnc/HOWTO.md
+
 %post server
 %systemd_post xvnc@.service
 %systemd_post xvnc.socket
@@ -292,6 +294,7 @@ fi
 %{_mandir}/man1/x0vncserver.1*
 %{_mandir}/man8/vncserver.8*
 %{_mandir}/man8/vncsession.8*
+%{_docdir}/tigervnc/HOWTO.md
 
 %files server-minimal
 %{_bindir}/vncconfig
@@ -315,6 +318,9 @@ fi
 %{_datadir}/selinux/packages/vncsession.pp
 
 %changelog
+* Thu Sep 24 07:14:06 CEST 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-5
+- Actually install the HOWTO.md file
+
 * Wed Sep 23 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-4
 - Call systemd macros on correct service file
 
