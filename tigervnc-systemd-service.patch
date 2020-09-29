@@ -1,0 +1,47 @@
+From 40f104ffe1e36df9613f8d316f616fb2b089cc86 Mon Sep 17 00:00:00 2001
+From: Jan Grulich <jgrulich@redhat.com>
+Date: Tue, 29 Sep 2020 13:37:16 +0200
+Subject: [PATCH] Use /run instead of /var/run which is just a symlink
+
+---
+ unix/vncserver/selinux/vncsession.fc | 2 +-
+ unix/vncserver/vncserver@.service.in | 2 +-
+ unix/vncserver/vncsession.c          | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/unix/vncserver/selinux/vncsession.fc b/unix/vncserver/selinux/vncsession.fc
+index 121cdd237..ae768baa4 100644
+--- a/unix/vncserver/selinux/vncsession.fc
++++ b/unix/vncserver/selinux/vncsession.fc
+@@ -23,4 +23,4 @@ HOME_ROOT/\.vnc(/.*)?      gen_context(system_u:object_r:xdm_home_t,s0)
+ /usr/sbin/vncsession			--	gen_context(system_u:object_r:vnc_session_exec_t,s0)
+ /usr/libexec/vncsession-start		--	gen_context(system_u:object_r:vnc_session_exec_t,s0)
+ 
+-/var/run/vncsession-:[0-9]*\.pid	--      gen_context(system_u:object_r:vnc_session_var_run_t,s0)
++/run/vncsession-:[0-9]*\.pid	--      gen_context(system_u:object_r:vnc_session_var_run_t,s0)
+diff --git a/unix/vncserver/vncserver@.service.in b/unix/vncserver/vncserver@.service.in
+index 584ecf4b1..5624dff76 100644
+--- a/unix/vncserver/vncserver@.service.in
++++ b/unix/vncserver/vncserver@.service.in
+@@ -36,7 +36,7 @@ After=syslog.target network.target
+ [Service]
+ Type=forking
+ ExecStart=@CMAKE_INSTALL_FULL_LIBEXECDIR@/vncsession-start %i
+-PIDFile=/var/run/vncsession-%i.pid
++PIDFile=/run/vncsession-%i.pid
+ SELinuxContext=system_u:system_r:vnc_session_t:s0
+ 
+ [Install]
+diff --git a/unix/vncserver/vncsession.c b/unix/vncserver/vncsession.c
+index 3e0c98f0f..2b47f5f55 100644
+--- a/unix/vncserver/vncsession.c
++++ b/unix/vncserver/vncsession.c
+@@ -543,7 +543,7 @@ main(int argc, char **argv)
+     }
+ 
+     snprintf(pid_file, sizeof(pid_file),
+-             "/var/run/vncsession-%s.pid", display);
++             "/run/vncsession-%s.pid", display);
+     f = fopen(pid_file, "w");
+     if (f == NULL) {
+         syslog(LOG_ERR, "Failure creating pid file \"%s\": %s",

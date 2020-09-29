@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.11.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -14,9 +14,17 @@ Source2:        xvnc.socket
 Source3:        10-libvnc.conf
 Source4:        HOWTO.md
 
-Patch2:         tigervnc-getmaster.patch
-Patch5:         tigervnc-utilize-system-crypto-policies.patch
-Patch7:         tigervnc-passwd-crash-with-malloc-checks.patch
+# Backwards compatibility
+Source5:        vncserver
+Source6:        vncserver.man
+
+Patch1:         tigervnc-getmaster.patch
+Patch2:         tigervnc-utilize-system-crypto-policies.patch
+Patch3:         tigervnc-passwd-crash-with-malloc-checks.patch
+Patch4:         tigervnc-systemd-service.patch
+
+# Upstream patches
+Patch50:        tigervnc-tolerate-specifying-boolparam.patch
 
 Patch100:       tigervnc-xserver120.patch
 
@@ -138,12 +146,18 @@ done
 popd
 
 # libvnc.so: don't use unexported GetMaster function (bug #744881 again).
-%patch2 -p1 -b .getmaster
+%patch1 -p1 -b .getmaster
 
 # Utilize system-wide crypto policies
-%patch5 -p1 -b .utilize-system-crypto-policies
+%patch2 -p1 -b .utilize-system-crypto-policies
 
-%patch7 -p1 -b .tigervnc-passwd-crash-with-malloc-checks
+%patch3 -p1 -b .tigervnc-passwd-crash-with-malloc-checks
+
+# Enable once this is reviewed by upstream
+# https://github.com/TigerVNC/tigervnc/pull/1115
+# %patch4 -p1 -b .tigervnc-systemd-service
+
+%patch50 -p1 -b .tigervnc-tolerate-specifying-boolparam
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -224,6 +238,7 @@ install -m644 tigervnc_$s.png %{buildroot}%{_datadir}/icons/hicolor/${s}x$s/apps
 done
 popd
 
+%if 0%{?fedora} > 33
 # Install a replacement for /usr/bin/vncserver which will tell the user to read the
 # HOWTO.md file
 cat <<EOF > %{buildroot}/%{_bindir}/vncserver
@@ -232,6 +247,12 @@ echo "vncserver has been replaced by a systemd unit."
 echo "Please read /usr/share/doc/tigervnc/HOWTO.md for more information."
 EOF
 chmod +x %{buildroot}/%{_bindir}/vncserver
+%else
+rm -f %{buildroot}/%{_mandir}/man8/vncserver.8
+
+install -m 755 %{SOURCE5} %{buildroot}/%{_bindir}/vncserver
+install -m 644 %{SOURCE6} %{buildroot}/%{_mandir}/man8/vncserver.8
+%endif
 
 %find_lang %{name} %{name}.lang
 
@@ -318,6 +339,10 @@ fi
 %{_datadir}/selinux/packages/vncsession.pp
 
 %changelog
+* Tue Sep 29 13:12:22 CEST 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-6
+- Backport upstream fix allowing Tigervnc to specify boolean valus in configuration
+- Revert removal of vncserver for F32 and F33
+
 * Thu Sep 24 07:14:06 CEST 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-5
 - Actually install the HOWTO.md file
 
