@@ -173,7 +173,7 @@ export CXXFLAGS="$CFLAGS -std=c++11"
 
 pushd unix/xserver
 
-%if 0%{?fedora} > 32
+%if 0%{?fedora} > 32 || 0%{?rhel} >= 9
 sed -i 's@TIGERVNC_BUILDDIR=${TIGERVNC_SRCDIR}@TIGERVNC_BUILDDIR=${TIGERVNC_SRCDIR}/%{_target_platform}@g' hw/vnc/Makefile.am
 %endif
 
@@ -199,7 +199,7 @@ make %{?_smp_mflags}
 popd
 
 # Build icons
-%if 0%{?fedora} > 32
+%if 0%{?fedora} > 32 || 0%{?rhel} >= 9
 pushd %{_target_platform}/media
 %else
 pushd media
@@ -238,7 +238,7 @@ install -m644 tigervnc_$s.png %{buildroot}%{_datadir}/icons/hicolor/${s}x$s/apps
 done
 popd
 
-%if 0%{?fedora} > 33
+%if 0%{?fedora} > 33 || 0%{?rhel} >= 9
 # Install a replacement for /usr/bin/vncserver which will tell the user to read the
 # HOWTO.md file
 cat <<EOF > %{buildroot}/%{_bindir}/vncserver
