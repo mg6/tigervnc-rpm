@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.11.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -90,7 +90,7 @@ Requires(preun): systemd
 Requires(postun): systemd
 Requires(post): systemd
 
-Requires:       mesa-dri-drivers, xkeyboard-config, xorg-x11-xkb-utils
+Requires:       mesa-dri-drivers, xkeyboard-config, xkbcomp
 Requires:       tigervnc-license, dbus-x11
 
 %description server-minimal
@@ -339,6 +339,10 @@ fi
 %{_datadir}/selinux/packages/vncsession.pp
 
 %changelog
+* Thu Nov 05 2020 Peter Hutterer <peter.hutterer@redhat.com> 1.11.0-7
+- Require xkbcomp directly, not xorg-x11-xkb-utils. The latter has had
+  Provides xkbcomp for years.
+
 * Tue Sep 29 13:12:22 CEST 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-6
 - Backport upstream fix allowing Tigervnc to specify boolean valus in configuration
 - Revert removal of vncserver for F32 and F33
