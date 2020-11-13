@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.11.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -153,9 +153,8 @@ popd
 
 %patch3 -p1 -b .tigervnc-passwd-crash-with-malloc-checks
 
-# Enable once this is reviewed by upstream
 # https://github.com/TigerVNC/tigervnc/pull/1115
-# %patch4 -p1 -b .tigervnc-systemd-service
+%patch4 -p1 -b .tigervnc-systemd-service
 
 %patch50 -p1 -b .tigervnc-tolerate-specifying-boolparam
 
@@ -339,6 +338,9 @@ fi
 %{_datadir}/selinux/packages/vncsession.pp
 
 %changelog
+* Fri Nov 13 14:08:29 CET 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-8
+- Use /run instead of /var/run which is just a symlink
+
 * Thu Nov 05 2020 Peter Hutterer <peter.hutterer@redhat.com> 1.11.0-7
 - Require xkbcomp directly, not xorg-x11-xkb-utils. The latter has had
   Provides xkbcomp for years.
