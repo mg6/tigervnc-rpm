@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.11.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -338,6 +338,9 @@ fi
 %{_datadir}/selinux/packages/vncsession.pp
 
 %changelog
+* Thu Dec 10 07:45:46 CET 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-9
+- vncserver: ignore new session parameter from the new systemd support
+
 * Fri Nov 13 14:08:29 CET 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-8
 - Use /run instead of /var/run which is just a symlink
 

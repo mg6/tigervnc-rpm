@@ -435,6 +435,9 @@ sub LoadConfig {
         next if /^#/;
         if (my ($k, $v) = /^\s*(\w+)\s*=\s*(.+)$/) {
           $k = lc($k); # must normalize key case
+          if ($k eq "session") {
+            next;
+          }
           if ($warnoverride && $config{$k}) {
             print("Warning: $configFile is overriding previously defined '$k' to be '$v'\n");
           }
