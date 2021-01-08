@@ -28,6 +28,7 @@ Patch50:        tigervnc-tolerate-specifying-boolparam.patch
 
 Patch100:       tigervnc-xserver120.patch
 
+BuildRequires: make
 BuildRequires:  gcc-c++
 BuildRequires:  libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
 BuildRequires:  libXext-devel, xorg-x11-server-source, libXi-devel
