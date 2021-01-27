@@ -1,6 +1,6 @@
 Name:           tigervnc
 Version:        1.11.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -339,6 +339,9 @@ fi
 %{_datadir}/selinux/packages/vncsession.pp
 
 %changelog
+* Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.11.0-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Thu Dec 10 07:45:46 CET 2020 Jan Grulich <jgrulich@redhat.com> - 1.11.0-9
 - vncserver: ignore new session parameter from the new systemd support
 
