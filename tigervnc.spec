@@ -1,6 +1,10 @@
+#defining macros needed by SELinux
+%global selinuxtype targeted
+%global modulename vncsession
+
 Name:           tigervnc
 Version:        1.11.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -18,15 +22,24 @@ Source4:        HOWTO.md
 Source5:        vncserver
 Source6:        vncserver.man
 
-Patch1:         tigervnc-getmaster.patch
-Patch2:         tigervnc-utilize-system-crypto-policies.patch
-Patch3:         tigervnc-passwd-crash-with-malloc-checks.patch
-Patch4:         tigervnc-systemd-service.patch
+Patch2:         tigervnc-cursor.patch
+Patch3:         tigervnc-1.3.1-CVE-2014-8240.patch
+Patch4:         tigervnc-let-user-know-about-not-using-view-only-password.patch
+Patch5:         tigervnc-utilize-system-crypto-policies.patch
+Patch6:         tigervnc-passwd-crash-with-malloc-checks.patch
 
 # Upstream patches
 Patch50:        tigervnc-tolerate-specifying-boolparam.patch
+Patch51:        tigervnc-systemd-service.patch
+Patch52:        tigervnc-correctly-start-vncsession-as-daemon.patch
+Patch53:        tigervnc-selinux-missing-compression-and-correct-location.patch
+Patch54:        tigervnc-selinux-policy-improvements.patch
+Patch55:        tigervnc-argb-runtime-ximage-byteorder-selection.patch
 
+# This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver120.patch
+# 1326867 - [RHEL7.3] GLX applications in an Xvnc session fails to start
+Patch101:       0001-rpath-hack.patch
 
 BuildRequires: make
 BuildRequires:  gcc-c++
@@ -69,7 +82,7 @@ server.
 Summary:        A TigerVNC server
 Requires:       perl-interpreter
 Requires:       tigervnc-server-minimal = %{version}-%{release}
-Requires:       tigervnc-selinux = %{version}-%{release}
+Requires:       (%{name}-selinux if selinux-policy-%{selinuxtype})
 Requires:       xorg-x11-xauth
 Requires:       xorg-x11-xinit
 Requires(post): systemd
@@ -126,10 +139,11 @@ This package contains icons for TigerVNC viewer
 %package selinux
 Summary:        SELinux module for TigerVNC
 BuildArch:      noarch
-Requires(pre):  libselinux-utils
-Requires(post): selinux-policy >= %{_selinux_policy_version}
-Requires(post): policycoreutils
-Requires(post): libselinux-utils
+BuildRequires:  selinux-policy-devel
+Requires:       selinux-policy-%{selinuxtype}
+Requires(post): selinux-policy-%{selinuxtype}
+BuildRequires:  selinux-policy-devel
+%{?selinux_requires}
 
 %description selinux
 This package provides the SELinux policy module to ensure TigerVNC
@@ -144,20 +158,31 @@ for all in `find . -type f -perm -001`; do
         chmod -x "$all"
 done
 %patch100 -p1 -b .xserver120-rebased
+%patch101 -p1 -b .rpath
 popd
 
-# libvnc.so: don't use unexported GetMaster function (bug #744881 again).
-%patch1 -p1 -b .getmaster
+# Fixed viewer crash when cursor has not been set (bug #1051333).
+%patch2 -p1 -b .cursor
+
+# CVE-2014-8240 tigervnc: integer overflow flaw, leading to a heap-based
+# buffer overflow in screen size handling
+%patch3 -p1 -b .tigervnc-1.3.1-CVE-2014-8240
+
+# Bug 1447555 - view-only accepts enter, unclear whether default password is generated or not
+%patch4 -p1 -b .let-user-know-about-not-using-view-only-password
 
 # Utilize system-wide crypto policies
-%patch2 -p1 -b .utilize-system-crypto-policies
+%patch5 -p1 -b .utilize-system-crypto-policies.patch
 
-%patch3 -p1 -b .tigervnc-passwd-crash-with-malloc-checks
+%patch6 -p1 -b .passwd-crash-with-malloc-checks
 
-# https://github.com/TigerVNC/tigervnc/pull/1115
-%patch4 -p1 -b .tigervnc-systemd-service
-
-%patch50 -p1 -b .tigervnc-tolerate-specifying-boolparam
+# Upstream patches
+%patch50 -p1 -b .tolerate-specifying-boolparam
+%patch51 -p1 -b .systemd-service
+%patch52 -p1 -b .correctly-start-vncsession-as-daemon
+%patch53 -p1 -b .selinux-missing-compression-and-correct-location
+%patch54 -p1 -b .selinux-policy-improvements
+%patch55 -p1 -b .argb-runtime-ximage-byteorder-selection
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -277,19 +302,16 @@ install -m 644 %{SOURCE4} %{buildroot}/%{_docdir}/tigervnc/HOWTO.md
 %systemd_postun xvnc.socket
 
 %pre selinux
-%selinux_relabel_pre
+%selinux_relabel_pre -s %{selinuxtype}
 
 %post selinux
-%selinux_modules_install %{_datadir}/selinux/packages/vncsession.pp
-%selinux_relabel_post
-
-%posttrans selinux
-%selinux_relabel_post
+%selinux_modules_install -s %{selinuxtype} %{_datadir}/selinux/packages/%{selinuxtype}/%{modulename}.pp.bz2
+%selinux_relabel_post -s %{selinuxtype}
 
 %postun selinux
-%selinux_modules_uninstall vncsession
 if [ $1 -eq 0 ]; then
-    %selinux_relabel_post
+    %selinux_modules_uninstall -s %{selinuxtype} %{modulename}
+    %selinux_relabel_post -s %{selinuxtype}
 fi
 
 
@@ -336,9 +358,14 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %files selinux
-%{_datadir}/selinux/packages/vncsession.pp
+%{_datadir}/selinux/packages/%{selinuxtype}/%{modulename}.pp.*
+%ghost %verify(not md5 size mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
+* Tue May 25 2021 Jan Grulich <jgrulich@redhat.com> - 1.11.0-11
+- SELinux improvements
+- Backport some CentOS changes
+
 * Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.11.0-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
