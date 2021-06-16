@@ -4,7 +4,7 @@
 
 Name:           tigervnc
 Version:        1.11.0
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -263,21 +263,10 @@ install -m644 tigervnc_$s.png %{buildroot}%{_datadir}/icons/hicolor/${s}x$s/apps
 done
 popd
 
-%if 0%{?fedora} > 33 || 0%{?rhel} >= 9
-# Install a replacement for /usr/bin/vncserver which will tell the user to read the
-# HOWTO.md file
-cat <<EOF > %{buildroot}/%{_bindir}/vncserver
-#!/bin/bash
-echo "vncserver has been replaced by a systemd unit."
-echo "Please read /usr/share/doc/tigervnc/HOWTO.md for more information."
-EOF
-chmod +x %{buildroot}/%{_bindir}/vncserver
-%else
 rm -f %{buildroot}/%{_mandir}/man8/vncserver.8
 
 install -m 755 %{SOURCE5} %{buildroot}/%{_bindir}/vncserver
 install -m 644 %{SOURCE6} %{buildroot}/%{_mandir}/man8/vncserver.8
-%endif
 
 %find_lang %{name} %{name}.lang
 
@@ -362,6 +351,9 @@ fi
 %ghost %verify(not md5 size mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
+* Wed Jun 16 2021 Jan Grulich <jgrulich@redhat.com> - 1.11.0-12
+- Re-enable vncserver script for F34+
+
 * Tue May 25 2021 Jan Grulich <jgrulich@redhat.com> - 1.11.0-11
 - SELinux improvements
 - Backport some CentOS changes
