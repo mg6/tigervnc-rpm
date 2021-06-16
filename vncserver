@@ -885,6 +885,6 @@ sub SanityCheck
 
 sub NotifyAboutDeprecation
 {
-    warn "\nWARNING: vncserver has been replaced by a systemd unit and is about to be removed in the next Fedora release.\n";
+    warn "\nWARNING: vncserver has been replaced by a systemd unit and is now considered deprecated and removed in upstream.\n";
     warn "Please read /usr/share/doc/tigervnc/HOWTO.md for more information.\n";
 }
