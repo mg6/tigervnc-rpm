@@ -156,7 +156,6 @@ for all in `find . -type f -perm -001`; do
         chmod -x "$all"
 done
 %patch100 -p1 -b .xserver120-rebased
-%patch101 -p1 -b .rpath
 popd
 
 # Fixed viewer crash when cursor has not been set (bug #1051333).
