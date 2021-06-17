@@ -38,8 +38,6 @@ Patch55:        tigervnc-argb-runtime-ximage-byteorder-selection.patch
 
 # This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver120.patch
-# 1326867 - [RHEL7.3] GLX applications in an Xvnc session fails to start
-Patch101:       0001-rpath-hack.patch
 
 BuildRequires: make
 BuildRequires:  gcc-c++
