@@ -4,7 +4,7 @@
 
 Name:           tigervnc
 Version:        1.11.0
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -22,19 +22,19 @@ Source4:        HOWTO.md
 Source5:        vncserver
 Source6:        vncserver.man
 
-Patch2:         tigervnc-cursor.patch
-Patch3:         tigervnc-1.3.1-CVE-2014-8240.patch
-Patch4:         tigervnc-let-user-know-about-not-using-view-only-password.patch
-Patch5:         tigervnc-utilize-system-crypto-policies.patch
-Patch6:         tigervnc-passwd-crash-with-malloc-checks.patch
+# Downstream patches
 
-# Upstream patches
-Patch50:        tigervnc-tolerate-specifying-boolparam.patch
-Patch51:        tigervnc-systemd-service.patch
-Patch52:        tigervnc-correctly-start-vncsession-as-daemon.patch
-Patch53:        tigervnc-selinux-missing-compression-and-correct-location.patch
-Patch54:        tigervnc-selinux-policy-improvements.patch
-Patch55:        tigervnc-argb-runtime-ximage-byteorder-selection.patch
+# Upstream patches (can be dropped with next Tigervnc release)
+Patch51:        tigervnc-let-user-know-about-not-using-view-only-password.patch
+Patch52:        tigervnc-working-tls-on-fips-systems.patch
+Patch53:        tigervnc-utilize-system-crypto-policies.patch
+Patch54:        tigervnc-passwd-crash-with-malloc-checks.patch
+Patch55:        tigervnc-tolerate-specifying-boolparam.patch
+Patch56:        tigervnc-systemd-service.patch
+Patch57:        tigervnc-correctly-start-vncsession-as-daemon.patch
+Patch58:        tigervnc-selinux-missing-compression-and-correct-location.patch
+Patch59:        tigervnc-selinux-policy-improvements.patch
+Patch60:        tigervnc-argb-runtime-ximage-byteorder-selection.patch
 
 # This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver120.patch
@@ -158,28 +158,19 @@ done
 %patch100 -p1 -b .xserver120-rebased
 popd
 
-# Fixed viewer crash when cursor has not been set (bug #1051333).
-%patch2 -p1 -b .cursor
-
-# CVE-2014-8240 tigervnc: integer overflow flaw, leading to a heap-based
-# buffer overflow in screen size handling
-%patch3 -p1 -b .tigervnc-1.3.1-CVE-2014-8240
-
-# Bug 1447555 - view-only accepts enter, unclear whether default password is generated or not
-%patch4 -p1 -b .let-user-know-about-not-using-view-only-password
-
-# Utilize system-wide crypto policies
-%patch5 -p1 -b .utilize-system-crypto-policies.patch
-
-%patch6 -p1 -b .passwd-crash-with-malloc-checks
+# Downstream patches
 
 # Upstream patches
-%patch50 -p1 -b .tolerate-specifying-boolparam
-%patch51 -p1 -b .systemd-service
-%patch52 -p1 -b .correctly-start-vncsession-as-daemon
-%patch53 -p1 -b .selinux-missing-compression-and-correct-location
-%patch54 -p1 -b .selinux-policy-improvements
-%patch55 -p1 -b .argb-runtime-ximage-byteorder-selection
+%patch51 -p1 -b .let-user-know-about-not-using-view-only-password
+%patch52 -p1 -b .working-tls-on-fips-systems
+%patch53 -p1 -b .utilize-system-crypto-policies
+%patch54 -p1 -b .passwd-crash-with-malloc-checks
+%patch55 -p1 -b .tolerate-specifying-boolparam
+%patch56 -p1 -b .systemd-service
+%patch57 -p1 -b .correctly-start-vncsession-as-daemon
+%patch58 -p1 -b .selinux-missing-compression-and-correct-location
+%patch59 -p1 -b .selinux-policy-improvements
+%patch60 -p1 -b .argb-runtime-ximage-byteorder-selection
 
 %build
 %ifarch sparcv9 sparc64 s390 s390x
@@ -348,6 +339,10 @@ fi
 %ghost %verify(not md5 size mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
+* Wed Jul 21 2021 Jan Grulich <jgrulich@redhat.com> - 1.11.0-13
+- Sync upstream patches + drop unused patches
+- Fix logout issue with vncserver script
+
 * Wed Jun 16 2021 Jan Grulich <jgrulich@redhat.com> - 1.11.0-12
 - Re-enable vncserver script for F34+
 

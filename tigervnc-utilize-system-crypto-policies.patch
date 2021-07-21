@@ -1,5 +1,175 @@
+diff --git a/common/rfb/CSecurityTLS.cxx b/common/rfb/CSecurityTLS.cxx
+index 9900837..59d2086 100644
+--- a/common/rfb/CSecurityTLS.cxx
++++ b/common/rfb/CSecurityTLS.cxx
+@@ -210,26 +210,66 @@ void CSecurityTLS::setParam()
+   static const char kx_anon_priority[] = ":+ANON-ECDH:+ANON-DH";
+ 
+   int ret;
+-  char *prio;
+-  const char *err;
+ 
+-  prio = (char*)malloc(strlen(Security::GnuTLSPriority) +
+-                       strlen(kx_anon_priority) + 1);
+-  if (prio == NULL)
+-    throw AuthFailureException("Not enough memory for GnuTLS priority string");
++  // Custom priority string specified?
++  if (strcmp(Security::GnuTLSPriority, "") != 0) {
++    char *prio;
++    const char *err;
+ 
+-  strcpy(prio, Security::GnuTLSPriority);
+-  if (anon)
++    prio = (char*)malloc(strlen(Security::GnuTLSPriority) +
++                         strlen(kx_anon_priority) + 1);
++    if (prio == NULL)
++      throw AuthFailureException("Not enough memory for GnuTLS priority string");
++
++    strcpy(prio, Security::GnuTLSPriority);
++    if (anon)
++      strcat(prio, kx_anon_priority);
++
++    ret = gnutls_priority_set_direct(session, prio, &err);
++
++    free(prio);
++
++    if (ret != GNUTLS_E_SUCCESS) {
++      if (ret == GNUTLS_E_INVALID_REQUEST)
++        vlog.error("GnuTLS priority syntax error at: %s", err);
++      throw AuthFailureException("gnutls_set_priority_direct failed");
++    }
++  } else if (anon) {
++    const char *err;
++
++#if GNUTLS_VERSION_NUMBER >= 0x030603
++    // gnutls_set_default_priority_appends() expects a normal priority string that
++    // doesn't start with ":".
++    ret = gnutls_set_default_priority_append(session, kx_anon_priority + 1, &err, 0);
++    if (ret != GNUTLS_E_SUCCESS) {
++      if (ret == GNUTLS_E_INVALID_REQUEST)
++        vlog.error("GnuTLS priority syntax error at: %s", err);
++      throw AuthFailureException("gnutls_set_default_priority_append failed");
++    }
++#else
++    // We don't know what the system default priority is, so we guess
++    // it's what upstream GnuTLS has
++    static const char gnutls_default_priority[] = "NORMAL";
++    char *prio;
++
++    prio = (char*)malloc(strlen(gnutls_default_priority) +
++                         strlen(kx_anon_priority) + 1);
++    if (prio == NULL)
++      throw AuthFailureException("Not enough memory for GnuTLS priority string");
++
++    strcpy(prio, gnutls_default_priority);
+     strcat(prio, kx_anon_priority);
+ 
+-  ret = gnutls_priority_set_direct(session, prio, &err);
++    ret = gnutls_priority_set_direct(session, prio, &err);
+ 
+-  free(prio);
++    free(prio);
+ 
+-  if (ret != GNUTLS_E_SUCCESS) {
+-    if (ret == GNUTLS_E_INVALID_REQUEST)
+-      vlog.error("GnuTLS priority syntax error at: %s", err);
+-    throw AuthFailureException("gnutls_set_priority_direct failed");
++    if (ret != GNUTLS_E_SUCCESS) {
++      if (ret == GNUTLS_E_INVALID_REQUEST)
++        vlog.error("GnuTLS priority syntax error at: %s", err);
++      throw AuthFailureException("gnutls_set_priority_direct failed");
++    }
++#endif
+   }
+ 
+   if (anon) {
+diff --git a/common/rfb/SSecurityTLS.cxx b/common/rfb/SSecurityTLS.cxx
+index ef5d8c9..f32f87f 100644
+--- a/common/rfb/SSecurityTLS.cxx
++++ b/common/rfb/SSecurityTLS.cxx
+@@ -198,26 +198,66 @@ void SSecurityTLS::setParams(gnutls_session_t session)
+   static const char kx_anon_priority[] = ":+ANON-ECDH:+ANON-DH";
+ 
+   int ret;
+-  char *prio;
+-  const char *err;
+ 
+-  prio = (char*)malloc(strlen(Security::GnuTLSPriority) +
+-                       strlen(kx_anon_priority) + 1);
+-  if (prio == NULL)
+-    throw AuthFailureException("Not enough memory for GnuTLS priority string");
++  // Custom priority string specified?
++  if (strcmp(Security::GnuTLSPriority, "") != 0) {
++    char *prio;
++    const char *err;
+ 
+-  strcpy(prio, Security::GnuTLSPriority);
+-  if (anon)
++    prio = (char*)malloc(strlen(Security::GnuTLSPriority) +
++                         strlen(kx_anon_priority) + 1);
++    if (prio == NULL)
++      throw AuthFailureException("Not enough memory for GnuTLS priority string");
++
++    strcpy(prio, Security::GnuTLSPriority);
++    if (anon)
++      strcat(prio, kx_anon_priority);
++
++    ret = gnutls_priority_set_direct(session, prio, &err);
++
++    free(prio);
++
++    if (ret != GNUTLS_E_SUCCESS) {
++      if (ret == GNUTLS_E_INVALID_REQUEST)
++        vlog.error("GnuTLS priority syntax error at: %s", err);
++      throw AuthFailureException("gnutls_set_priority_direct failed");
++    }
++  } else if (anon) {
++    const char *err;
++
++#if GNUTLS_VERSION_NUMBER >= 0x030603
++    // gnutls_set_default_priority_appends() expects a normal priority string that
++    // doesn't start with ":".
++    ret = gnutls_set_default_priority_append(session, kx_anon_priority + 1, &err, 0);
++    if (ret != GNUTLS_E_SUCCESS) {
++      if (ret == GNUTLS_E_INVALID_REQUEST)
++        vlog.error("GnuTLS priority syntax error at: %s", err);
++      throw AuthFailureException("gnutls_set_default_priority_append failed");
++    }
++#else
++    // We don't know what the system default priority is, so we guess
++    // it's what upstream GnuTLS has
++    static const char gnutls_default_priority[] = "NORMAL";
++    char *prio;
++
++    prio = (char*)malloc(strlen(gnutls_default_priority) +
++                         strlen(kx_anon_priority) + 1);
++    if (prio == NULL)
++      throw AuthFailureException("Not enough memory for GnuTLS priority string");
++
++    strcpy(prio, gnutls_default_priority);
+     strcat(prio, kx_anon_priority);
+ 
+-  ret = gnutls_priority_set_direct(session, prio, &err);
++    ret = gnutls_priority_set_direct(session, prio, &err);
+ 
+-  free(prio);
++    free(prio);
+ 
+-  if (ret != GNUTLS_E_SUCCESS) {
+-    if (ret == GNUTLS_E_INVALID_REQUEST)
+-      vlog.error("GnuTLS priority syntax error at: %s", err);
+-    throw AuthFailureException("gnutls_set_priority_direct failed");
++    if (ret != GNUTLS_E_SUCCESS) {
++      if (ret == GNUTLS_E_INVALID_REQUEST)
++        vlog.error("GnuTLS priority syntax error at: %s", err);
++      throw AuthFailureException("gnutls_set_priority_direct failed");
++    }
++#endif
+   }
+ 
+ #if defined (SSECURITYTLS__USE_DEPRECATED_DH)
 diff --git a/common/rfb/Security.cxx b/common/rfb/Security.cxx
-index e623ab5..4987b29 100644
+index 0666041..59deb78 100644
 --- a/common/rfb/Security.cxx
 +++ b/common/rfb/Security.cxx
 @@ -52,7 +52,7 @@ static LogWriter vlog("Security");
@@ -7,7 +177,22 @@ index e623ab5..4987b29 100644
  StringParameter Security::GnuTLSPriority("GnuTLSPriority",
    "GnuTLS priority string that controls the TLS session’s handshake algorithms",
 -  "NORMAL");
-+  "@SYSTEM");
++  "");
  #endif
-
+ 
  Security::Security()
+diff --git a/unix/xserver/hw/vnc/Xvnc.man b/unix/xserver/hw/vnc/Xvnc.man
+index 83621c0..4a0d20c 100644
+--- a/unix/xserver/hw/vnc/Xvnc.man
++++ b/unix/xserver/hw/vnc/Xvnc.man
+@@ -226,7 +226,9 @@ also be in PEM format.
+ .TP
+ .B \-GnuTLSPriority \fIpriority\fP
+ GnuTLS priority string that controls the TLS session’s handshake algorithms.
+-See the GnuTLS manual for possible values. Default is \fBNORMAL\fP.
++See the GnuTLS manual for possible values. For GnuTLS < 3.6.3 the default
++value will be \fBNORMAL\fP to use upstream default. For newer versions
++of GnuTLS system-wide crypto policy will be used.
+ .
+ .TP
+ .B \-UseBlacklist
