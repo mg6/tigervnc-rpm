@@ -4,7 +4,7 @@
 
 Name:           tigervnc
 Version:        1.11.0
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -345,6 +345,9 @@ fi
 %ghost %verify(not md5 size mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
+* Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.11.0-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
 * Wed Jul 21 2021 Jan Grulich <jgrulich@redhat.com> - 1.11.0-13
 - Sync upstream patches + drop unused patches
 - Fix logout issue with vncserver script
