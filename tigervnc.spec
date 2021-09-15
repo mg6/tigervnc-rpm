@@ -3,8 +3,8 @@
 %global modulename vncsession
 
 Name:           tigervnc
-Version:        1.11.0
-Release:        14%{?dist}
+Version:        1.11.90
+Release:        1%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -20,21 +20,8 @@ Source4:        HOWTO.md
 
 # Backwards compatibility
 Source5:        vncserver
-Source6:        vncserver.man
 
 # Downstream patches
-
-# Upstream patches (can be dropped with next Tigervnc release)
-Patch51:        tigervnc-let-user-know-about-not-using-view-only-password.patch
-Patch52:        tigervnc-working-tls-on-fips-systems.patch
-Patch53:        tigervnc-utilize-system-crypto-policies.patch
-Patch54:        tigervnc-passwd-crash-with-malloc-checks.patch
-Patch55:        tigervnc-tolerate-specifying-boolparam.patch
-Patch56:        tigervnc-systemd-service.patch
-Patch57:        tigervnc-correctly-start-vncsession-as-daemon.patch
-Patch58:        tigervnc-selinux-missing-compression-and-correct-location.patch
-Patch59:        tigervnc-selinux-policy-improvements.patch
-Patch60:        tigervnc-argb-runtime-ximage-byteorder-selection.patch
 
 # This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver120.patch
@@ -160,18 +147,6 @@ popd
 
 # Downstream patches
 
-# Upstream patches
-%patch51 -p1 -b .let-user-know-about-not-using-view-only-password
-%patch52 -p1 -b .working-tls-on-fips-systems
-%patch53 -p1 -b .utilize-system-crypto-policies
-%patch54 -p1 -b .passwd-crash-with-malloc-checks
-%patch55 -p1 -b .tolerate-specifying-boolparam
-%patch56 -p1 -b .systemd-service
-%patch57 -p1 -b .correctly-start-vncsession-as-daemon
-%patch58 -p1 -b .selinux-missing-compression-and-correct-location
-%patch59 -p1 -b .selinux-policy-improvements
-%patch60 -p1 -b .argb-runtime-ximage-byteorder-selection
-
 %build
 %ifarch sparcv9 sparc64 s390 s390x
 export CFLAGS="$RPM_OPT_FLAGS -fPIC"
@@ -257,10 +232,7 @@ install -m644 tigervnc_$s.png %{buildroot}%{_datadir}/icons/hicolor/${s}x$s/apps
 done
 popd
 
-rm -f %{buildroot}/%{_mandir}/man8/vncserver.8
-
 install -m 755 %{SOURCE5} %{buildroot}/%{_bindir}/vncserver
-install -m 644 %{SOURCE6} %{buildroot}/%{_mandir}/man8/vncserver.8
 
 %find_lang %{name} %{name}.lang
 
@@ -345,6 +317,9 @@ fi
 %ghost %verify(not md5 size mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
+* Wed Sep 15 2021 Jan Grulich <jgrulich@redhat.com> - 1.11.90-1
+- 1.11.90
+
 * Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.11.0-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
