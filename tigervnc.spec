@@ -3,7 +3,7 @@
 %global modulename vncsession
 
 Name:           tigervnc
-Version:        1.11.90
+Version:        1.12.0
 Release:        1%{?dist}
 Summary:        A TigerVNC remote display system
 
@@ -317,6 +317,9 @@ fi
 %ghost %verify(not md5 size mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
+* Thu Nov 11 2021 Jan Grulich <jgrulich@redhat.com> - 1.12.0-1
+- 1.12.0
+
 * Wed Sep 15 2021 Jan Grulich <jgrulich@redhat.com> - 1.11.90-1
 - 1.11.90
 
