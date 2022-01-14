@@ -1,0 +1,81 @@
+From d2d52704624ce841f4a392fccd82079d87ff13b6 Mon Sep 17 00:00:00 2001
+From: Jan Grulich <jgrulich@redhat.com>
+Date: Thu, 11 Nov 2021 13:52:41 +0100
+Subject: [PATCH] SELinux: restore SELinux context in case of different
+ policies
+
+---
+ CMakeLists.txt                | 13 +++++++++++++
+ unix/vncserver/CMakeLists.txt |  2 +-
+ unix/vncserver/vncsession.c   | 16 ++++++++++++++++
+ 3 files changed, 30 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 50247c7da..1708eb3d8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -268,6 +268,19 @@ if(UNIX AND NOT APPLE)
+   endif()
+ endif()
+
++# Check for SELinux library
++if(UNIX AND NOT APPLE)
++  check_include_files(selinux/selinux.h HAVE_SELINUX_H)
++  if(HAVE_SELINUX_H)
++    set(CMAKE_REQUIRED_LIBRARIES -lselinux)
++    set(CMAKE_REQUIRED_LIBRARIES)
++    set(SELINUX_LIBS selinux)
++    add_definitions("-DHAVE_SELINUX")
++  else()
++    message(WARNING "Could not find SELinux development files")
++  endif()
++endif()
++
+ # Generate config.h and make sure the source finds it
+ configure_file(config.h.in config.h)
+ add_definitions(-DHAVE_CONFIG_H)
+diff --git a/unix/vncserver/CMakeLists.txt b/unix/vncserver/CMakeLists.txt
+index f65ccc7db..ae69dc098 100644
+--- a/unix/vncserver/CMakeLists.txt
++++ b/unix/vncserver/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ add_executable(vncsession vncsession.c)
+-target_link_libraries(vncsession ${PAM_LIBS})
++target_link_libraries(vncsession ${PAM_LIBS} ${SELINUX_LIBS})
+
+ configure_file(vncserver@.service.in vncserver@.service @ONLY)
+ configure_file(vncsession-start.in vncsession-start @ONLY)
+diff --git a/unix/vncserver/vncsession.c b/unix/vncserver/vncsession.c
+index 3573e5e9b..f6d2fd59e 100644
+--- a/unix/vncserver/vncsession.c
++++ b/unix/vncserver/vncsession.c
+@@ -37,6 +37,11 @@
+ #include <sys/types.h>
+ #include <sys/wait.h>
+
++#ifdef HAVE_SELINUX
++#include <selinux/selinux.h>
++#include <selinux/restorecon.h>
++#endif
++
+ extern char **environ;
+
+ // PAM service name
+@@ -360,6 +365,17 @@ redir_stdio(const char *homedir, const char *display)
+             syslog(LOG_CRIT, "Failure creating \"%s\": %s", logfile, strerror(errno));
+             _exit(EX_OSERR);
+         }
++
++#ifdef HAVE_SELINUX
++        int result;
++        if (selinux_file_context_verify(logfile, 0) == 0) {
++            result = selinux_restorecon(logfile, SELINUX_RESTORECON_RECURSE);
++
++            if (result < 0) {
++                syslog(LOG_WARNING, "Failure restoring SELinux context for \"%s\": %s", logfile, strerror(errno));
++            }
++        }
++#endif
+     }
+
+     hostlen = sysconf(_SC_HOST_NAME_MAX);

@@ -4,7 +4,7 @@
 
 Name:           tigervnc
 Version:        1.12.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -23,10 +23,13 @@ Source5:        vncserver
 
 # Downstream patches
 
+# Upstream patches
+Patch50:        tigervnc-selinux-restore-context-in-case-of-different-policies.patch
+
 # This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver120.patch
 
-BuildRequires: make
+BuildRequires:  make
 BuildRequires:  gcc-c++
 BuildRequires:  libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
 BuildRequires:  libXext-devel, xorg-x11-server-source, libXi-devel
@@ -36,7 +39,8 @@ BuildRequires:  mesa-libGL-devel, libXinerama-devel, xorg-x11-font-utils
 BuildRequires:  freetype-devel, libXdmcp-devel, libxshmfence-devel
 BuildRequires:  libjpeg-turbo-devel, gnutls-devel, pam-devel
 BuildRequires:  libdrm-devel, libXt-devel, pixman-devel,
-BuildRequires:  systemd, cmake, desktop-file-utils, selinux-policy-devel
+BuildRequires:  systemd, cmake, desktop-file-utils
+BuildRequires:  libselinux-devel, selinux-policy-devel
 %if 0%{?fedora} > 24 || 0%{?rhel} >= 7
 BuildRequires:  libXfont2-devel
 %else
@@ -136,6 +140,8 @@ runs properly under an environment with SELinux enabled.
 
 %prep
 %setup -q
+
+%patch50 -p1 -b .selinux-restore-context-in-case-of-different-policies
 
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
@@ -317,6 +323,9 @@ fi
 %ghost %verify(not md5 size mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
+* Fri Jan 14 2021 Jan Grulich <jgrulich@redhat.com> - 1.12.0-2
+- SELinux: restore SELinux context in case of different policies
+
 * Thu Nov 11 2021 Jan Grulich <jgrulich@redhat.com> - 1.12.0-1
 - 1.12.0
 
