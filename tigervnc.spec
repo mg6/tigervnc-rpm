@@ -4,7 +4,7 @@
 
 Name:           tigervnc
 Version:        1.12.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -323,7 +323,10 @@ fi
 %ghost %verify(not md5 size mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
-* Fri Jan 14 2021 Jan Grulich <jgrulich@redhat.com> - 1.12.0-2
+* Fri Jan 14 2022 Jan Grulich <jgrulich@redhat.com> - 1.12.0-3
+- Remove unavailable option from vncserver script
+
+* Fri Jan 14 2022 Jan Grulich <jgrulich@redhat.com> - 1.12.0-2
 - SELinux: restore SELinux context in case of different policies
 
 * Thu Nov 11 2021 Jan Grulich <jgrulich@redhat.com> - 1.12.0-1
