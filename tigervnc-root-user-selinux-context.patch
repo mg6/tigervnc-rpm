@@ -1,0 +1,25 @@
+From faf81b4b238e24fe29eb53f885a25367e212dd7b Mon Sep 17 00:00:00 2001
+From: Zdenek Pytela <zpytela@redhat.com>
+Date: Mon, 7 Feb 2022 10:45:41 +0100
+Subject: [PATCH] SELinux: use /root/.vnc in file context specification
+
+Instead of HOME_ROOT/.vnc, /root/.vnc should be used
+for user root's home to specify default file context
+as HOME_ROOT actually means base for home dirs (usually /home).
+---
+ unix/vncserver/selinux/vncsession.fc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/unix/vncserver/selinux/vncsession.fc b/unix/vncserver/selinux/vncsession.fc
+index 6aaf4b1f4..bc81f8f25 100644
+--- a/unix/vncserver/selinux/vncsession.fc
++++ b/unix/vncserver/selinux/vncsession.fc
+@@ -18,7 +18,7 @@
+ #
+
+ HOME_DIR/\.vnc(/.*)?      gen_context(system_u:object_r:vnc_home_t,s0)
+-HOME_ROOT/\.vnc(/.*)?      gen_context(system_u:object_r:vnc_home_t,s0)
++/root/\.vnc(/.*)?      gen_context(system_u:object_r:vnc_home_t,s0)
+
+ /usr/sbin/vncsession			--	gen_context(system_u:object_r:vnc_session_exec_t,s0)
+ /usr/libexec/vncsession-start		--	gen_context(system_u:object_r:vnc_session_exec_t,s0)
