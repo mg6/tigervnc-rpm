@@ -4,7 +4,7 @@
 
 Name:           tigervnc
 Version:        1.12.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -34,21 +34,25 @@ Patch100:       tigervnc-xserver120.patch
 
 BuildRequires:  make
 BuildRequires:  gcc-c++
-BuildRequires:  libX11-devel, automake, autoconf, libtool, gettext, gettext-autopoint
-BuildRequires:  libXext-devel, xorg-x11-server-source, libXi-devel
-BuildRequires:  xorg-x11-xtrans-devel, xorg-x11-util-macros, libXtst-devel
+BuildRequires:  automake, autoconf, libtool, gettext, gettext-autopoint
+BuildRequires:  cmake, desktop-file-utils
 BuildRequires:  libxkbfile-devel, openssl-devel, libpciaccess-devel
-BuildRequires:  mesa-libGL-devel, libXinerama-devel, xorg-x11-font-utils
-BuildRequires:  freetype-devel, libXdmcp-devel, libxshmfence-devel
-BuildRequires:  libjpeg-turbo-devel, gnutls-devel, pam-devel
-BuildRequires:  libdrm-devel, libXt-devel, pixman-devel,
-BuildRequires:  systemd, cmake, desktop-file-utils
-BuildRequires:  libselinux-devel, selinux-policy-devel
+BuildRequires:  freetype-devel, libjpeg-turbo-devel, gnutls-devel, pam-devel
+# X11/graphics dependencies
+BuildRequires: xorg-x11-server-source
+BuildRequires: libXext-devel, libX11-devel, libXi-devel, libXfixes-devel
+BuildRequires: libXdamage-devel, libXrandr-devel, libXt-devel, libXdmcp-devel
+BuildRequires: libXinerama-devel, mesa-libGL-devel, libxshmfence-devel
+BuildRequires: pixman-devel, libdrm-devel,
+BuildRequires: xorg-x11-util-macros, xorg-x11-xtrans-devel, libXtst-devel
+BuildRequires: xorg-x11-font-utils
 %if 0%{?fedora} > 24 || 0%{?rhel} >= 7
 BuildRequires:  libXfont2-devel
 %else
 BuildRequires:  libXfont-devel
 %endif
+# SELinux
+BuildRequires:  libselinux-devel, selinux-policy-devel, systemd
 
 # TigerVNC 1.4.x requires fltk 1.3.3 for keyboard handling support
 # See https://github.com/TigerVNC/tigervnc/issues/8, also bug #1208814
@@ -330,6 +334,9 @@ fi
 %ghost %verify(not md5 size mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
+* Tue May 31 2022 Jan Grulich <jgrulich@redhat.com> - 1.12.0-6
+- Add some missing build requirements for x0vncserver
+
 * Tue Feb 15 2022 Jan Grulich <jgrulich@redhat.com> - 1.12.0-5
 - Fix migration of SELinux context policy
 
