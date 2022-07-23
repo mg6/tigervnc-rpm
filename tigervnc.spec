@@ -4,7 +4,7 @@
 
 Name:           tigervnc
 Version:        1.12.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -334,6 +334,9 @@ fi
 %ghost %verify(not md5 size mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
+* Sat Jul 23 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1.12.0-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
 * Tue May 31 2022 Jan Grulich <jgrulich@redhat.com> - 1.12.0-6
 - Add some missing build requirements for x0vncserver
 
