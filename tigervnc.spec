@@ -33,7 +33,7 @@ Patch100:       tigervnc-xserver120.patch
 BuildRequires:  make
 BuildRequires:  gcc-c++
 BuildRequires:  automake, autoconf, libtool, gettext, gettext-autopoint
-BuildRequires:  cmake, desktop-file-utils
+BuildRequires:  cmake, desktop-file-utils, libappstream-glib
 BuildRequires:  ImageMagick
 BuildRequires:  libxkbfile-devel, openssl-devel, libpciaccess-devel
 BuildRequires:  freetype-devel, libjpeg-turbo-devel, gnutls-devel, pam-devel
@@ -235,6 +235,9 @@ for s in 16 22 24 32 48 64 128; do
 install -m644 tigervnc_$s.png %{buildroot}%{_datadir}/icons/hicolor/${s}x$s/apps/tigervnc.png
 done
 popd
+
+appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/org.tigervnc.vncviewer.metainfo.xml
+desktop-file-validate %{buildroot}%{_datadir}/applications/vncviewer.desktop
 
 install -m 755 %{SOURCE5} %{buildroot}/%{_bindir}/vncserver
 
