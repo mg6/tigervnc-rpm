@@ -2,6 +2,8 @@
 %global selinuxtype targeted
 %global modulename vncsession
 
+%bcond_without server
+
 Name:           tigervnc
 Version:        1.13.0
 Release:        2%{?dist}
@@ -32,14 +34,16 @@ Patch100:       tigervnc-xserver120.patch
 
 BuildRequires:  make
 BuildRequires:  gcc-c++
-BuildRequires:  automake, autoconf, libtool, gettext, gettext-autopoint
+BuildRequires:  gettext
 BuildRequires:  cmake, desktop-file-utils, libappstream-glib
 BuildRequires:  ImageMagick
 BuildRequires:  libxkbfile-devel, openssl-devel, libpciaccess-devel
 BuildRequires:  freetype-devel, libjpeg-turbo-devel, gnutls-devel, pam-devel
+BuildRequires: libXext-devel, libX11-devel, libXi-devel, libXrandr-devel
+%if %{with server}
 # X11/graphics dependencies
+BuildRequires:  automake, autoconf, libtool, gettext-autopoint
 BuildRequires: xorg-x11-server-source
-BuildRequires: libXext-devel, libX11-devel, libXi-devel, libXfixes-devel
 BuildRequires: libXdamage-devel, libXrandr-devel, libXt-devel, libXdmcp-devel
 BuildRequires: libXinerama-devel, mesa-libGL-devel, libxshmfence-devel
 BuildRequires: pixman-devel, libdrm-devel,
@@ -52,6 +56,7 @@ BuildRequires:  libXfont-devel
 %endif
 # SELinux
 BuildRequires:  libselinux-devel, selinux-policy-devel, systemd
+%endif
 
 # TigerVNC 1.4.x requires fltk 1.3.3 for keyboard handling support
 # See https://github.com/TigerVNC/tigervnc/issues/8, also bug #1208814
@@ -150,6 +155,7 @@ runs properly under an environment with SELinux enabled.
 %patch1 -p1 -b .vncsession-restore-script-systemd-service
 %patch50 -p1 -b .sanity-check-when-cleaning-up-keymap-changes
 
+%if %{with server}
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
 pushd unix/xserver
 for all in `find . -type f -perm -001`; do
@@ -157,6 +163,9 @@ for all in `find . -type f -perm -001`; do
 done
 %patch100 -p1 -b .xserver120-rebased
 popd
+%else
+sed -i -e '/add_subdirectory.*vnc/d' unix/CMakeLists.txt
+%endif
 
 # Downstream patches
 
@@ -178,6 +187,7 @@ mkdir -p %{%__cmake_builddir}
 
 %cmake_build
 
+%if %{with server}
 pushd unix/xserver
 
 %if 0%{?fedora} > 32 || 0%{?rhel} >= 9
@@ -209,11 +219,13 @@ popd
 pushd unix/vncserver/selinux
 make
 popd
+%endif
 
 %install
 %cmake_install
 rm -f %{buildroot}%{_docdir}/%{name}-%{version}/{README.rst,LICENCE.TXT}
 
+%if %{with server}
 pushd unix/xserver/hw/vnc
 %make_install
 popd
@@ -226,6 +238,8 @@ popd
 # Install systemd unit file
 install -m644 %{SOURCE1} %{buildroot}%{_unitdir}/xvnc@.service
 install -m644 %{SOURCE2} %{buildroot}%{_unitdir}/xvnc.socket
+install -m755 %{SOURCE5} %{buildroot}/%{_bindir}/vncserver
+%endif
 
 # Install desktop stuff
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/{16x16,24x24,48x48}/apps
@@ -239,10 +253,9 @@ popd
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/org.tigervnc.vncviewer.metainfo.xml
 desktop-file-validate %{buildroot}%{_datadir}/applications/vncviewer.desktop
 
-install -m 755 %{SOURCE5} %{buildroot}/%{_bindir}/vncserver
-
 %find_lang %{name} %{name}.lang
 
+%if %{with server}
 # remove unwanted files
 rm -f  %{buildroot}%{_libdir}/xorg/modules/extensions/libvnc.la
 
@@ -275,6 +288,7 @@ if [ $1 -eq 0 ]; then
     %selinux_modules_uninstall -s %{selinuxtype} %{modulename}
     %selinux_relabel_post -s %{selinuxtype}
 fi
+%endif
 
 
 %files -f %{name}.lang
@@ -284,6 +298,7 @@ fi
 %{_mandir}/man1/vncviewer.1*
 %{_datadir}/metainfo/org.tigervnc.vncviewer.metainfo.xml
 
+%if %{with server}
 %files server
 %config(noreplace) %{_sysconfdir}/pam.d/tigervnc
 %config(noreplace) %{_sysconfdir}/tigervnc/vncserver-config-defaults
@@ -315,15 +330,16 @@ fi
 %{_libdir}/xorg/modules/extensions/libvnc.so
 %config(noreplace) %{_sysconfdir}/X11/xorg.conf.d/10-libvnc.conf
 
+%files selinux
+%{_datadir}/selinux/packages/%{selinuxtype}/%{modulename}.pp.*
+%ghost %verify(not md5 size mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
+%endif
+
 %files license
 %{_docdir}/tigervnc/LICENCE.TXT
 
 %files icons
 %{_datadir}/icons/hicolor/*/apps/*
-
-%files selinux
-%{_datadir}/selinux/packages/%{selinuxtype}/%{modulename}.pp.*
-%ghost %verify(not md5 size mtime) %{_sharedstatedir}/selinux/%{selinuxtype}/active/modules/200/%{modulename}
 
 %changelog
 * Wed Feb 15 2023 Jan Grulich <jgrulich@redhat.com> - 1.13.0-2
