@@ -34,6 +34,7 @@ BuildRequires:  make
 BuildRequires:  gcc-c++
 BuildRequires:  automake, autoconf, libtool, gettext, gettext-autopoint
 BuildRequires:  cmake, desktop-file-utils
+BuildRequires:  ImageMagick
 BuildRequires:  libxkbfile-devel, openssl-devel, libpciaccess-devel
 BuildRequires:  freetype-devel, libjpeg-turbo-devel, gnutls-devel, pam-devel
 # X11/graphics dependencies
@@ -204,15 +205,6 @@ autoreconf -fiv
 make %{?_smp_mflags}
 popd
 
-# Build icons
-%if 0%{?fedora} > 32 || 0%{?rhel} >= 9
-pushd %{_target_platform}/media
-%else
-pushd media
-%endif
-make
-popd
-
 # SELinux
 pushd unix/vncserver/selinux
 make
@@ -239,7 +231,7 @@ install -m644 %{SOURCE2} %{buildroot}%{_unitdir}/xvnc.socket
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/{16x16,24x24,48x48}/apps
 
 pushd media/icons
-for s in 16 24 48; do
+for s in 16 22 24 32 48 64 128; do
 install -m644 tigervnc_$s.png %{buildroot}%{_datadir}/icons/hicolor/${s}x$s/apps/tigervnc.png
 done
 popd
