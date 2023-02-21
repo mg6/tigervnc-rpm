@@ -1,0 +1,31 @@
+From 717d787de8f913070446444e37d552b51f05515e Mon Sep 17 00:00:00 2001
+From: Zdenek Pytela <zpytela@redhat.com>
+Date: Mon, 16 Jan 2023 12:35:40 +0100
+Subject: [PATCH] SELinux: Allow vncsession create ~/.vnc directory
+
+Addresses the following AVC denial:
+
+type=PROCTITLE msg=audit(01/12/2023 02:58:12.648:696) : proctitle=/usr/sbin/vncsession fedora :1
+type=PATH msg=audit(01/12/2023 02:58:12.648:696) : item=1 name=/home/fedora/.vnc nametype=CREATE cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=PATH msg=audit(01/12/2023 02:58:12.648:696) : item=0 name=/home/fedora/ inode=262145 dev=fc:02 mode=dir,700 ouid=fedora ogid=fedora rdev=00:00 obj=unconfined_u:object_r:user_home_dir_t:s0 nametype=PARENT cap_fp=none cap_fi=none cap_fe=0 cap_fver=0 cap_frootid=0
+type=CWD msg=audit(01/12/2023 02:58:12.648:696) : cwd=/home/fedora
+type=SYSCALL msg=audit(01/12/2023 02:58:12.648:696) : arch=x86_64 syscall=mkdir success=no exit=EACCES(Permission denied) a0=0x7fff47d52540 a1=0755 a2=0x0 a3=0x0 items=2 ppid=2869 pid=2880 auid=fedora uid=fedora gid=fedora euid=fedora suid=fedora fsuid=fedora egid=fedora sgid=fedora fsgid=fedora tty=(none) ses=8 comm=vncsession exe=/usr/sbin/vncsession subj=system_u:system_r:vnc_session_t:s0 key=(null)
+type=AVC msg=audit(01/12/2023 02:58:12.648:696) : avc:  denied  { create } for  pid=2880 comm=vncsession name=.vnc scontext=system_u:system_r:vnc_session_t:s0 tcontext=system_u:object_r:vnc_home_t:s0 tclass=dir permissive=0
+
+Resolves: rhbz#2143704
+---
+ unix/vncserver/selinux/vncsession.te | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/unix/vncserver/selinux/vncsession.te b/unix/vncserver/selinux/vncsession.te
+index fb966c14b..680be8ea1 100644
+--- a/unix/vncserver/selinux/vncsession.te
++++ b/unix/vncserver/selinux/vncsession.te
+@@ -37,6 +37,7 @@ allow vnc_session_t self:fifo_file rw_fifo_file_perms;
+ allow vnc_session_t vnc_session_var_run_t:file manage_file_perms;
+ files_pid_filetrans(vnc_session_t, vnc_session_var_run_t, file)
+
++create_dirs_pattern(vnc_session_t, vnc_home_t, vnc_home_t)
+ manage_files_pattern(vnc_session_t, vnc_home_t, vnc_home_t)
+ manage_fifo_files_pattern(vnc_session_t, vnc_home_t, vnc_home_t)
+ manage_sock_files_pattern(vnc_session_t, vnc_home_t, vnc_home_t)

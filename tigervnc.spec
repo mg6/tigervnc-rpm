@@ -6,7 +6,7 @@
 
 Name:           tigervnc
 Version:        1.13.0
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -28,6 +28,7 @@ Patch1:        tigervnc-vncsession-restore-script-systemd-service.patch
 
 # Upstream patches
 Patch50:       tigervnc-sanity-check-when-cleaning-up-keymap-changes.patch
+Patch51:       tigervnc-selinux-allow-vncsession-create-vnc-directory.patch
 
 # This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
 Patch100:       tigervnc-xserver120.patch
@@ -154,6 +155,7 @@ runs properly under an environment with SELinux enabled.
 
 %patch1 -p1 -b .vncsession-restore-script-systemd-service
 %patch50 -p1 -b .sanity-check-when-cleaning-up-keymap-changes
+%patch51 -p1 -b .selinux-allow-vncsession-create-vnc-directory
 
 %if %{with server}
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver
@@ -342,6 +344,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Tue Feb 21 2023 Jan Grulich <jgrulich@redhat.com> - 1.13.0-3
+- vncsession: allow to create .vnc directory
+
 * Wed Feb 15 2023 Jan Grulich <jgrulich@redhat.com> - 1.13.0-2
 - Backport: Sanity check when cleaning up keymap changes
 
