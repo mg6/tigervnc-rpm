@@ -25,6 +25,7 @@ Source5:        vncserver
 
 # Downstream patches
 Patch1:         tigervnc-vncsession-restore-script-systemd-service.patch
+Patch2:         tigervnc-make-edges-scroll-by-full-window-width-height.patch
 
 # Upstream patches
 
@@ -179,6 +180,7 @@ runs properly under an environment with SELinux enabled.
 %setup -q
 
 %patch1 -p1 -b .vncsession-restore-script-systemd-service
+%patch2 -p1 -b .make-edges-scroll-by-full-window-width-height
 
 %if %{with server}
 cp -r /usr/share/xorg-x11-server-source/* unix/xserver

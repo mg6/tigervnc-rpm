@@ -1,0 +1,72 @@
+From 0cbc863cf21b708d8a49ae7846e5676f27f90d32 Mon Sep 17 00:00:00 2001
+From: Maciej Gamrat <dev@gamrat.it>
+Date: Fri, 7 Apr 2023 18:36:50 +0200
+Subject: [PATCH] feat: scroll edges by full client width/height
+
+---
+ vncviewer/DesktopWindow.cxx | 28 +++++++---------------------
+ 1 file changed, 7 insertions(+), 21 deletions(-)
+
+diff --git a/vncviewer/DesktopWindow.cxx b/vncviewer/DesktopWindow.cxx
+index 9b086f4f..f9859099 100644
+--- a/vncviewer/DesktopWindow.cxx
++++ b/vncviewer/DesktopWindow.cxx
+@@ -56,18 +56,11 @@
+ #include <Carbon/Carbon.h>
+ #endif
+ 
+-// width of each "edge" region where scrolling happens,
+-// as a ratio compared to the viewport size
+-// default: 1/16th of the viewport size
+-#define EDGE_SCROLL_SIZE 16
+ // edge width is calculated at runtime; these values are just examples
+-static int edge_scroll_size_x = 128;
+-static int edge_scroll_size_y = 96;
+-// maximum pixels to scroll per frame
+-#define EDGE_SCROLL_SPEED 16
++static int edge_scroll_size_x = 2;
++static int edge_scroll_size_y = 2;
+ // how long to wait between viewport scroll position changes
+-// default: roughly 60 fps for smooth motion
+-#define EDGE_SCROLL_SECONDS_PER_FRAME 0.016666
++#define EDGE_SCROLL_SECONDS_PER_FRAME 0.3
+ 
+ using namespace rfb;
+ 
+@@ -851,9 +844,6 @@ int DesktopWindow::handle(int event)
+       }
+     }
+     if (fullscreen_active()) {
+-      // calculate width of "edge" regions
+-      edge_scroll_size_x = viewport->w() / EDGE_SCROLL_SIZE;
+-      edge_scroll_size_y = viewport->h() / EDGE_SCROLL_SIZE;
+       // if cursor is near the edge of the viewport, scroll
+       if (((viewport->x() < 0) && (Fl::event_x() < edge_scroll_size_x)) ||
+           ((viewport->x() + viewport->w() >= w()) && (Fl::event_x() >= w() - edge_scroll_size_x)) ||
+@@ -1587,19 +1577,15 @@ void DesktopWindow::handleEdgeScroll(void *data)
+     my = self->h();
+ 
+   if ((self->viewport->x() < 0) && (mx < edge_scroll_size_x))
+-    dx = EDGE_SCROLL_SPEED -
+-         EDGE_SCROLL_SPEED * mx / edge_scroll_size_x;
++    dx = self->w();
+   if ((self->viewport->x() + self->viewport->w() >= self->w()) &&
+       (mx >= self->w() - edge_scroll_size_x))
+-    dx = EDGE_SCROLL_SPEED * (self->w() - mx) / edge_scroll_size_x -
+-         EDGE_SCROLL_SPEED - 1;
++    dx = -self->w();
+   if ((self->viewport->y() < 0) && (my < edge_scroll_size_y))
+-    dy = EDGE_SCROLL_SPEED -
+-         EDGE_SCROLL_SPEED * my / edge_scroll_size_y;
++    dy = self->h();
+   if ((self->viewport->y() + self->viewport->h() >= self->h()) &&
+       (my >= self->h() - edge_scroll_size_y))
+-    dy = EDGE_SCROLL_SPEED * (self->h() - my) / edge_scroll_size_y -
+-         EDGE_SCROLL_SPEED - 1;
++    dy = -self->h();
+ 
+   if ((dx == 0) && (dy == 0))
+     return;
+-- 
+2.39.2
+
